@@ -11,41 +11,57 @@ const userSchema = new Schema(
             unique: true
         },
         email: {
-            type : String,
+            type: String,
             required: true,
             max: 50,
             unique: true,
         },
         password: {
-            type: String, 
-            required : true,
-            min : 6
+            type: String,
+            required: true,
+            min: 6
         },
         profilePicture: {
             type: String,
-            default : ''
+            default: ''
         },
-        coverPicture : {
+        coverPicture: {
             type: String,
-            default : ''
+            default: ''
         },
         followers: {
             type: Array,
             default: []
         },
-        followins: {
+        followings: {
             type: Array,
             default: []
         },
         isAdmin: {
             type: Boolean,
             default: false
+        },
+        description: {
+            type: String,
+            max: 50
+        },
+        city: {
+            type: String,
+            max: 50
+        },
+        from: {
+            type: String,
+            max: 50
+        },
+        relationship: {
+            type: Number,
+            enum: [1, 2, 3]
         }
     },
-    { timestamps : true},
+    { timestamps: true },
     { versionKey: false }
 );
 
-const User = mongoose.model("users", userSchema);
+const User = mongoose.model("User", userSchema);
 
 module.exports = User;

@@ -15,7 +15,7 @@ app.use(morgan('common'))
 
 dotenv.config()
 
-app.use('/api/user', userRoute)
+app.use('/api/users', userRoute)
 app.use('/api/auth', authRoute)
 
 app.listen(8000, () => {
