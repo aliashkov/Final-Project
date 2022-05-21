@@ -1,5 +1,6 @@
 import "./rightbar.css";
 import { Users } from "../../data";
+import Friends from "../friends/Friends";
 
 export default function Rightbar({ profile }) {
   const HomeRightbar = () => {
@@ -7,30 +8,9 @@ export default function Rightbar({ profile }) {
       <>
         <h4 className="rightbarTitle">Friends</h4>
         <ul className="rightbarFriendList">
-            <li className="rightbarFriend">
-                <div className="rightbarProfileImgContainer">
-                    <img className="rightbarProfileImg" src="assets/person/1.jpg" alt="" />
-                </div>
-                <span className="rightbarUsername">Vitaliy </span>
-            </li>
-            <li className="rightbarFriend">
-                <div className="rightbarProfileImgContainer">
-                    <img className="rightbarProfileImg" src="assets/person/1.jpg" alt="" />
-                </div>
-                <span className="rightbarUsername">Vitaliy </span>
-            </li>
-            <li className="rightbarFriend">
-                <div className="rightbarProfileImgContainer">
-                    <img className="rightbarProfileImg" src="assets/person/1.jpg" alt="" />
-                </div>
-                <span className="rightbarUsername">Vitaliy </span>
-            </li>
-            <li className="rightbarFriend">
-                <div className="rightbarProfileImgContainer">
-                    <img className="rightbarProfileImg" src="assets/person/1.jpg" alt="" />
-                </div>
-                <span className="rightbarUsername">Vitaliy </span>
-            </li>
+           {Users.map(u => (
+             <Friends key ={u.id} user={u}/>
+           ))}
         </ul>
       </>
     );
