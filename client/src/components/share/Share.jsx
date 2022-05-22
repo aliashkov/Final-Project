@@ -10,7 +10,7 @@ const Share = () => {
                 <div className="shareTop">
                     <img className='shareProfileImg' src="/assets/person/2.jpg" alt="" />
                     <input
-                        placeholder='Input yput thoughts'
+                        placeholder='Input your thoughts'
                         className="shareInput"
                     />
                 </div>
