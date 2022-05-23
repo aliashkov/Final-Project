@@ -1,15 +1,18 @@
 import "./rightbar.css";
 import { Users } from "../../data";
-import Online from "../friends/Friends";
+import Friends from "../friends/Friends";
 
 export default function Rightbar({ profile }) {
+
+  const PUBLIC_FOLDER = process.env.REACT_APP_PUBLIC_FOLDER
+
   const HomeRightbar = () => {
     return (
       <>
-        <h4 className="rightbarTitle">Online Friends</h4>
+        <h4 className="rightbarTitle">Your Friends</h4>
         <ul className="rightbarFriendList">
           {Users.map((u) => (
-            <Online key={u.id} user={u} />
+            <Friends key={u.id} user={u} />
           ))}
         </ul>
       </>
@@ -21,7 +24,7 @@ export default function Rightbar({ profile }) {
       <div className="profileContainer">
         <img
           className="profilePageTitle"
-          src="assets/person/2.jpg"
+          src={`${PUBLIC_FOLDER}person/2.jpg`}
           alt=""
         />
         <h4 className="rightbarTitleUsername">Artyom Liashkou</h4>
@@ -46,7 +49,7 @@ export default function Rightbar({ profile }) {
         <div className="rightbarFollowings">
           <div className="rightbarFollowing">
             <img
-              src="assets/person/1.jpg"
+              src={`${PUBLIC_FOLDER}person/1.jpg`}
               alt=""
               className="rightbarFollowingImg"
             />
@@ -54,7 +57,7 @@ export default function Rightbar({ profile }) {
           </div>
           <div className="rightbarFollowing">
             <img
-              src="assets/person/2.jpg"
+              src={`${PUBLIC_FOLDER}person/2.jpg`}
               alt=""
               className="rightbarFollowingImg"
             />
@@ -62,7 +65,7 @@ export default function Rightbar({ profile }) {
           </div>
           <div className="rightbarFollowing">
             <img
-              src="assets/person/3.jpg"
+              src={`${PUBLIC_FOLDER}person/3.jpg`}
               alt=""
               className="rightbarFollowingImg"
             />
@@ -70,7 +73,7 @@ export default function Rightbar({ profile }) {
           </div>
           <div className="rightbarFollowing">
             <img
-              src="assets/person/4.jpeg"
+              src={`${PUBLIC_FOLDER}person/4.jpeg`}
               alt=""
               className="rightbarFollowingImg"
             />
@@ -78,7 +81,7 @@ export default function Rightbar({ profile }) {
           </div>
           <div className="rightbarFollowing">
             <img
-              src="assets/person/5.jpeg"
+              src={`${PUBLIC_FOLDER}person/5.jpeg`}
               alt=""
               className="rightbarFollowingImg"
             />
@@ -86,7 +89,7 @@ export default function Rightbar({ profile }) {
           </div>
           <div className="rightbarFollowing">
             <img
-              src="assets/person/6.jpeg"
+              src={`${PUBLIC_FOLDER}person/6.jpeg`}
               alt=""
               className="rightbarFollowingImg"
             />

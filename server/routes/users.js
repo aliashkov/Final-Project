@@ -10,7 +10,7 @@ router.delete('/:id', usersController.deleteUser)
 
 //Find User
 
-router.get('/:id', usersController.findUser)
+router.get('/', usersController.findUser)
 
 //Follow User
 
