@@ -2,6 +2,7 @@ const express = require('express');
 const dotenv = require('dotenv')
 const helmet = require('helmet')
 const morgan = require('morgan')
+const cors = require('cors')
 
 const connect = require("./connection/connection");
 const userRoute = require("./routes/users")
@@ -10,6 +11,7 @@ const postRoute = require('./routes/posts')
 
 const app = express()
 
+app.use(cors())
 app.use(express.json())
 app.use(helmet())
 app.use(morgan('common'))

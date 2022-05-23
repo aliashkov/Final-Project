@@ -1,19 +1,9 @@
 import React from 'react';
 import './leftbar.css'
 import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
-import {
-    RssFeed,
-    Chat,
-    PlayCircleFilledOutlined,
-    Group,
-    Bookmark,
-    HelpOutline,
-    WorkOutline,
-    Event,
-    School,
-} from '@mui/icons-material';
-import Friend from '../friend/Friend';
+import { Chat, PlayCircleFilledOutlined, Group, Bookmark, HelpOutline, WorkOutline, Event, School } from '@mui/icons-material';
 import { Users } from '../../data';
+import YourFriends from '../yourFriends/YourFriends';
 
 
 const Leftbar = () => {
@@ -61,7 +51,7 @@ const Leftbar = () => {
                 <hr className='sidebarHr' />
                 <ul className="sidebarFriendList">
                     {Users.map(u => (
-                        <Friend key={u.id} user={u} />
+                        <YourFriends key={u.id} user={u} />
                     ))}
                 </ul>
             </div>
