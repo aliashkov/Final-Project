@@ -1,22 +1,26 @@
-import React, {useContext, useRef} from 'react';
+import React, { useContext, useRef } from 'react';
 import './login.css'
 import { loginCall } from '../../services/LoginApi';
-import { AuthContext } from '../../context/AuthContext';
+import { CircularProgress } from "@mui/material";
+import { useDispatch, useSelector } from "react-redux"
 
 
 
 const Login = () => {
 
-    const email = useRef()
-    const password = useRef()
-    const {user, isFetching , error , dispatch} = useContext(AuthContext)
-
+    const email = useRef();
+    const password = useRef();
+    const dispatch = useDispatch();
+    const { user, isFetching} = useSelector(state => state.authReducer)
+    //const { user, isFetching, dispatch } = useContext(AuthContext);
+    
     const handleClick = (e) => {
-        e.preventDefault()
-        loginCall({email : email.current.value, password : password.current.value} , dispatch)
-    }
-
-    console.log(user)
+        e.preventDefault();
+        loginCall(
+            { email: email.current.value, password: password.current.value },
+            dispatch
+        );
+    };
 
     return (
         <div className="login">
@@ -29,11 +33,22 @@ const Login = () => {
                 </div>
                 <div className="loginRight">
                     <form className="loginBox" onSubmit={handleClick}>
-                        <input placeholder="Email" type="email" required className="loginInput" ref={email}/>
-                        <input placeholder="Password" required minLength="6" type="password" className="loginInput" ref={password}/>
-                        <button className="loginButton">Log In</button>
+                        <input placeholder="Email" type="email" required className="loginInput" ref={email} />
+                        <input placeholder="Password" required minLength="6" type="password" className="loginInput" ref={password} />
+                        <button className="loginButton" type="submit" disabled={isFetching}>
+
+                            {isFetching ? (
+                                <CircularProgress size='20px' style={{ 'color': 'yellow'}} />
+                            ) : (
+                                "Log In"
+                            )}
+                        </button>
                         <button className="loginRegisterButton">
-                            Create a New Account
+                            {isFetching ? (
+                                <CircularProgress size='20px' style={{ 'color': 'yellow'}} />
+                            ) : (
+                                "Create New Account"
+                            )}
                         </button>
                     </form>
                 </div>

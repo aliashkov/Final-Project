@@ -1,4 +1,11 @@
-const AuthReducer = (state, action) => {
+const defaultStore = {
+    user: null,
+    isFetching: false,
+    error: false
+}
+
+
+export const authReducer = (state = defaultStore, action) => {
     switch (action.type) {
       case "LOGIN_START":
         return {
@@ -41,4 +48,3 @@ const AuthReducer = (state, action) => {
     }
   };
   
-  export default AuthReducer;
