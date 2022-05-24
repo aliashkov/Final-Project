@@ -20,7 +20,7 @@ const Register = () => {
                         <input placeholder="Password" className="registerInput" />
                         <input placeholder="Password Confirm" className="registerInput" />
                         <button className="registerButton">Sign Up</button>
-                        <button className="loginButton">
+                        <button className="loginRegisterButton">
                             Log in To Your Account
                         </button>
                     </div>

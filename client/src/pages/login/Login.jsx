@@ -1,9 +1,23 @@
-import React from 'react';
+import React, {useContext, useRef} from 'react';
 import './login.css'
+import { loginCall } from '../../services/LoginApi';
+import { AuthContext } from '../../context/AuthContext';
 
 
 
 const Login = () => {
+
+    const email = useRef()
+    const password = useRef()
+    const {user, isFetching , error , dispatch} = useContext(AuthContext)
+
+    const handleClick = (e) => {
+        e.preventDefault()
+        loginCall({email : email.current.value, password : password.current.value} , dispatch)
+    }
+
+    console.log(user)
+
     return (
         <div className="login">
             <div className="loginWrapper">
@@ -14,14 +28,14 @@ const Login = () => {
                     </span>
                 </div>
                 <div className="loginRight">
-                    <div className="loginBox">
-                        <input placeholder="Email" className="loginInput" />
-                        <input placeholder="Password" className="loginInput" />
+                    <form className="loginBox" onSubmit={handleClick}>
+                        <input placeholder="Email" type="email" required className="loginInput" ref={email}/>
+                        <input placeholder="Password" required minLength="6" type="password" className="loginInput" ref={password}/>
                         <button className="loginButton">Log In</button>
                         <button className="loginRegisterButton">
                             Create a New Account
                         </button>
-                    </div>
+                    </form>
                 </div>
             </div>
         </div>
