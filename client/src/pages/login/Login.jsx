@@ -16,6 +16,10 @@ const Login = () => {
     
     const handleClick = (e) => {
         e.preventDefault();
+    };
+
+    const loginClick = (e) => {
+        e.preventDefault();
         loginCall(
             { email: email.current.value, password: password.current.value },
             dispatch
@@ -35,7 +39,7 @@ const Login = () => {
                     <form className="loginBox" onSubmit={handleClick}>
                         <input placeholder="Email" type="email" required className="loginInput" ref={email} />
                         <input placeholder="Password" required minLength="6" type="password" className="loginInput" ref={password} />
-                        <button className="loginButton" type="submit" disabled={isFetching}>
+                        <button className="loginButton" type="submit" onClick={loginClick} disabled={isFetching}>
 
                             {isFetching ? (
                                 <CircularProgress size='20px' style={{ 'color': 'yellow'}} />
