@@ -14,11 +14,11 @@ const Post = ({ post }) => {
     const [isLiked, setIsLiked] = useState(false)
     const PUBLIC_FOLDER = process.env.REACT_APP_PUBLIC_FOLDER
     const [user, setUser] = useState({})
-    const { user : currentUser} = useSelector(state => state.authReducer)
+    const { user: currentUser } = useSelector(state => state.authReducer)
 
     useEffect(() => {
-       setIsLiked(post.likes.includes(currentUser._id))
-    }, [currentUser._id , post.likes])
+        setIsLiked(post.likes.includes(currentUser._id))
+    }, [currentUser._id, post.likes])
 
     useEffect(() => {
         (async () => {
@@ -31,10 +31,10 @@ const Post = ({ post }) => {
     const likeHandler = () => {
         (async () => {
             try {
-                await likeDislikePosts(post._id , currentUser._id)
+                await likeDislikePosts(post._id, currentUser._id)
                 setLike(isLiked ? like - 1 : like + 1);
                 setIsLiked(!isLiked);
-              } catch (err) {}
+            } catch (err) { }
 
         })()
 
@@ -46,10 +46,10 @@ const Post = ({ post }) => {
             <div className="postWrapper">
                 <div className="postTop">
                     <div className="postTopLeft">
-                        <Link to = {`profile/${user.username}`}>
+                        <Link to={`/profile/${user.username}`}>
                             <img
                                 className="postProfileImg"
-                                src={user.profilePicture ? PUBLIC_FOLDER + user.profilePicture  : PUBLIC_FOLDER + "person/noAvatar.png"}
+                                src={user.profilePicture ? PUBLIC_FOLDER + user.profilePicture : PUBLIC_FOLDER + "person/noAvatar.png"}
                                 alt=""
                             />
                         </Link>
