@@ -3,7 +3,7 @@ import Topbar from '../../components/topbar/Topbar';
 import Feed from '../../components/center/Feed';
 import Leftbar from '../../components/leftbar/Leftbar';
 import Rightbar from '../../components/rightbar/Rightbar';
-import { GetProfileUser } from '../../services/GetUser';
+import { GetProfileUser } from '../../services/userApi';
 import './profile.css';
 import {useParams} from 'react-router'
 

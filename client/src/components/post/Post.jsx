@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import './post.css'
 import { MoreVert } from '@mui/icons-material';
-import { GetUser } from '../../services/GetUser';
+import { GetUser } from '../../services/userApi';
 import { format } from 'timeago.js'
 import { Link } from 'react-router-dom';
+import axios from 'axios';
+import { useSelector } from 'react-redux';
+import { likeDislikePosts } from '../../services/likesApi';
 
 
 const Post = ({ post }) => {
@@ -11,6 +14,11 @@ const Post = ({ post }) => {
     const [isLiked, setIsLiked] = useState(false)
     const PUBLIC_FOLDER = process.env.REACT_APP_PUBLIC_FOLDER
     const [user, setUser] = useState({})
+    const { user : currentUser} = useSelector(state => state.authReducer)
+
+    useEffect(() => {
+       setIsLiked(post.likes.includes(currentUser._id))
+    }, [currentUser._id , post.likes])
 
     useEffect(() => {
         (async () => {
@@ -19,9 +27,19 @@ const Post = ({ post }) => {
         })()
     }, [post.userId])
 
+
     const likeHandler = () => {
-        setLike(isLiked ? like - 1 : like + 1)
-        setIsLiked(!isLiked)
+        (async () => {
+            try {
+                await likeDislikePosts(post._id , currentUser._id)
+                setLike(isLiked ? like - 1 : like + 1);
+                setIsLiked(!isLiked);
+              } catch (err) {}
+
+        })()
+
+
+
     }
     return (
         <div className="post">
@@ -31,7 +49,7 @@ const Post = ({ post }) => {
                         <Link to = {`profile/${user.username}`}>
                             <img
                                 className="postProfileImg"
-                                src={user.profilePicture || PUBLIC_FOLDER + "person/noAvatar.png"}
+                                src={user.profilePicture ? PUBLIC_FOLDER + user.profilePicture  : PUBLIC_FOLDER + "person/noAvatar.png"}
                                 alt=""
                             />
                         </Link>

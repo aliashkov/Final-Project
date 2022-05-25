@@ -2,8 +2,14 @@ import React from 'react';
 import "./topbar.css"
 import { Search, Person, Chat, Notifications } from '@mui/icons-material'
 import { Link } from "react-router-dom"
+import { useSelector } from 'react-redux';
 
 const Topbar = () => {
+    const { user } = useSelector(state => state.authReducer)
+    const PUBLIC_FOLDER = process.env.REACT_APP_PUBLIC_FOLDER
+    console.log(user)
+
+
     return (
         <div className="topbarContainer">
             <div className="topbarLeft">
@@ -40,7 +46,10 @@ const Topbar = () => {
                         <span className="topbarIconBadge">1</span>
                     </div>
                 </div>
-                <img src="/assets/person/2.jpg" alt="" className="topbarImg" />
+                <Link to={`/profile/${user.username}`}>
+                    <img src={user.profilePicture ? PUBLIC_FOLDER + user.profilePicture : PUBLIC_FOLDER + "person/noAvatar.png"} alt="" className="topbarImg" />
+                </Link>
+
             </div>
         </div>
     )
