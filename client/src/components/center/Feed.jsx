@@ -7,26 +7,26 @@ import { GetPosts, getProfilePosts, getTimelinePosts } from '../../services/post
 import { useSelector } from 'react-redux';
 
 
-const Feed = ({username}) => {
+const Feed = ({ username }) => {
     const [posts, setPosts] = useState([])
-    const { user} = useSelector(state => state.authReducer)
+    const { user } = useSelector(state => state.authReducer)
 
     useEffect(() => {
         (async () => {
-            const res = username ? await getProfilePosts(username) : await getTimelinePosts(user._id) ;
-            setPosts(res.data.sort((post1 , post2) => {
+            const res = username ? await getProfilePosts(username) : await getTimelinePosts(user._id);
+            setPosts(res.data.sort((post1, post2) => {
                 return new Date(post2.createdAt) - new Date(post1.createdAt)
             }));
         })()
-        
-    }, [username , user._id])
+
+    }, [username, user._id])
 
     return (
         <div className='feed'>
             <div className="feedWrapper">
-                {username === user.username && <Share />}
+                {(!username || username === user.username) && <Share />}
                 {
-                   
+
                     posts.map((p) => (
                         <Post key={p._id} post={p} />
                     ))

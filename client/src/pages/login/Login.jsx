@@ -1,6 +1,6 @@
 import React, { useContext, useRef } from 'react';
 import './login.css'
-import { loginCall } from '../../services/loginApi';
+import { loginInit } from '../../services/loginApi';
 import { CircularProgress } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux"
 
@@ -19,7 +19,7 @@ const Login = () => {
 
     const loginClick = (e) => {
         e.preventDefault();
-        loginCall(
+        loginInit(
             { email: email.current.value, password: password.current.value },
             dispatch
         );
