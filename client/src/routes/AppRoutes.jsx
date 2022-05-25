@@ -20,7 +20,7 @@ const AppRoutes = (props) => {
                 <Route path="/login" element={
                     <RequireAuth><Login /> </RequireAuth>
                 } />
-                <Route path="/profile/:username" element={<Profile />} />
+                <Route path="/profile/:username" element={  user ? <Profile /> : <Login />} />
                 <Route path="/register" element={
                     <RequireAuth><Register /> </RequireAuth>
                 } />

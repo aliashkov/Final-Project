@@ -3,24 +3,28 @@ import './feed.css'
 import Share from '../share/Share';
 import Post from '../post/Post';
 import axios from 'axios'
-import { GetPosts, getProfilePosts } from '../../services/GetPosts';
+import { GetPosts, getProfilePosts, getTimelinePosts } from '../../services/postsApi';
+import { useSelector } from 'react-redux';
 
 
 const Feed = ({username}) => {
     const [posts, setPosts] = useState([])
+    const { user} = useSelector(state => state.authReducer)
 
     useEffect(() => {
         (async () => {
-            const res = username ? await getProfilePosts(username) : await GetPosts() ;
-            setPosts(res.data);
+            const res = username ? await getProfilePosts(username) : await getTimelinePosts(user._id) ;
+            setPosts(res.data.sort((post1 , post2) => {
+                return new Date(post2.createdAt) - new Date(post1.createdAt)
+            }));
         })()
         
-    }, [username])
+    }, [username , user._id])
 
     return (
         <div className='feed'>
             <div className="feedWrapper">
-                <Share />
+                {username === user.username && <Share />}
                 {
                    
                     posts.map((p) => (
