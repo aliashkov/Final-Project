@@ -1,14 +1,14 @@
 export const LoginStartUser = (userCredentials) => ({
-    type: "LOGIN_START",
+    type: "LOGIN_START_USER",
   });
   
   export const LoginSuccessUser = (user) => ({
-    type: "LOGIN_SUCCESS",
+    type: "LOGIN_SUCCESS_USER",
     payload: user,
   });
   
   export const LoginFailureUser = () => ({
-    type: "LOGIN_FAILURE",
+    type: "LOGIN_FAILURE_USER",
   });
 
   export const FollowUser = (userId) => ({

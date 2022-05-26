@@ -1,4 +1,6 @@
 import { Link } from "react-router-dom";
+//import "rightbar.css";
+import "../rightbar/rightbar.css"
 
 
 export const FriendsList = ({ friend }) => {
@@ -7,8 +9,8 @@ export const FriendsList = ({ friend }) => {
     return (
         <>
             <Link
-                to={"/profile/" + friend.username}
-                style={{ textDecoration: "none" }}
+              to={"/profile/" + friend.username}
+              style={{ textDecoration: "none", color : "black" }}
             >
 
                 <div className="rightbarFollowing">
