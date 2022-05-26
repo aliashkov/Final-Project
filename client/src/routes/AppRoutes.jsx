@@ -10,7 +10,7 @@ import RequireAuth from '../hoc/requireAuth';
 
 const AppRoutes = (props) => {
 
-    const { user} = useSelector(state => state.authReducer)
+    const { user} = useSelector(state => state.userReducer)
 
     return (
 

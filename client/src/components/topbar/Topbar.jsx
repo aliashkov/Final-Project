@@ -5,7 +5,7 @@ import { Link } from "react-router-dom"
 import { useSelector } from 'react-redux';
 
 const Topbar = () => {
-    const { user } = useSelector(state => state.authReducer)
+    const { user } = useSelector(state => state.userReducer)
     const PUBLIC_FOLDER = process.env.REACT_APP_PUBLIC_FOLDER
     console.log(user)
 

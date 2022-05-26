@@ -1,15 +1,15 @@
 import React, { useRef, useState } from 'react';
 import './share.css'
-import { PermMedia } from '@mui/icons-material';
+import { PermMedia, Cancel } from '@mui/icons-material';
 import { useSelector } from 'react-redux';
-import axios from 'axios';
 import { uploadFile } from '../../services/uploadApi';
 import { addPost } from '../../services/postsApi';
 
 
+
 const Share = () => {
 
-    const { user } = useSelector(state => state.authReducer)
+    const { user } = useSelector(state => state.userReducer)
     const PUBLIC_FOLDER = process.env.REACT_APP_PUBLIC_FOLDER
     const description = useRef()
     const [file, setFile] = useState(null)
@@ -50,6 +50,12 @@ const Share = () => {
                     />
                 </div>
                 <hr className="shareHr" />
+                {file && (
+                    <div className="shareImgContainer">
+                        <img className="shareImg" src={URL.createObjectURL(file)} alt="" />
+                        <Cancel className="shareCancelImg" onClick={() => setFile(null)} />
+                    </div>
+                )}
                 <form className="shareBottom" onSubmit={submitHandler}>
                     <div className="shareOptions">
                         <label htmlFor="file" className="shareOption">

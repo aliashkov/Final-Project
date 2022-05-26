@@ -2,14 +2,13 @@ import React, { useEffect, useState } from 'react';
 import './feed.css'
 import Share from '../share/Share';
 import Post from '../post/Post';
-import axios from 'axios'
-import { GetPosts, getProfilePosts, getTimelinePosts } from '../../services/postsApi';
+import { getProfilePosts, getTimelinePosts } from '../../services/postsApi';
 import { useSelector } from 'react-redux';
 
 
 const Feed = ({ username }) => {
     const [posts, setPosts] = useState([])
-    const { user } = useSelector(state => state.authReducer)
+    const { user } = useSelector(state => state.userReducer)
 
     useEffect(() => {
         (async () => {

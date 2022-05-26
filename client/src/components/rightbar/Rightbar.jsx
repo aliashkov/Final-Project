@@ -7,13 +7,23 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { FriendsList } from "../friendList/FriendList";
 import { friendsListUser } from "../../services/friendsApi";
+import { useSelector, useDispatch } from "react-redux";
+import { Add, Remove } from "@mui/icons-material";
+import { followUser, unfollowUser } from "../../services/friendsApi";
 
 export default function Rightbar({ user }) {
 
   const PUBLIC_FOLDER = process.env.REACT_APP_PUBLIC_FOLDER
   const [friends, setFriends] = useState([])
-  console.log(user)
-  console.log(friends)
+  const dispatch = useDispatch();
+  const [followed, setFollowed] = useState(false)
+
+  const { user: currentUser } = useSelector(state => state.userReducer)
+  console.log(currentUser)
+
+  useEffect(() => {
+    setFollowed(currentUser.followings.includes(user?._id))
+  }, [user]);
 
   useEffect(() => {
     const getFriends = async () => {
@@ -26,6 +36,22 @@ export default function Rightbar({ user }) {
     };
     getFriends();
   }, [user]);
+
+
+  const handleClick = async () => {
+    try {
+      if (followed) {
+        await unfollowUser(user._id, currentUser._id)
+        dispatch({ type: "UNFOLLOW_USER", payload: user._id });
+      } else {
+        await followUser(user._id, currentUser._id)
+        dispatch({ type: "FOLLOW_USER", payload: user._id });
+      }
+      setFollowed(!followed);
+    } catch (err) {
+      console.log(err)
+    }
+  }
 
 
   const HomeRightbar = () => {
@@ -56,6 +82,15 @@ export default function Rightbar({ user }) {
               : PUBLIC_FOLDER + "person/noAvatar.png"}
             alt=""
           />
+          {user.username !== currentUser.username && (
+            <div className="rightbarContainerButton">
+              <button className="rightbarFollowButton" onClick={handleClick}>
+                {followed ? "Unfollow" : "Follow"}
+                {followed ? <Remove /> : <Add />}
+              </button>
+            </div>
+
+          )}
           <h4 className="rightbarTitleUsername">{user.username}</h4>
           <hr className="rightbarHr" />
           <h4 className="rightbarTitle">User information</h4>
