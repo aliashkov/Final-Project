@@ -3,6 +3,7 @@ import './login.css'
 import { loginInit } from '../../services/loginApi';
 import { CircularProgress } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux"
+import { useNavigate } from 'react-router-dom';
 
 
 
@@ -11,7 +12,9 @@ const Login = () => {
     const email = useRef();
     const password = useRef();
     const dispatch = useDispatch();
-    const { user, isFetching} = useSelector(state => state.authReducer)
+    const { isFetching} = useSelector(state => state.authReducer)
+    const { user} = useSelector(state => state.userReducer)
+    const navigate = useNavigate();
     
     const handleClick = (e) => {
         e.preventDefault();
@@ -23,6 +26,12 @@ const Login = () => {
             { email: email.current.value, password: password.current.value },
             dispatch
         );
+        navigate('/');
+    };
+
+    const registerClick = (e) => {
+        e.preventDefault();
+        navigate('/register');
     };
 
     return (
@@ -38,7 +47,7 @@ const Login = () => {
                     <form className="loginBox" onSubmit={handleClick}>
                         <input placeholder="Email" type="email" required className="loginInput" ref={email} />
                         <input placeholder="Password" required minLength="6" type="password" className="loginInput" ref={password} />
-                        <button className="loginButton" type="submit" onClick={loginClick} disabled={isFetching}>
+                        <button className="loginButton"  onClick={loginClick} disabled={isFetching}>
 
                             {isFetching ? (
                                 <CircularProgress size='20px' style={{ 'color': 'yellow'}} />
@@ -46,12 +55,8 @@ const Login = () => {
                                 "Log In"
                             )}
                         </button>
-                        <button className="loginRegisterButton">
-                            {isFetching ? (
-                                <CircularProgress size='20px' style={{ 'color': 'yellow'}} />
-                            ) : (
-                                "Create New Account"
-                            )}
+                        <button className="loginRegisterButton" onClick={registerClick}>
+                            Create New Account
                         </button>
                     </form>
                 </div>
