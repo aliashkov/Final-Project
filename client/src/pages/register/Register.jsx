@@ -1,34 +1,30 @@
-import React, { useRef , useState} from 'react';
+import React, { useRef, useState } from 'react';
 import './register.css'
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom'
 import { registerCall } from '../../services/registerApi';
+import PasswordChecklist from "react-password-checklist"
+
 
 
 const Register = () => {
 
     const username = useRef();
     const email = useRef();
-    const password = useRef();
-    const passwordConfirm = useRef();
-    
-    console.log(passwordConfirm)
-    console.log(password)
+    const [password, setPassword] = useState("")
+    const [passwordConfirm, setPasswordConfirm] = useState("")
     const navigate = useNavigate();
-    const [valid, setValid] = useState(true);
 
     const handleClick = async (e) => {
-        console.log(passwordConfirm.current.value)
         e.preventDefault();
-        if (passwordConfirm.current.value !== password.current.value) {
-            console.log(555)
-            passwordConfirm.current.asyncSetValidity("Passwords don't match!")
+        console.log(passwordConfirm)
+        console.log(passwordConfirm)
+        if (password !== passwordConfirm) {
         } else {
-            console.log(6666)
             const user = {
                 username: username.current.value,
                 email: email.current.value,
-                password: password.current.value
+                password: password
             }
             console.log(user)
             try {
@@ -41,6 +37,7 @@ const Register = () => {
     };
 
     const loginClick = (e) => {
+        e.preventDefault();
         navigate('/login');
     };
 
@@ -60,12 +57,26 @@ const Register = () => {
                     <form className="registerBox" onSubmit={handleClick}>
                         <input placeholder="Username" required ref={username} className="registerInput" />
                         <input placeholder="Email" required ref={email} type="email" className="registerInput" />
-                        <input placeholder="Password" required ref={password} minLength="6" type="password" className="registerInput" />
-                        <input placeholder="Password Confirm" required ref={passwordConfirm} minLength="6" type="password" className="registerInput" />
+                        <input placeholder="Password" required minLength="6" onChange={e => setPassword(e.target.value)} type="password" className="registerInput" />
+                        <input placeholder="Password Confirm" required minLength="6" onChange={e => setPasswordConfirm(e.target.value)} type="password" className="registerInput" />
+                        <div className='passwordsMessageWrapper'>
+                            <PasswordChecklist
+                                rules={["minLength", "match"]}
+                                minLength={6}
+                                value={password}
+                                valueAgain={passwordConfirm}
+                                messages={{
+                                    minLength: "Password length less than 6 symbols",
+                                    match: "Password don't match",
+                                }}
+                            />
+                        </div>
+
                         <button className="registerButton">Sign Up</button>
                         <button className="loginRegisterButton" onClick={loginClick}>
                             Log in To Your Account
                         </button>
+
                     </form>
                 </div>
             </div>
