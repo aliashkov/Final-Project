@@ -1,5 +1,44 @@
 const User = require('../models/User')
 const bcrypt = require('bcrypt')
+const jwt = require("jsonwebtoken");
+
+let refreshTokens = [];
+
+const refresh = (req, res) => {
+    //take the refresh token from the user
+    const refreshToken = req.body.token;
+
+    //send error if there is no token or it's invalid
+    if (!refreshToken) return res.status(401).json("You are not authenticated!");
+    if (!refreshTokens.includes(refreshToken)) {
+        return res.status(403).json("Refresh token is not valid!");
+    }
+    jwt.verify(refreshToken, "myRefreshSecretKey", (err, user) => {
+        err && console.log(err);
+        refreshTokens = refreshTokens.filter((token) => token !== refreshToken);
+
+        const newAccessToken = generateAccessToken(user);
+        const newRefreshToken = generateRefreshToken(user);
+
+        refreshTokens.push(newRefreshToken);
+
+        res.status(200).json({
+            accessToken: newAccessToken,
+            refreshToken: newRefreshToken,
+        });
+    });
+
+};
+
+const generateAccessToken = (user) => {
+    return jwt.sign({ id: user.id, isAdmin: user.isAdmin }, "mySecretKey", {
+        expiresIn: "20m",
+    });
+};
+
+const generateRefreshToken = (user) => {
+    return jwt.sign({ id: user.id, isAdmin: user.isAdmin }, "myRefreshSecretKey");
+};
 
 
 const register = async (req, res) => {
@@ -32,7 +71,23 @@ const login = async (req, res) => {
         else {
             const validPassword = await bcrypt.compare(req.body.password, user.password)
             if (validPassword) {
-                res.status(200).json(user)
+                const accessToken = generateAccessToken(user);
+                const refreshToken = generateRefreshToken(user);
+                refreshTokens.push(refreshToken);
+                res.json({
+                    _id : user._id,
+                    username : user.username,
+                    profilePicture : user.profilePicture,
+                    followers : user.followers,
+                    followings : user.followings,
+                    isAdmin : user.isAdmin,
+                    description : user.description,
+                    city : user.city,
+                    from : user.from,
+                    relationship : user.relationship,
+                    accessToken,
+                    refreshToken,
+                });
             }
             else {
                 res.status(400).json("Wrong password")
@@ -45,7 +100,15 @@ const login = async (req, res) => {
     }
 };
 
+const logout = async (req, res) => {
+    const refreshToken = req.body.token;
+    refreshTokens = refreshTokens.filter((token) => token !== refreshToken);
+    res.status(200).json("You logged out successfully.");
+};
+
 module.exports = {
     register,
-    login
+    login,
+    logout,
+    refresh
 }

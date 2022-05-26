@@ -17,7 +17,7 @@ export default function Rightbar({ user }) {
   const [friends, setFriends] = useState([])
   const dispatch = useDispatch();
   const [followed, setFollowed] = useState(false)
-
+  console.log(user)
   const { user: currentUser } = useSelector(state => state.userReducer)
   console.log(currentUser)
 
