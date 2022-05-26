@@ -4,7 +4,6 @@ import { MoreVert } from '@mui/icons-material';
 import { GetUser } from '../../services/userApi';
 import { format } from 'timeago.js'
 import { Link } from 'react-router-dom';
-import axios from 'axios';
 import { useSelector } from 'react-redux';
 import { likeDislikePosts } from '../../services/likesApi';
 
@@ -14,7 +13,7 @@ const Post = ({ post }) => {
     const [isLiked, setIsLiked] = useState(false)
     const PUBLIC_FOLDER = process.env.REACT_APP_PUBLIC_FOLDER
     const [user, setUser] = useState({})
-    const { user: currentUser } = useSelector(state => state.authReducer)
+    const { user: currentUser } = useSelector(state => state.userReducer)
 
     useEffect(() => {
         setIsLiked(post.likes.includes(currentUser._id))
@@ -37,10 +36,8 @@ const Post = ({ post }) => {
             } catch (err) { }
 
         })()
-
-
-
     }
+
     return (
         <div className="post">
             <div className="postWrapper">
