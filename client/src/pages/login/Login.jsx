@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router-dom';
 
 
 
+
 const Login = () => {
 
     const email = useRef();
@@ -15,6 +16,7 @@ const Login = () => {
     const { isFetching} = useSelector(state => state.authReducer)
     const { user} = useSelector(state => state.userReducer)
     const navigate = useNavigate();
+    
     
     const handleClick = (e) => {
         e.preventDefault();
@@ -26,6 +28,7 @@ const Login = () => {
             { email: email.current.value, password: password.current.value },
             dispatch
         );
+        
         navigate('/');
     };
 
