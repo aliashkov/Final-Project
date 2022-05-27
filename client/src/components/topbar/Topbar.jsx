@@ -3,11 +3,17 @@ import "./topbar.css"
 import { Search, Person, Chat, Notifications } from '@mui/icons-material'
 import { Link } from "react-router-dom"
 import { useSelector } from 'react-redux';
+import LogoutIcon from '@mui/icons-material/Logout';
+import { useNavigate } from 'react-router-dom';
 
 const Topbar = () => {
     const { user } = useSelector(state => state.userReducer)
     const PUBLIC_FOLDER = process.env.REACT_APP_PUBLIC_FOLDER
     console.log(user)
+
+    const loginClick = () => {
+        console.log(777)
+    }
 
 
     return (
@@ -34,16 +40,10 @@ const Topbar = () => {
                 </div>
                 <div className="topbarIcons">
                     <div className="topbarIconItem">
-                        <Person />
-                        <span className="topbarIconBadge">1</span>
-                    </div>
-                    <div className="topbarIconItem">
-                        <Chat />
-                        <span className="topbarIconBadge">2</span>
-                    </div>
-                    <div className="topbarIconItem">
-                        <Notifications />
-                        <span className="topbarIconBadge">1</span>
+                        <Link to={`/login`} style={{ textDecoration: "none", color : "white" }}>
+                            <LogoutIcon  />
+                        </Link>
+
                     </div>
                 </div>
                 <Link to={`/profile/${user.username}`}>

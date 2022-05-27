@@ -16,6 +16,7 @@ const Login = () => {
     const { isFetching} = useSelector(state => state.authReducer)
     const { user} = useSelector(state => state.userReducer)
     const navigate = useNavigate();
+    localStorage.setItem("user", null)
     
     
     const handleClick = (e) => {
