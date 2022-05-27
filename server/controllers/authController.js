@@ -23,6 +23,7 @@ const refresh = (req, res) => {
         refreshTokens.push(newRefreshToken);
 
         res.status(200).json({
+            
             accessToken: newAccessToken,
             refreshToken: newRefreshToken,
         });
@@ -32,7 +33,7 @@ const refresh = (req, res) => {
 
 const generateAccessToken = (user) => {
     return jwt.sign({ id: user.id, isAdmin: user.isAdmin }, "mySecretKey", {
-        expiresIn: "20m",
+        expiresIn: "5s",
     });
 };
 

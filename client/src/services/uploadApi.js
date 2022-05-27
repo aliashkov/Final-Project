@@ -1,6 +1,16 @@
 import axios from 'axios'
+import { interceptorRefreshToken } from '../interceptors/intercetptorRefreshToken';
 
-export const uploadFile = (data) => {
+export const UploadFile = async (fileData , user) => {
 
-    return axios.post("http://localhost:8000/api/upload", data);
+    const axiosJWT = axios.create()
+    interceptorRefreshToken(user , axiosJWT)
+
+    await axiosJWT.post("http://localhost:8000/api/upload", fileData, {
+        headers: { authorization: "Bearer " + user.accessToken },
+    });
+
+    return axiosJWT;
 }
+
+

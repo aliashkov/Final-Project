@@ -1,5 +1,5 @@
 const defaultStore = {
-    user: null
+    user: JSON.parse(localStorage.getItem("user")) || null,
 }
 
 

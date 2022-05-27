@@ -2,8 +2,11 @@ import React, { useRef, useState } from 'react';
 import './share.css'
 import { PermMedia, Cancel } from '@mui/icons-material';
 import { useSelector } from 'react-redux';
-import { uploadFile } from '../../services/uploadApi';
+import { UploadFile } from '../../services/uploadApi';
 import { addPost } from '../../services/postsApi';
+import axios from 'axios'
+import jwt_decode from "jwt-decode";
+import { useDispatch } from 'react-redux';
 
 
 
@@ -13,6 +16,7 @@ const Share = () => {
     const PUBLIC_FOLDER = process.env.REACT_APP_PUBLIC_FOLDER
     const description = useRef()
     const [file, setFile] = useState(null)
+    const dispatch = useDispatch()
 
 
     const submitHandler = async (e) => {
@@ -28,7 +32,7 @@ const Share = () => {
             data.append("file", file);
             newPost.img = fileName;
             try {
-                await uploadFile(data);
+                await UploadFile(data , user)
             } catch (err) { }
         }
         try {
