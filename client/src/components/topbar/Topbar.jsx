@@ -2,17 +2,24 @@ import React from 'react';
 import "./topbar.css"
 import { Search, Person, Chat, Notifications } from '@mui/icons-material'
 import { Link } from "react-router-dom"
-import { useSelector } from 'react-redux';
+import { useSelector , useDispatch } from 'react-redux';
 import LogoutIcon from '@mui/icons-material/Logout';
 import { useNavigate } from 'react-router-dom';
 
 const Topbar = () => {
     const { user } = useSelector(state => state.userReducer)
+    const { isAllPosts } = useSelector(state => state.isAllPostsReducer)
+    const dispatch = useDispatch()
+
     const PUBLIC_FOLDER = process.env.REACT_APP_PUBLIC_FOLDER
     console.log(user)
 
-    const loginClick = () => {
-        console.log(777)
+    const friendsPostsClick = () => {
+        console.log(888888)
+    }
+
+    const allPostsClick = () => {
+        console.log(2222222)
     }
 
 
@@ -35,20 +42,36 @@ const Topbar = () => {
             </div>
             <div className="topbarRight">
                 <div className="topbarLinks">
-                    <span className="topbarLink">Homepage</span>
-                    <span className="topbarLink">Timeline</span>
+                    {isAllPosts ?
+                        <>
+                            <span className="topbarLink" style={{ color: "red" }} onClick={allPostsClick}>All Posts</span>
+                            <span className="topbarLink" style={{ color: "white" }} onClick={friendsPostsClick}>Friend Posts</span>
+                        </>
+                        :
+                        <>
+                            <span className="topbarLink" style={{ color: "white" }} onClick={allPostsClick}>All Posts</span>
+                            <span className="topbarLink" style={{ color: "red" }} onClick={friendsPostsClick}>Friend Posts</span>
+                        </>
+                    }
                 </div>
                 <div className="topbarIcons">
+
                     <div className="topbarIconItem">
-                        <Link to={`/login`} style={{ textDecoration: "none", color : "white" }}>
-                            <LogoutIcon  />
+                        <Link to={`/login`} style={{ textDecoration: "none", color: "white" }}>
+                            <LogoutIcon />
                         </Link>
 
                     </div>
+
+                    <div className="topbarIconItem">
+                        <Link to={`/profile/${user.username}`}>
+                            <img src={user.profilePicture ? PUBLIC_FOLDER + user.profilePicture : PUBLIC_FOLDER + "person/noAvatar.png"} alt="" className="topbarImg" />
+                        </Link>
+
+                    </div>
+
                 </div>
-                <Link to={`/profile/${user.username}`}>
-                    <img src={user.profilePicture ? PUBLIC_FOLDER + user.profilePicture : PUBLIC_FOLDER + "person/noAvatar.png"} alt="" className="topbarImg" />
-                </Link>
+
 
             </div>
         </div>

@@ -24,7 +24,7 @@ const Post = ({ post }) => {
             const res = await GetUser(post)
             setUser(res.data)
         })()
-    }, [post.userId])
+    }, [post])
 
 
     const likeHandler = () => {

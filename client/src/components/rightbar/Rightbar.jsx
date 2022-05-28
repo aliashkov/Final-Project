@@ -10,6 +10,7 @@ import { friendsListUser } from "../../services/friendsApi";
 import { useSelector, useDispatch } from "react-redux";
 import { Add, Remove } from "@mui/icons-material";
 import { followUser, unfollowUser } from "../../services/friendsApi";
+import { FollowUser , UnfollowUser} from "../../actions/userAction"
 
 export default function Rightbar({ user }) {
 
@@ -42,10 +43,10 @@ export default function Rightbar({ user }) {
     try {
       if (followed) {
         await unfollowUser(user._id, currentUser._id)
-        dispatch({ type: "UNFOLLOW_USER", payload: user._id });
+        dispatch(UnfollowUser(user._id));
       } else {
         await followUser(user._id, currentUser._id)
-        dispatch({ type: "FOLLOW_USER", payload: user._id });
+        dispatch(FollowUser(user._id));
       }
       setFollowed(!followed);
     } catch (err) {
