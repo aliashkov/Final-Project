@@ -5,6 +5,7 @@ import { Link } from "react-router-dom"
 import { useSelector , useDispatch } from 'react-redux';
 import LogoutIcon from '@mui/icons-material/Logout';
 import { useNavigate } from 'react-router-dom';
+import { AllPosts, FriendsPosts } from '../../actions/isAllPostsAction';
 
 const Topbar = () => {
     const { user } = useSelector(state => state.userReducer)
@@ -15,11 +16,11 @@ const Topbar = () => {
     console.log(user)
 
     const friendsPostsClick = () => {
-        console.log(888888)
+        dispatch(FriendsPosts())
     }
 
     const allPostsClick = () => {
-        console.log(2222222)
+        dispatch(AllPosts())
     }
 
 
