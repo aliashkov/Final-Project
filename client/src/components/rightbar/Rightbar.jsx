@@ -2,9 +2,7 @@ import "./rightbar.css";
 import { Users } from "../../data";
 import Friends from "../friends/Friends";
 import { useEffect } from "react";
-import axios from "axios";
 import { useState } from "react";
-import { Link } from "react-router-dom";
 import { FriendsList } from "../friendList/FriendList";
 import { friendsListUser } from "../../services/friendsApi";
 import { useSelector, useDispatch } from "react-redux";
@@ -24,7 +22,7 @@ export default function Rightbar({ user }) {
 
   useEffect(() => {
     setFollowed(currentUser.followings.includes(user?._id))
-  }, [user]);
+  }, [currentUser.followings, user]);
 
   useEffect(() => {
     const getFriends = async () => {

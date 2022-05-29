@@ -1,35 +1,30 @@
-import React, { useRef, useState } from 'react';
+import React, { useState } from 'react';
 import './share.css'
 import { PermMedia, Cancel } from '@mui/icons-material';
 import { useSelector } from 'react-redux';
 import { UploadFile } from '../../services/uploadApi';
 import { addPost } from '../../services/postsApi';
-import axios from 'axios'
-import jwt_decode from "jwt-decode";
 import { useDispatch } from 'react-redux';
-import { AllPosts, FriendsPosts , AmountAddedPosts } from '../../actions/isAllPostsAction';
+import { AmountAddedPosts } from '../../actions/isAllPostsAction';
 
 
 
 const Share = () => {
 
     const { user } = useSelector(state => state.userReducer)
-    const PUBLIC_FOLDER = process.env.REACT_APP_PUBLIC_FOLDER
-    const description = useRef()
-    const [file, setFile] = useState(null)
+    const PUBLIC_FOLDER = process.env.REACT_APP_PUBLIC_FOLDER;
+    const [file, setFile] = useState(null);
+    const [description, setDescription] = useState("")
     const dispatch = useDispatch();
-    console.log(user)
     
-
-
     const submitHandler = async (e) => {
         e.preventDefault();
         const newPost = {
             userId: user._id,
-            description: description.current.value,
+            description: description
         };
+        const data = new FormData();
         if (file) {
-            const data = new FormData();
             const fileName = Date.now() + file.name;
             data.append("name", fileName);
             data.append("file", file);
@@ -40,7 +35,10 @@ const Share = () => {
         }
         try {
             await addPost(newPost)
-            await dispatch(AmountAddedPosts())
+            dispatch(AmountAddedPosts())
+            setFile(null)
+            setDescription("")
+            document.getElementById("shareInputId").value = "";
             //window.location.reload()
         } catch (err) { }
     };
@@ -54,7 +52,8 @@ const Share = () => {
                     <input
                         placeholder='Input your thoughts'
                         className="shareInput"
-                        ref={description}
+                        id="shareInputId"
+                        onChange={e => setDescription(e.target.value)} 
                     />
                 </div>
                 <hr className="shareHr" />
