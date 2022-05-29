@@ -10,8 +10,7 @@ const Feed = ({ username }) => {
     const [posts, setPosts] = useState([])
     const { user } = useSelector(state => state.userReducer)
     const { isAllPosts } = useSelector(state => state.isAllPostsReducer)
-    console.log(isAllPosts)
-    console.log(username)
+    const { amountAddedPosts} = useSelector(state => state.isAllPostsReducer)
 
     useEffect(() => {
         (async () => {
@@ -22,7 +21,7 @@ const Feed = ({ username }) => {
             }));
         })()
 
-    }, [username, user, isAllPosts])
+    }, [username, user, isAllPosts, amountAddedPosts])
 
 
     return (

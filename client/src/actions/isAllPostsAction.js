@@ -5,3 +5,7 @@ export const AllPosts = () => ({
 export const FriendsPosts = () => ({
     type: "FRIENDS_POSTS",
 });
+
+export const AmountAddedPosts = () => ({
+    type: "ADDED_POST",
+});

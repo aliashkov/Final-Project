@@ -1,5 +1,6 @@
 const defaultStore = {
     isAllPosts: false,
+    amountAddedPosts: 0,
 }
 
 
@@ -13,6 +14,8 @@ export const isAllPostsReducer = (state = defaultStore, action) => {
             return {
                 isAllPosts: false,
             };
+        case "ADDED_POST":
+            return { ...state, amountAddedPosts: state.amountAddedPosts + 1 }
         default:
             return state;
     }

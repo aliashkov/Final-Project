@@ -7,6 +7,7 @@ import { addPost } from '../../services/postsApi';
 import axios from 'axios'
 import jwt_decode from "jwt-decode";
 import { useDispatch } from 'react-redux';
+import { AllPosts, FriendsPosts , AmountAddedPosts } from '../../actions/isAllPostsAction';
 
 
 
@@ -16,7 +17,9 @@ const Share = () => {
     const PUBLIC_FOLDER = process.env.REACT_APP_PUBLIC_FOLDER
     const description = useRef()
     const [file, setFile] = useState(null)
-    const dispatch = useDispatch()
+    const dispatch = useDispatch();
+    console.log(user)
+    
 
 
     const submitHandler = async (e) => {
@@ -37,7 +40,8 @@ const Share = () => {
         }
         try {
             await addPost(newPost)
-            window.location.reload()
+            await dispatch(AmountAddedPosts())
+            //window.location.reload()
         } catch (err) { }
     };
 
