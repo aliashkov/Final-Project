@@ -22,6 +22,7 @@ export const Editing = () => {
     const [file, setFile] = useState(null);
     const navigate = useNavigate();
     const dispatch = useDispatch()
+    console.log(user)
 
     const submitHandler = async (e) => {
         e.preventDefault();
