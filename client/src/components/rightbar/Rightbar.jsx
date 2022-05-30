@@ -8,7 +8,8 @@ import { friendsListUser } from "../../services/friendsApi";
 import { useSelector, useDispatch } from "react-redux";
 import { Add, Remove } from "@mui/icons-material";
 import { followUser, unfollowUser } from "../../services/friendsApi";
-import { FollowUser , UnfollowUser} from "../../actions/userAction"
+import { FollowUser, UnfollowUser } from "../../actions/userAction"
+import { useNavigate } from "react-router-dom";
 
 export default function Rightbar({ user }) {
 
@@ -19,6 +20,7 @@ export default function Rightbar({ user }) {
   console.log(user)
   const { user: currentUser } = useSelector(state => state.userReducer)
   console.log(currentUser)
+  const navigate = useNavigate()
 
   useEffect(() => {
     setFollowed(currentUser.followings.includes(user?._id))
@@ -37,31 +39,28 @@ export default function Rightbar({ user }) {
   }, [user]);
 
 
+  const navigateClick = () => {
+    navigate('/editing');
+  }
+
   const handleClick = async () => {
     try {
       if (followed) {
         await unfollowUser(user._id, currentUser._id)
-        //dispatch(UnfollowUser(user._id));
+        dispatch(UnfollowUser(user._id));
         localStorage.setItem("user", JSON.stringify({
           ...currentUser,
           followings: currentUser.followings.filter(
             (following) => following !== user._id
           ),
-
-
-      }))
-
-
-
-      
-
+        }))
       } else {
         await followUser(user._id, currentUser._id)
-        //dispatch(FollowUser(user._id));
+        dispatch(FollowUser(user._id));
         localStorage.setItem("user", JSON.stringify({
           ...currentUser,
-          followings : [...currentUser.followings, user._id]
-      }))
+          followings: [...currentUser.followings, user._id]
+        }))
       }
       setFollowed(!followed);
     } catch (err) {
@@ -103,6 +102,14 @@ export default function Rightbar({ user }) {
               <button className="rightbarFollowButton" onClick={handleClick}>
                 {followed ? "Unfollow" : "Follow"}
                 {followed ? <Remove /> : <Add />}
+              </button>
+            </div>
+
+          )}
+          {user.username === currentUser.username && (
+            <div className="rightbarContainerButton">
+              <button className="rightbarFollowButton" onClick={navigateClick}>
+                Change Data
               </button>
             </div>
 
