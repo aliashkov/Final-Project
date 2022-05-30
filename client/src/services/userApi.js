@@ -10,5 +10,9 @@ export const GetProfileUser = async (username) => {
     return res
 }
 
+export const changeUser  = async (editUser , userId) => {
+    const res = await axios.put(`http://localhost:8000/api/users/${userId}`, editUser);
+    return res
+}
 
 

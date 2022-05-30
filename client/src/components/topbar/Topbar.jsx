@@ -11,6 +11,7 @@ const Topbar = () => {
     const { user } = useSelector(state => state.userReducer)
     const { isAllPosts } = useSelector(state => state.isAllPostsReducer)
     const dispatch = useDispatch()
+    
 
     const PUBLIC_FOLDER = process.env.REACT_APP_PUBLIC_FOLDER
     console.log(user)

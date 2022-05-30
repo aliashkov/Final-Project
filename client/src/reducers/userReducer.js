@@ -19,11 +19,13 @@ export const userReducer = (state = defaultStore, action) => {
         };
       case "FOLLOW_USER":
         return {
+          
           ...state,
           user: {
             ...state.user,
             followings: [...state.user.followings, action.payload],
           },
+          
         };
       case "UNFOLLOW_USER":
         return {

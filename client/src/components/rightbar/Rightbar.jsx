@@ -41,10 +41,27 @@ export default function Rightbar({ user }) {
     try {
       if (followed) {
         await unfollowUser(user._id, currentUser._id)
-        dispatch(UnfollowUser(user._id));
+        //dispatch(UnfollowUser(user._id));
+        localStorage.setItem("user", JSON.stringify({
+          ...currentUser,
+          followings: currentUser.followings.filter(
+            (following) => following !== user._id
+          ),
+
+
+      }))
+
+
+
+      
+
       } else {
         await followUser(user._id, currentUser._id)
-        dispatch(FollowUser(user._id));
+        //dispatch(FollowUser(user._id));
+        localStorage.setItem("user", JSON.stringify({
+          ...currentUser,
+          followings : [...currentUser.followings, user._id]
+      }))
       }
       setFollowed(!followed);
     } catch (err) {
@@ -100,7 +117,7 @@ export default function Rightbar({ user }) {
             </div>
             <div className="rightbarInfoItem">
               <span className="rightbarInfoKey">Country:</span>
-              <span className="rightbarInfoValue">{user.from}</span>
+              <span className="rightbarInfoValue">{user.country}</span>
             </div>
             <div className="rightbarInfoItem">
               <span className="rightbarInfoKey">Relationship:</span>
