@@ -8,6 +8,7 @@ import { useSelector } from 'react-redux';
 import { UploadFile } from '../../services/uploadApi';
 import { changeUser } from '../../services/userApi';
 import { useDispatch } from 'react-redux';
+import { LoginSuccessUser } from '../../actions/userAction';
 
 export const Editing = () => {
     const PUBLIC_FOLDER = process.env.REACT_APP_PUBLIC_FOLDER
@@ -26,10 +27,11 @@ export const Editing = () => {
         e.preventDefault();
         const editUser = {
             userId: user._id,
+            username : username.current.value,
             city : city.current.value,
             country : country.current.value,
             password : password,
-            passwordConfirm : passwordConfirm
+            passwordConfirm : passwordConfirm,
         };
         const data = new FormData();
         if (file) {
@@ -47,6 +49,7 @@ export const Editing = () => {
                 ...user,
                 ...editUser
             }))
+            dispatch(LoginSuccessUser({...user,...editUser}))
             navigate('/');
            
         } catch (err) { }
@@ -79,6 +82,7 @@ export const Editing = () => {
                                     <img className='editingImg' src={PUBLIC_FOLDER + "person/noAvatar.png"} alt="" />
                                 </div>
                             )}
+                            <input placeholder="name" ref={username} className="editingInput" />
                             <input placeholder="City" ref={city} className="editingInput" />
                             <input placeholder="Country" ref={country} className="editingInput" />
                             <input placeholder="Password" required minLength="6" onChange={e => setPassword(e.target.value)} type="password" className="editingInput" />
