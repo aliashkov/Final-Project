@@ -14,6 +14,7 @@ const Post = ({ post }) => {
     const PUBLIC_FOLDER = process.env.REACT_APP_PUBLIC_FOLDER
     const [user, setUser] = useState({})
     const { user: currentUser } = useSelector(state => state.userReducer)
+    
 
     useEffect(() => {
         setIsLiked(post.likes.includes(currentUser._id))
@@ -24,7 +25,7 @@ const Post = ({ post }) => {
             const res = await GetUser(post)
             setUser(res.data)
         })()
-    }, [post.userId])
+    }, [post])
 
 
     const likeHandler = () => {

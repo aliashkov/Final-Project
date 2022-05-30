@@ -16,13 +16,10 @@ const Login = () => {
     const { isFetching} = useSelector(state => state.authReducer)
     const { user} = useSelector(state => state.userReducer)
     const navigate = useNavigate();
+    localStorage.setItem("user", null)
     
     
     const handleClick = (e) => {
-        e.preventDefault();
-    };
-
-    const loginClick = (e) => {
         e.preventDefault();
         loginInit(
             { email: email.current.value, password: password.current.value },
@@ -30,6 +27,11 @@ const Login = () => {
         );
         
         navigate('/');
+    };
+
+    const loginClick = (e) => {
+        e.preventDefault();
+
     };
 
     const registerClick = (e) => {
@@ -50,7 +52,7 @@ const Login = () => {
                     <form className="loginBox" onSubmit={handleClick}>
                         <input placeholder="Email" type="email" required className="loginInput" ref={email} />
                         <input placeholder="Password" required minLength="6" type="password" className="loginInput" ref={password} />
-                        <button className="loginButton"  onClick={loginClick} disabled={isFetching}>
+                        <button className="loginButton" type='submit' disabled={isFetching}>
 
                             {isFetching ? (
                                 <CircularProgress size='20px' style={{ 'color': 'yellow'}} />

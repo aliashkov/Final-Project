@@ -2,14 +2,13 @@ import "./rightbar.css";
 import { Users } from "../../data";
 import Friends from "../friends/Friends";
 import { useEffect } from "react";
-import axios from "axios";
 import { useState } from "react";
-import { Link } from "react-router-dom";
 import { FriendsList } from "../friendList/FriendList";
 import { friendsListUser } from "../../services/friendsApi";
 import { useSelector, useDispatch } from "react-redux";
 import { Add, Remove } from "@mui/icons-material";
 import { followUser, unfollowUser } from "../../services/friendsApi";
+import { FollowUser , UnfollowUser} from "../../actions/userAction"
 
 export default function Rightbar({ user }) {
 
@@ -23,7 +22,7 @@ export default function Rightbar({ user }) {
 
   useEffect(() => {
     setFollowed(currentUser.followings.includes(user?._id))
-  }, [user]);
+  }, [currentUser.followings, user]);
 
   useEffect(() => {
     const getFriends = async () => {
@@ -42,10 +41,10 @@ export default function Rightbar({ user }) {
     try {
       if (followed) {
         await unfollowUser(user._id, currentUser._id)
-        dispatch({ type: "UNFOLLOW_USER", payload: user._id });
+        dispatch(UnfollowUser(user._id));
       } else {
         await followUser(user._id, currentUser._id)
-        dispatch({ type: "FOLLOW_USER", payload: user._id });
+        dispatch(FollowUser(user._id));
       }
       setFollowed(!followed);
     } catch (err) {

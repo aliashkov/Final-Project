@@ -10,9 +10,6 @@ const refresh = (req, res) => {
 
     //send error if there is no token or it's invalid
     if (!refreshToken) return res.status(401).json("You are not authenticated!");
-    if (!refreshTokens.includes(refreshToken)) {
-        return res.status(403).json("Refresh token is not valid!");
-    }
     jwt.verify(refreshToken, "myRefreshSecretKey", (err, user) => {
         err && console.log(err);
         refreshTokens = refreshTokens.filter((token) => token !== refreshToken);
@@ -32,13 +29,13 @@ const refresh = (req, res) => {
 };
 
 const generateAccessToken = (user) => {
-    return jwt.sign({ id: user.id, isAdmin: user.isAdmin }, "mySecretKey", {
-        expiresIn: "5s",
+    return jwt.sign({ _id: user._id, isAdmin: user.isAdmin }, "mySecretKey", {
+        expiresIn: "1s",
     });
 };
 
 const generateRefreshToken = (user) => {
-    return jwt.sign({ id: user.id, isAdmin: user.isAdmin }, "myRefreshSecretKey");
+    return jwt.sign({ _id: user._id, isAdmin: user.isAdmin }, "myRefreshSecretKey");
 };
 
 

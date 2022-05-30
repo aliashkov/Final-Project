@@ -80,6 +80,17 @@ const getTimelinedPosts = async (req, res) => {
     }
 }
 
+const getTimelinedPostsAll = async (req, res) => {
+    try {
+        //const user = await User.find({});
+        const posts = await Post.find({});
+        res.status(200).json(posts);
+    } catch (err) {
+        res.status(500).json(err);
+    }
+}
+
+
 const getAllPosts = async (req, res) => {
     try {
         const user = await User.findOne({ username: req.params.username });
@@ -98,5 +109,6 @@ module.exports = {
     likePost,
     getPost,
     getTimelinedPosts,
+    getTimelinedPostsAll,
     getAllPosts
 }

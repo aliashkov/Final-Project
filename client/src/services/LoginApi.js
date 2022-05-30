@@ -1,17 +1,21 @@
 import axios from "axios"
+import { LoginStart, LoginSuccess , LoginFailure } from "../actions/authAction";
+import { LoginStartUser, LoginSuccessUser , LoginFailureUser } from "../actions/userAction";
+
+
 
 export const loginInit = async (userCredential, dispatch) => {
-    dispatch({ type: "LOGIN_START" })
-    dispatch({ type: "LOGIN_START_USER" })
+    dispatch(LoginStart());
+    dispatch(LoginStartUser())
     try {
         const res = await axios.post('http://localhost:8000/api/auth/login', userCredential)
         localStorage.setItem("user", JSON.stringify(res.data))
-        dispatch({ type: "LOGIN_SUCCESS_USER", payload: res.data })
-        dispatch({ type: "LOGIN_SUCCESS"})
+        dispatch(LoginSuccessUser(res.data))
+        dispatch(LoginSuccess())
 
 
     } catch (err) {
-        dispatch({ type: "LOGIN_FAILURE_USER"})
-        dispatch({ type: "LOGIN_FAILURE", payload: err })
+        dispatch(LoginFailureUser())
+        dispatch(LoginFailure(err))
     }
 }
