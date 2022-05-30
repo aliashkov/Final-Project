@@ -81,7 +81,7 @@ const login = async (req, res) => {
                     isAdmin : user.isAdmin,
                     description : user.description,
                     city : user.city,
-                    from : user.from,
+                    country : user.country,
                     relationship : user.relationship,
                     accessToken,
                     refreshToken,

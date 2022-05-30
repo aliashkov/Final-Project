@@ -24,6 +24,8 @@ const AppRoutes = (props) => {
                 <Route path="/register" element={
                     <RequireAuth><Register /> </RequireAuth>
                 } />
+                <Route path="/editing" element={  user ? <Profile /> : <Login />} />
+
             </Routes>
         </>
     );

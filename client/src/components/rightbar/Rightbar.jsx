@@ -56,12 +56,12 @@ export default function Rightbar({ user }) {
   const HomeRightbar = () => {
     return (
       <>
-        <h4 className="rightbarTitle">Your Friends</h4>
+{/*         <h4 className="rightbarTitle"></h4>
         <ul className="rightbarFriendList">
           {Users.map((u) => (
             <Friends key={u.id} user={u} />
           ))}
-        </ul>
+        </ul> */}
       </>
     );
   };
@@ -100,7 +100,7 @@ export default function Rightbar({ user }) {
             </div>
             <div className="rightbarInfoItem">
               <span className="rightbarInfoKey">Country:</span>
-              <span className="rightbarInfoValue">{user.from}</span>
+              <span className="rightbarInfoValue">{user.country}</span>
             </div>
             <div className="rightbarInfoItem">
               <span className="rightbarInfoKey">Relationship:</span>
