@@ -4,7 +4,7 @@ import "../filter/filter.css"
 import ExitToAppIcon from "@mui/icons-material/ExitToApp";
 
 
-export const Filter = ({ user , hiddenString }) => {
+export const Filter = ({ findUser , hiddenString }) => {
     const PUBLIC_FOLDER = process.env.REACT_APP_PUBLIC_FOLDER
 
     const onLinkClick = () => {
@@ -15,20 +15,20 @@ export const Filter = ({ user , hiddenString }) => {
         <>
             <div className="userFind">
                 <div className="userTopLeft">
-                    <Link to={`/profile/${user.username}`} onClick={onLinkClick}>
+                    <Link to={`/profile/${findUser.username}`} onClick={onLinkClick}>
                         <img
                             className="userProfileImg"
-                            src={user.profilePicture ? PUBLIC_FOLDER + user.profilePicture : PUBLIC_FOLDER + "person/noAvatar.png"}
+                            src={findUser.profilePicture ? PUBLIC_FOLDER + findUser.profilePicture : PUBLIC_FOLDER + "person/noAvatar.png"}
                             alt=""
                         />
                     </Link>
 
                     <span className="userUsername">
-                        {user.username}
+                        {findUser.username}
                     </span>
                 </div>
                 <div className="userTopRight">
-                    <Link to={`/profile/${user.username}`} onClick={onLinkClick}>
+                    <Link to={`/profile/${findUser.username}`} onClick={onLinkClick}>
                         <ExitToAppIcon />
                     </Link>
 

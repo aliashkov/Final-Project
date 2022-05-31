@@ -70,16 +70,14 @@ const Topbar = () => {
                 </div>
             </div>
 
+             
             <div className="usersList">
                 {searchUser !== "" ?
-                    users.map((user, index) => ((index < 5)
-                        ? <Filter hiddenString={hiddenSearch} key={user._id}  user={user} />
-                        : <></>
-
-
+                    
+                    users.slice(0, 5).map((findUser, index) => (
+                       <Filter hiddenString={hiddenSearch} key={findUser._id}  findUser={findUser} />
                     ))
-                    : <></>
-                }
+                : <></>}
             </div>
 
             <div className="topbarRight">
