@@ -30,7 +30,7 @@ const refresh = (req, res) => {
 
 const generateAccessToken = (user) => {
     return jwt.sign({ _id: user._id, isAdmin: user.isAdmin }, "mySecretKey", {
-        expiresIn: "15m",
+        expiresIn: "1s",
     });
 };
 
