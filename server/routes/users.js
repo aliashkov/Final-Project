@@ -12,6 +12,10 @@ router.delete('/:id', usersController.deleteUser)
 
 router.get('/', usersController.findUser)
 
+//Find Users
+
+router.get('/all', usersController.findUsers)
+
 //Get Friends 
 
 router.get("/friends/:userId", usersController.getFriends);

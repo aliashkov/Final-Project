@@ -9,6 +9,7 @@ import { UploadFile } from '../../services/uploadApi';
 import { changeUser } from '../../services/userApi';
 import { useDispatch } from 'react-redux';
 import { LoginSuccessUser } from '../../actions/userAction';
+import { changeFilterPosts } from '../../actions/findPostsAction';
 
 export const Editing = () => {
     const PUBLIC_FOLDER = process.env.REACT_APP_PUBLIC_FOLDER
@@ -51,6 +52,7 @@ export const Editing = () => {
                 ...editUser
             }))
             dispatch(LoginSuccessUser({...user,...editUser}))
+            dispatch(changeFilterPosts(""))
             navigate('/');
            
         } catch (err) { }

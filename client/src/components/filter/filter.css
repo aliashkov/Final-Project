@@ -1,0 +1,46 @@
+.usersList {
+    position: absolute;
+    width: 42%;
+    left :26%;
+    top: 50px;
+
+}
+
+.user{
+    color: black;
+}
+
+.userFind {
+    padding: 10px;
+    background-color: white;
+    z-index: 999999;
+    border-radius: 10px;
+    -webkit-box-shadow: 0px 0px 16px -8px rgba(0, 0, 0, 0.7);
+    box-shadow: 0px 0px 16px -8px rgba(0, 0, 0, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.userTopLeft {
+    display: flex;
+    align-items: center;
+}
+
+.userTopRight {
+    display: flex;
+    align-items: center;
+}
+
+.userProfileImg {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    object-fit: cover;
+ }
+ 
+ .userUsername {
+     font-size: 15px;
+     font-weight: 500;
+     margin: 0 10px;
+ }

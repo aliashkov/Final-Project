@@ -9,3 +9,8 @@ export const FriendsPosts = () => ({
 export const AmountAddedPosts = () => ({
     type: "ADDED_POST",
 });
+
+export const NulifyPosts = () => ({
+    type: "NULIFY_POST",
+});
+
