@@ -72,12 +72,6 @@ export default function Rightbar({ user }) {
   const HomeRightbar = () => {
     return (
       <>
-        <h4 className="rightbarTitle">Your Friends</h4>
-        <ul className="rightbarFriendList">
-          {Users.map((u) => (
-            <Friends key={u.id} user={u} />
-          ))}
-        </ul>
       </>
     );
   };

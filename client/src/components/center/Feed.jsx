@@ -4,6 +4,7 @@ import Share from '../share/Share';
 import Post from '../post/Post';
 import { getProfilePosts, getTimelinePosts, getAllPosts } from '../../services/postsApi';
 import { useSelector } from 'react-redux';
+import { GetUsers } from '../../services/userApi';
 
 
 const Feed = ({ username }) => {
@@ -19,6 +20,11 @@ const Feed = ({ username }) => {
             setPosts(res.data.sort((post1, post2) => {
                 return new Date(post2.createdAt) - new Date(post1.createdAt)
             }));
+            //const users = await GetUsers()
+            //const result = posts.map(post => ({ ...post, ...users.find(user => post.userId === user._id) }));
+            //setPosts(result)
+            //console.log(result)
+            //console.log([...posts].filter(post => post.description.toLowerCase().includes(searchString.toLowerCase())))
         })()
 
     }, [username, user, isAllPosts, amountAddedPosts])

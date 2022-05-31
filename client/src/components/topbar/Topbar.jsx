@@ -1,20 +1,40 @@
-import React from 'react';
+import React, { useState } from 'react';
 import "./topbar.css"
 import { Search, Person, Chat, Notifications } from '@mui/icons-material'
 import { Link } from "react-router-dom"
-import { useSelector , useDispatch } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import LogoutIcon from '@mui/icons-material/Logout';
 import { useNavigate } from 'react-router-dom';
 import { AllPosts, FriendsPosts } from '../../actions/isAllPostsAction';
+import { changeFilterPosts } from '../../actions/findPostsAction';
+import { useEffect } from 'react';
+import { GetUsers } from '../../services/userApi';
+import { MoreVert } from '@mui/icons-material';
+import ExitToAppIcon from '@mui/icons-material/ExitToApp';
+import { Filter } from '../filter/Filter';
+
 
 const Topbar = () => {
     const { user } = useSelector(state => state.userReducer)
     const { isAllPosts } = useSelector(state => state.isAllPostsReducer)
     const dispatch = useDispatch()
-    
+    const navigate = useNavigate()
+    const [searchUser, setSearchUser] = useState("")
+
+
+    const [users, setUsers] = useState([])
+
+    useEffect(() => {
+        (async () => {
+            const allUsers = await GetUsers()
+            setUsers([...allUsers].filter(user => user.username.toLowerCase().includes(searchUser.toLowerCase())))
+
+        })()
+
+    }, [searchUser])
+
 
     const PUBLIC_FOLDER = process.env.REACT_APP_PUBLIC_FOLDER
-    console.log(user)
 
     const friendsPostsClick = () => {
         dispatch(FriendsPosts())
@@ -22,6 +42,11 @@ const Topbar = () => {
 
     const allPostsClick = () => {
         dispatch(AllPosts())
+    }
+
+    const hiddenSearch = () => {
+        setSearchUser("");
+        setUsers([])
     }
 
 
@@ -37,11 +62,26 @@ const Topbar = () => {
                 <div className="searchbar">
                     <Search className="searchIcon" />
                     <input
-                        placeholder="Search for friend, post or video"
+                        value={searchUser}
+                        onChange={e => setSearchUser(e.target.value)}
+                        placeholder="Search User"
                         className="searchInput"
                     />
                 </div>
             </div>
+
+            <div className="usersList">
+                {searchUser !== "" ?
+                    users.map((user, index) => ((index < 5)
+                        ? <Filter hiddenString={hiddenSearch} key={user._id}  user={user} />
+                        : <></>
+
+
+                    ))
+                    : <></>
+                }
+            </div>
+
             <div className="topbarRight">
                 <div className="topbarLinks">
                     {isAllPosts ?

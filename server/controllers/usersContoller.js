@@ -44,17 +44,26 @@ const findUser = async (req, res) => {
     const userId = req.query.userId;
     const username = req.query.username;
     try {
-      const user = userId
-        ? await User.findById(userId)
-        : await User.findOne({ username: username });
-      const { password, updatedAt, ...other } = user._doc;
-      res.status(200).json(other);
+        const user = userId
+            ? await User.findById(userId)
+            : await User.findOne({ username: username });
+        const { password, updatedAt, ...other } = user._doc;
+        res.status(200).json(other);
     } catch (err) {
-      res.status(500).json(err);
+        res.status(500).json(err);
     }
 }
 
-const getFriends = async (req , res) => {
+const findUsers = async (req, res) => {
+    try {
+        const user = await User.find({});
+        res.status(200).json(user);
+    } catch (err) {
+        res.status(500).json(err);
+    }
+}
+
+const getFriends = async (req, res) => {
     try {
         const user = await User.findById(req.params.userId);
         const friends = await Promise.all(
@@ -123,5 +132,6 @@ module.exports = {
     findUser,
     followUser,
     unfollowUser,
-    getFriends
+    getFriends,
+    findUsers
 }
