@@ -16,6 +16,8 @@ export const isAllPostsReducer = (state = defaultStore, action) => {
             };
         case "ADDED_POST":
             return { ...state, amountAddedPosts: state.amountAddedPosts + 1 }
+        case "NULIFY_POST":
+            return { ...state, amountAddedPosts: 0 }
         default:
             return state;
     }

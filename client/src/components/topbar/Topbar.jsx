@@ -5,7 +5,7 @@ import { Link } from "react-router-dom"
 import { useSelector, useDispatch } from 'react-redux';
 import LogoutIcon from '@mui/icons-material/Logout';
 import { useNavigate } from 'react-router-dom';
-import { AllPosts, FriendsPosts } from '../../actions/isAllPostsAction';
+import { AllPosts, AmountAddedPosts, FriendsPosts , NulifyPosts } from '../../actions/isAllPostsAction';
 import { changeFilterPosts } from '../../actions/findPostsAction';
 import { useEffect } from 'react';
 import { GetUsers } from '../../services/userApi';
@@ -36,12 +36,16 @@ const Topbar = () => {
 
     const PUBLIC_FOLDER = process.env.REACT_APP_PUBLIC_FOLDER
 
-    const friendsPostsClick = () => {
+    const friendsPostsClick = (e) => {
+        e.preventDefault()
         dispatch(FriendsPosts())
+        dispatch(NulifyPosts())
     }
 
-    const allPostsClick = () => {
+    const allPostsClick = (e) => {
+        e.preventDefault()
         dispatch(AllPosts())
+        dispatch(NulifyPosts())
     }
 
     const hiddenSearch = () => {

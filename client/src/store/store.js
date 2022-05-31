@@ -10,7 +10,7 @@ const rootReducer = combineReducers({
     friendsReducer,
     userReducer,
     isAllPostsReducer,
-    findPostsReducer
+    findPostsReducer,
 })
 
 

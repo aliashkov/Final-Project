@@ -13,6 +13,8 @@ const Feed = ({ username }) => {
     const { isAllPosts } = useSelector(state => state.isAllPostsReducer)
     const { amountAddedPosts} = useSelector(state => state.isAllPostsReducer)
 
+    console.log(amountAddedPosts)
+
     useEffect(() => {
         (async () => {
             const res = username ? await getProfilePosts(username) : 
