@@ -84,11 +84,11 @@ const Post = ({ post }) => {
 
 
     
-    const submitHandler2 = async (e) => {
+    const submitHandler = async (e) => {
         e.preventDefault();
         if (description !== "") {
             const newPost = {
-                userId: user._id,
+                userId: currentUser._id,
                 description: description
             };
             const data = new FormData();
@@ -97,8 +97,9 @@ const Post = ({ post }) => {
                 data.append("name", fileName);
                 data.append("file", file);
                 newPost.img = fileName;
+                console.log(newPost.img)
                 try {
-                    await UploadFile(data , user)
+                    await UploadFile(data , currentUser)
                 } catch (err) { }
             }
             try {
@@ -150,33 +151,33 @@ const Post = ({ post }) => {
                     )}
                 </div>
                 {modifyData ?
-                    <div className='share2'>
-                        <div className="share2Wrapper">
-                            <div className="share2Top">
-                                <img className='share2ProfileImg' src={user.profilePicture ? PUBLIC_FOLDER + user.profilePicture : PUBLIC_FOLDER + "person/noAvatar.png"} alt="" />
+                    <div className='share'>
+                        <div className="shareWrapper">
+                            <div className="shareTop">
+                                <img className='shareProfileImg' src={user.profilePicture ? PUBLIC_FOLDER + user.profilePicture : PUBLIC_FOLDER + "person/noAvatar.png"} alt="" />
                                 <input
                                     placeholder='Input your thoughts'
-                                    className="share2Input"
-                                    id="share2InputId"
+                                    className="shareInput"
+                                    id="shareInputId"
                                     onChange={e => setDescription(e.target.value)}
                                 />
                             </div>
-                            <hr className="share2Hr" />
+                            <hr className="shareHr" />
                             {file && (
-                                <div className="share2ImgContainer">
-                                    <img className="share2Img" src={URL.createObjectURL(file)} alt="" />
-                                    <Cancel className="share2CancelImg" onClick={() => setFile(null)} />
+                                <div className="shareImgContainer">
+                                    <img className="shareImg" src={URL.createObjectURL(file)} alt="" />
+                                    <Cancel className="shareCancelImg" onClick={() => setFile(null)} />
                                 </div>
                             )}
-                            <form className="share2Bottom" onSubmit={submitHandler2}>
-                                <div className="share2Options">
+                            <form className="shareBottom" onSubmit={submitHandler}>
+                                <div className="shareOptions">
                                     <label htmlFor="file" className="shareOption">
                                         <PermMedia htmlColor='tomato' className='shareIcon' />
-                                        <span className='share2OptionText'>Photo</span>
-                                        <input style={{ display: "none" }} type="file" id="file" accept=".png,.jpeg,.jpg" onChange={(e) => setFile(e.target.files[0])} />
+                                        <span className='shareOptionText'>Photo</span>
+                                        <input type="file" id="file" accept=".png,.jpeg,.jpg" onChange={(e) => setFile(e.target.files[0])} />
                                     </label>
                                 </div>
-                                <button className='share2Button' type="submit"> Share </button>
+                                <button className='shareButton' type="submit"> Share </button>
                             </form>
                         </div>
                     </div>
