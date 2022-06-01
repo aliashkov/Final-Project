@@ -9,14 +9,14 @@ import { AmountAddedPosts } from '../../actions/isAllPostsAction';
 
 
 
-const Share = () => {
-
+const Share = ({ change }) => {
+    console.log(change)
     const { user } = useSelector(state => state.userReducer)
     const PUBLIC_FOLDER = process.env.REACT_APP_PUBLIC_FOLDER;
     const [file, setFile] = useState(null);
     const [description, setDescription] = useState("")
     const dispatch = useDispatch();
-    
+
     const submitHandler = async (e) => {
         e.preventDefault();
         if (description !== "") {
@@ -31,7 +31,7 @@ const Share = () => {
                 data.append("file", file);
                 newPost.img = fileName;
                 try {
-                    await UploadFile(data , user)
+                    await UploadFile(data, user)
                 } catch (err) { }
             }
             try {
@@ -59,7 +59,7 @@ const Share = () => {
                         placeholder='Input your thoughts'
                         className="shareInput"
                         id="shareInputId"
-                        onChange={e => setDescription(e.target.value)} 
+                        onChange={e => setDescription(e.target.value)}
                     />
                 </div>
                 <hr className="shareHr" />
@@ -72,9 +72,17 @@ const Share = () => {
                 <form className="shareBottom" onSubmit={submitHandler}>
                     <div className="shareOptions">
                         <label htmlFor="file" className="shareOption">
-                            <PermMedia htmlColor='tomato' className='shareIcon' />
-                            <span className='shareOptionText'>Photo</span>
-                            <input  type="file" id="file" accept=".png,.jpeg,.jpg" onChange={(e) => setFile(e.target.files[0])} />
+
+                            {change ? (
+                                <input style={{ display: "flex" }} type="file" id="control" accept=".png,.jpeg,.jpg" onChange={(e) => setFile(e.target.files[0])} />
+                            ) :
+                                <>
+                                    <PermMedia htmlColor='tomato' className='shareIcon' />
+                                    <span className='shareOptionText'>Photo</span>
+                                    <input style={{ display: "none" }} type="file" id="file" accept=".png,.jpeg,.jpg" onChange={(e) => setFile(e.target.files[0])} />
+                                </>
+                            }
+
                         </label>
                     </div>
                     <button className='shareButton' type="submit"> Share </button>

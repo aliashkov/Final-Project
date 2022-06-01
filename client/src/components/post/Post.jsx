@@ -108,7 +108,7 @@ const Post = ({ post }) => {
                     )}
                 </div>
                 {modifyData ?
-                    <Share />
+                    <Share change={true}/>
                     : <>
                         <div className="postCenter">
                             <span className="postText">{post?.description}</span>
