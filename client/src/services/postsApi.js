@@ -18,3 +18,7 @@ export const getProfilePosts = async (username) => {
 export const addPost = async (newPost) => {
     return await axios.post("http://localhost:8000/api/posts", newPost);
 }
+
+export const deletePost = async (postId, currentUserId) => {
+    return await axios.delete(`http://localhost:8000/api/posts/${postId}`, { data: { userId: currentUserId } });
+}

@@ -27,6 +27,7 @@ const updateUser = async (req, res) => {
 }
 
 const deleteUser = async (req, res) => {
+    console.log(req.body.userId)
     if (req.body.userId === req.params.id || req.body.isAdmin) {
         try {
             const user = await User.findByIdAndDelete({ _id: req.params.id });
