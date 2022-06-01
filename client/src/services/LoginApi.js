@@ -12,10 +12,9 @@ export const loginInit = async (userCredential, dispatch) => {
         localStorage.setItem("user", JSON.stringify(res.data))
         dispatch(LoginSuccessUser(res.data))
         dispatch(LoginSuccess())
-
-
     } catch (err) {
         dispatch(LoginFailureUser())
         dispatch(LoginFailure(err))
+        alert(err.response.data)
     }
 }

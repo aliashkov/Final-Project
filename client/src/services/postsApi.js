@@ -1,13 +1,11 @@
 import axios from 'axios'
 
 export const getTimelinePosts = async (userId) => {
-    console.log(11111)
     const res = await axios.get(`http://localhost:8000/api/posts/timeline/${userId}`)
     return res
 }
 
 export const getAllPosts = async (userId) => {
-    console.log(6666)
     const res = await axios.get(`http://localhost:8000/api/posts/all/${userId}`)
     return res
 }

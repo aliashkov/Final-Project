@@ -19,28 +19,34 @@ const Share = () => {
     
     const submitHandler = async (e) => {
         e.preventDefault();
-        const newPost = {
-            userId: user._id,
-            description: description
-        };
-        const data = new FormData();
-        if (file) {
-            const fileName = Date.now() + file.name;
-            data.append("name", fileName);
-            data.append("file", file);
-            newPost.img = fileName;
+        if (description !== "") {
+            const newPost = {
+                userId: user._id,
+                description: description
+            };
+            const data = new FormData();
+            if (file) {
+                const fileName = Date.now() + file.name;
+                data.append("name", fileName);
+                data.append("file", file);
+                newPost.img = fileName;
+                try {
+                    await UploadFile(data , user)
+                } catch (err) { }
+            }
             try {
-                await UploadFile(data , user)
+                await addPost(newPost)
+                dispatch(AmountAddedPosts())
+                setFile(null)
+                setDescription("")
+                document.getElementById("shareInputId").value = "";
+                //window.location.reload()
             } catch (err) { }
         }
-        try {
-            await addPost(newPost)
-            dispatch(AmountAddedPosts())
-            setFile(null)
-            setDescription("")
-            document.getElementById("shareInputId").value = "";
-            //window.location.reload()
-        } catch (err) { }
+        else {
+            alert("You must input some data before sending")
+        }
+
     };
 
 

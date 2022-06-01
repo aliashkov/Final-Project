@@ -1,6 +1,7 @@
 const User = require('../models/User')
 const bcrypt = require('bcrypt')
 const jwt = require("jsonwebtoken");
+const { body, validationResult } = require('express-validator');
 
 let refreshTokens = [];
 
@@ -20,7 +21,7 @@ const refresh = (req, res) => {
         refreshTokens.push(newRefreshToken);
 
         res.status(200).json({
-            
+
             accessToken: newAccessToken,
             refreshToken: newRefreshToken,
         });
@@ -41,6 +42,10 @@ const generateRefreshToken = (user) => {
 
 const register = async (req, res) => {
     try {
+        const errors = validationResult(req);
+        if (!errors.isEmpty())
+            return res.status(400).json(errors.errors[0].msg);
+
         //generate new password
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(req.body.password, salt);
@@ -62,6 +67,9 @@ const register = async (req, res) => {
 
 const login = async (req, res) => {
     try {
+        const errors = validationResult(req);
+        if (!errors.isEmpty())
+            return res.status(400).json(errors.errors[0].msg);
         const user = await User.findOne({ email: req.body.email });
         if (!user) {
             res.status(404).json("User not found");
@@ -73,16 +81,16 @@ const login = async (req, res) => {
                 const refreshToken = generateRefreshToken(user);
                 refreshTokens.push(refreshToken);
                 res.json({
-                    _id : user._id,
-                    username : user.username,
-                    profilePicture : user.profilePicture,
-                    followers : user.followers,
-                    followings : user.followings,
-                    isAdmin : user.isAdmin,
-                    description : user.description,
-                    city : user.city,
-                    country : user.country,
-                    relationship : user.relationship,
+                    _id: user._id,
+                    username: user.username,
+                    profilePicture: user.profilePicture,
+                    followers: user.followers,
+                    followings: user.followings,
+                    isAdmin: user.isAdmin,
+                    description: user.description,
+                    city: user.city,
+                    country: user.country,
+                    relationship: user.relationship,
                     accessToken,
                     refreshToken,
                 });

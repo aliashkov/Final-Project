@@ -17,9 +17,8 @@ const Register = () => {
 
     const handleClick = async (e) => {
         e.preventDefault();
-        console.log(passwordConfirm)
-        console.log(passwordConfirm)
         if (password !== passwordConfirm) {
+            alert("Passwords doesn't match")
         } else {
             const user = {
                 username: username.current.value,
@@ -31,7 +30,10 @@ const Register = () => {
                 const res = await registerCall(user)
                 navigate('/login');
             } catch (err) {
-                alert(err)
+                if (err.code === "ERR_BAD_RESPONSE")
+                    alert("This user already exists")
+                else
+                    alert(err.response.data)
             }
         }
     };

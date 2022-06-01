@@ -27,35 +27,46 @@ export const Editing = () => {
 
     const submitHandler = async (e) => {
         e.preventDefault();
-        const editUser = {
-            userId: user._id,
-            username : username.current.value,
-            city : city.current.value,
-            country : country.current.value,
-            password : password,
-            passwordConfirm : passwordConfirm,
-        };
-        const data = new FormData();
-        if (file) {
-            const fileName = Date.now() + file.name;
-            data.append("name", fileName);
-            data.append("file", file);
-            editUser.profilePicture = fileName;
-            try {
-                await UploadFile(data , user)
-            } catch (err) { }
+        if (password !== passwordConfirm) {
+            alert("Passwords doesn't match")
         }
-        try {
-            await changeUser(editUser, user._id)
-            localStorage.setItem("user", JSON.stringify({
-                ...user,
-                ...editUser
-            }))
-            dispatch(LoginSuccessUser({...user,...editUser}))
-            dispatch(changeFilterPosts(""))
-            navigate('/');
-           
-        } catch (err) { }
+        else {
+            const editUser = {
+                userId: user._id,
+                username: username.current.value,
+                city: city.current.value,
+                country: country.current.value,
+                password: password,
+                passwordConfirm: passwordConfirm,
+            };
+            const data = new FormData();
+            if (file) {
+                const fileName = Date.now() + file.name;
+                data.append("name", fileName);
+                data.append("file", file);
+                editUser.profilePicture = fileName;
+                try {
+                    await UploadFile(data, user)
+                } catch (err) { }
+            }
+            try {
+                await changeUser(editUser, user._id)
+                localStorage.setItem("user", JSON.stringify({
+                    ...user,
+                    ...editUser
+                }))
+                dispatch(LoginSuccessUser({ ...user, ...editUser }))
+                dispatch(changeFilterPosts(""))
+                navigate('/');
+
+            } catch (err) {
+                if (err.code === "ERR_BAD_RESPONSE")
+                    alert("This user already exists")
+                else
+                    alert(err.response.data)
+            }
+        }
+
     };
 
     return (
