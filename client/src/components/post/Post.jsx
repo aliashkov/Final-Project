@@ -12,9 +12,6 @@ import { deletePost } from '../../services/postsApi';
 import { AmountAddedPosts } from '../../actions/isAllPostsAction';
 import { useDispatch } from 'react-redux';
 import Share from '../share/Share';
-import { addPost } from '../../services/postsApi';
-import { PermMedia, Cancel } from '@mui/icons-material';
-import { UploadFile } from '../../services/uploadApi';
 
 
 const Post = ({ post }) => {
@@ -27,8 +24,6 @@ const Post = ({ post }) => {
     const { user: currentUser } = useSelector(state => state.userReducer)
     const [clicked, setClicked] = useState(false)
     const [modifyData, setModifyData] = useState(false)
-    const [file, setFile] = useState(null);
-    const [description, setDescription] = useState("")
     const { amountAddedPosts } = useSelector(state => state.isAllPostsReducer)
 
     useEffect(() => {
@@ -82,44 +77,6 @@ const Post = ({ post }) => {
 
     }
 
-
-    
-    const submitHandler = async (e) => {
-        e.preventDefault();
-        if (description !== "") {
-            const newPost = {
-                userId: currentUser._id,
-                description: description
-            };
-            const data = new FormData();
-            if (file) {
-                const fileName = Date.now() + file.name;
-                data.append("name", fileName);
-                data.append("file", file);
-                newPost.img = fileName;
-                console.log(newPost.img)
-                try {
-                    await UploadFile(data , currentUser)
-                } catch (err) { }
-            }
-            try {
-                await addPost(newPost)
-                dispatch(AmountAddedPosts())
-                setFile(null)
-                setDescription("")
-                document.getElementById("shareInputId").value = "";
-                //window.location.reload()
-            } catch (err) { }
-        }
-        else {
-            alert("You must input some data before sending")
-        }
-
-    };
-
-
-
-
     return (
         <div className="post">
             <div className="postWrapper">
@@ -151,36 +108,7 @@ const Post = ({ post }) => {
                     )}
                 </div>
                 {modifyData ?
-                    <div className='share'>
-                        <div className="shareWrapper">
-                            <div className="shareTop">
-                                <img className='shareProfileImg' src={user.profilePicture ? PUBLIC_FOLDER + user.profilePicture : PUBLIC_FOLDER + "person/noAvatar.png"} alt="" />
-                                <input
-                                    placeholder='Input your thoughts'
-                                    className="shareInput"
-                                    id="shareInputId"
-                                    onChange={e => setDescription(e.target.value)}
-                                />
-                            </div>
-                            <hr className="shareHr" />
-                            {file && (
-                                <div className="shareImgContainer">
-                                    <img className="shareImg" src={URL.createObjectURL(file)} alt="" />
-                                    <Cancel className="shareCancelImg" onClick={() => setFile(null)} />
-                                </div>
-                            )}
-                            <form className="shareBottom" onSubmit={submitHandler}>
-                                <div className="shareOptions">
-                                    <label htmlFor="file" className="shareOption">
-                                        <PermMedia htmlColor='tomato' className='shareIcon' />
-                                        <span className='shareOptionText'>Photo</span>
-                                        <input type="file" id="file" accept=".png,.jpeg,.jpg" onChange={(e) => setFile(e.target.files[0])} />
-                                    </label>
-                                </div>
-                                <button className='shareButton' type="submit"> Share </button>
-                            </form>
-                        </div>
-                    </div>
+                    <Share />
                     : <>
                         <div className="postCenter">
                             <span className="postText">{post?.description}</span>

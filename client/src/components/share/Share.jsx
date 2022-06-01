@@ -74,7 +74,7 @@ const Share = () => {
                         <label htmlFor="file" className="shareOption">
                             <PermMedia htmlColor='tomato' className='shareIcon' />
                             <span className='shareOptionText'>Photo</span>
-                            <input style={{ display: "none" }} type="file" id="file" accept=".png,.jpeg,.jpg" onChange={(e) => setFile(e.target.files[0])} />
+                            <input  type="file" id="file" accept=".png,.jpeg,.jpg" onChange={(e) => setFile(e.target.files[0])} />
                         </label>
                     </div>
                     <button className='shareButton' type="submit"> Share </button>
