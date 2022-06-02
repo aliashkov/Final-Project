@@ -20,3 +20,14 @@ export const LoginStartUser = (userCredentials) => ({
     type: "UNFOLLOW_USER",
     payload: userId,
   });
+
+
+  export const RemoveFriend = (userId) => ({
+    type: "REMOVE_FRIEND",
+    payload: userId,
+  });
+  
+  export const AddFriend = (userId) => ({
+    type: "ADD_FRIEND",
+    payload: userId,
+  });

@@ -25,6 +25,12 @@ router.get("/followers/:userId", usersController.getFollowers);
 
 router.get("/followings/:userId", usersController.getFollowings);
 
+
+//Get Friends 
+
+router.get("/friends/:userId", usersController.getFriends);
+
+
 //Follow User
 
 router.put('/:id/follow', usersController.followUser)
@@ -32,6 +38,11 @@ router.put('/:id/follow', usersController.followUser)
 //UnFollow User
 
 router.put('/:id/unfollow', usersController.unfollowUser)
+
+
+//add Friend User
+
+router.put('/:id/addfriend', usersController.addFriend)
 
 
 module.exports = router;

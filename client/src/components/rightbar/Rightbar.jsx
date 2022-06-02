@@ -4,12 +4,14 @@ import Friends from "../friends/Friends";
 import { useEffect } from "react";
 import { useState } from "react";
 import { FriendsList } from "../friendList/FriendList";
-import { followersListUser, followingsListUser } from "../../services/friendsApi";
+import { followersListUser, followingsListUser, friendsListUser } from "../../services/friendsApi";
 import { useSelector, useDispatch } from "react-redux";
 import { Add, Remove } from "@mui/icons-material";
 import { followUser, unfollowUser } from "../../services/friendsApi";
 import { FollowUser, UnfollowUser } from "../../actions/userAction"
 import { useNavigate } from "react-router-dom";
+import { addFriend } from "../../services/friendsApi";
+import { AddFriend } from "../../actions/userAction";
 
 
 export default function Rightbar({ user }) {
@@ -17,6 +19,7 @@ export default function Rightbar({ user }) {
   const PUBLIC_FOLDER = process.env.REACT_APP_PUBLIC_FOLDER
   const [followers, setFollowers] = useState([])
   const [followings, setFollowings] = useState([])
+  const [friends, setFriends] = useState([])
   const dispatch = useDispatch();
   const [followed, setFollowed] = useState(false)
   const [isSubscribed, setIsSubscribed] = useState(false)
@@ -53,6 +56,21 @@ export default function Rightbar({ user }) {
     };
     getFollowings();
   }, [user]);
+
+
+  useEffect(() => {
+    const getFriends = async () => {
+      try {
+        const friendsList = await friendsListUser(user._id)
+        setFriends(friendsList.data);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    getFriends();
+  }, [user]);
+
+
 
 
   useEffect(() => {
@@ -95,6 +113,31 @@ export default function Rightbar({ user }) {
   }
 
 
+  const addFriendClick = async () => {
+    try {
+      if (followed) {
+        await unfollowUser(user._id, currentUser._id)
+        dispatch(UnfollowUser(user._id));
+        localStorage.setItem("user", JSON.stringify({
+          ...currentUser,
+          followings: currentUser.followings.filter(
+            (following) => following !== user._id
+          ),
+        }))
+      } else {
+        await addFriend(user._id, currentUser._id)
+        //dispatch(AddFriend(user._id));
+        localStorage.setItem("user", JSON.stringify({
+          ...currentUser,
+        }))
+      }
+      setFollowed(!followed);
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
+
   const HomeRightbar = () => {
     return (
       <>
@@ -125,7 +168,7 @@ export default function Rightbar({ user }) {
           {user.username !== currentUser.username && (
             isSubscribed ?
               <div className="rightbarContainerButton">
-                <button className="rightbarFollowButton" onClick={handleClick}>
+                <button className="rightbarFollowButton" onClick={addFriendClick}>
                   {followed ? "Remove from friends" : "Add friend"}
                   {followed ? <Remove /> : <Add />}
                 </button>
@@ -174,7 +217,16 @@ export default function Rightbar({ user }) {
 
             ))}
           </div>
+
+          <h4 className="rightbarTitle">User friends</h4>
+          <div className="rightbarFollowings">
+            {friends.map((friend, index) => (
+              <FriendsList key={friend._id} friend={friend} />
+
+            ))}
+          </div>
         </div>
+
       </>
     );
   };
