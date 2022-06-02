@@ -195,6 +195,32 @@ const addFriend = async (req, res) => {
     }
 }
 
+const removeFriend = async (req, res) => {
+    if (req.body.userId !== req.params.id) {
+        try {
+            const user = await User.findById(req.params.id)
+            const currentUser = await User.findById(req.body.userId)
+
+            
+            if (user.friends.includes(req.body.userId)) {
+                await user.updateOne({ $push: { followings: req.body.userId} })
+                await currentUser.updateOne({ $push: { followers: req.params.id } })
+                await user.updateOne({ $pull: { friends: req.body.userId } })
+                await currentUser.updateOne({ $pull: { friends: req.params.id } })
+                res.status(200).json('User successfully removed friend')
+            } else {
+                res.status(403).json(user)
+            }
+
+        } catch (err) {
+            res.status(500).json(err)
+        }
+    }
+    else {
+        res.status(403).json('You cant remove friend yourself')
+    }
+}
+
 
 
 
@@ -206,6 +232,7 @@ module.exports = {
     followUser,
     unfollowUser,
     addFriend,
+    removeFriend,
     getFollowers,
     getFollowings,
     getFriends,

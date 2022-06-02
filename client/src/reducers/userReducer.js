@@ -42,12 +42,25 @@ export const userReducer = (state = defaultStore, action) => {
         ...state,
         user: {
           ...state.user,
-          followings: state.user.followings.filter(
+          followers: state.user.followers.filter(
             (following) => following !== action.payload
           ),
           friends: [...state.user.friends, action.payload],
         },
       };
+      case "REMOVE_FRIEND":
+        return {
+          ...state,
+          user: {
+            ...state.user,
+            followers: [...state.user.followers, action.payload],
+            friends: state.user.friends.filter(
+              (friend) => friend !== action.payload
+            ),
+          },
+        };
+
+
     default:
       return state;
   }

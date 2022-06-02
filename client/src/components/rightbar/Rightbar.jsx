@@ -10,8 +10,8 @@ import { Add, Remove } from "@mui/icons-material";
 import { followUser, unfollowUser } from "../../services/friendsApi";
 import { FollowUser, UnfollowUser } from "../../actions/userAction"
 import { useNavigate } from "react-router-dom";
-import { addFriend } from "../../services/friendsApi";
-import { AddFriend } from "../../actions/userAction";
+import { addFriend , removeFriend } from "../../services/friendsApi";
+import { AddFriend , RemoveFriend } from "../../actions/userAction";
 
 
 export default function Rightbar({ user }) {
@@ -22,13 +22,19 @@ export default function Rightbar({ user }) {
   const [friends, setFriends] = useState([])
   const dispatch = useDispatch();
   const [followed, setFollowed] = useState(false)
+  const [isFriended, setIsFriended] = useState(false)
   const [isSubscribed, setIsSubscribed] = useState(false)
   const { user: currentUser } = useSelector(state => state.userReducer)
   const navigate = useNavigate()
+  console.log(friends)
 
   useEffect(() => {
     setFollowed(currentUser.followings.includes(user?._id))
   }, [currentUser.followings, user]);
+
+  useEffect(() => {
+    setIsFriended(currentUser.friends.includes(user?._id))
+  }, [currentUser.friends, user]);
 
   useEffect(() => {
     const getFollowers = async () => {
@@ -42,7 +48,7 @@ export default function Rightbar({ user }) {
       }
     };
     getFollowers();
-  }, [user]);
+  }, [user,isSubscribed, isFriended , followed]);
 
 
   useEffect(() => {
@@ -55,7 +61,7 @@ export default function Rightbar({ user }) {
       }
     };
     getFollowings();
-  }, [user]);
+  }, [user,isSubscribed, isFriended, followed]);
 
 
   useEffect(() => {
@@ -68,19 +74,21 @@ export default function Rightbar({ user }) {
       }
     };
     getFriends();
-  }, [user]);
+  }, [user,isSubscribed, isFriended, followed]);
 
 
 
 
   useEffect(() => {
     const userFollowed = followers.find(follower => follower._id === currentUser._id)
-    console.log(userFollowed)
-    if (userFollowed === undefined)
-      setIsSubscribed(false)
-    else
+    const userFriended = friends.find(follower => follower._id === currentUser._id)
+    if (userFriended || userFollowed) {
       setIsSubscribed(true)
-  }, [isSubscribed, followers]);
+    }
+     
+    else
+       setIsSubscribed(false)
+  }, [isSubscribed, followers,friends, currentUser._id]);
 
 
   const navigateClick = () => {
@@ -115,23 +123,28 @@ export default function Rightbar({ user }) {
 
   const addFriendClick = async () => {
     try {
-      if (followed) {
-        await unfollowUser(user._id, currentUser._id)
-        dispatch(UnfollowUser(user._id));
+      if (isFriended) {
+        await removeFriend(user._id, currentUser._id)
+        dispatch(RemoveFriend(user._id));
         localStorage.setItem("user", JSON.stringify({
           ...currentUser,
-          followings: currentUser.followings.filter(
-            (following) => following !== user._id
+          friends: currentUser.friends.filter(
+            (friend) => friend !== user._id
           ),
+          followers: [...currentUser.followers, user._id],
         }))
       } else {
         await addFriend(user._id, currentUser._id)
-        //dispatch(AddFriend(user._id));
+        dispatch(AddFriend(user._id));
         localStorage.setItem("user", JSON.stringify({
           ...currentUser,
+          followers: currentUser.followers.filter(
+            (following) => following !== user._id
+          ),
+          friends: [...currentUser.friends, user._id],
         }))
       }
-      setFollowed(!followed);
+      setIsFriended(!isFriended);
     } catch (err) {
       console.log(err)
     }
@@ -169,8 +182,8 @@ export default function Rightbar({ user }) {
             isSubscribed ?
               <div className="rightbarContainerButton">
                 <button className="rightbarFollowButton" onClick={addFriendClick}>
-                  {followed ? "Remove from friends" : "Add friend"}
-                  {followed ? <Remove /> : <Add />}
+                  {isFriended ? "Remove from friends" : "Add friend"}
+                  {isFriended ? <Remove /> : <Add />}
                 </button>
               </div> :
               <div className="rightbarContainerButton">
@@ -203,6 +216,16 @@ export default function Rightbar({ user }) {
             </div>
           </div>
           <hr className="rightbarHr" />
+
+          <h4 className="rightbarTitle">User friends</h4>
+          <div className="rightbarFollowings">
+            {friends.map((friend, index) => (
+              <FriendsList key={friend._id} friend={friend} />
+
+            ))}
+          </div>
+
+
           <h4 className="rightbarTitle">User subscribes</h4>
           <div className="rightbarFollowings">
             {followers.map((friend, index) => (
@@ -218,13 +241,7 @@ export default function Rightbar({ user }) {
             ))}
           </div>
 
-          <h4 className="rightbarTitle">User friends</h4>
-          <div className="rightbarFollowings">
-            {friends.map((friend, index) => (
-              <FriendsList key={friend._id} friend={friend} />
 
-            ))}
-          </div>
         </div>
 
       </>
