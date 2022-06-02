@@ -4,19 +4,22 @@ import Friends from "../friends/Friends";
 import { useEffect } from "react";
 import { useState } from "react";
 import { FriendsList } from "../friendList/FriendList";
-import { followersListUser } from "../../services/friendsApi";
+import { followersListUser, followingsListUser } from "../../services/friendsApi";
 import { useSelector, useDispatch } from "react-redux";
 import { Add, Remove } from "@mui/icons-material";
 import { followUser, unfollowUser } from "../../services/friendsApi";
 import { FollowUser, UnfollowUser } from "../../actions/userAction"
 import { useNavigate } from "react-router-dom";
 
+
 export default function Rightbar({ user }) {
 
   const PUBLIC_FOLDER = process.env.REACT_APP_PUBLIC_FOLDER
-  const [friends, setFriends] = useState([])
+  const [followers, setFollowers] = useState([])
+  const [followings, setFollowings] = useState([])
   const dispatch = useDispatch();
   const [followed, setFollowed] = useState(false)
+  const [isSubscribed, setIsSubscribed] = useState(false)
   const { user: currentUser } = useSelector(state => state.userReducer)
   const navigate = useNavigate()
 
@@ -25,16 +28,41 @@ export default function Rightbar({ user }) {
   }, [currentUser.followings, user]);
 
   useEffect(() => {
-    const getFriends = async () => {
+    const getFollowers = async () => {
       try {
-        const friendList = await followersListUser(user._id)
-        setFriends(friendList.data);
+        const followerList = await followersListUser(user._id)
+        setFollowers(followerList.data);
+        console.log(followers)
+
       } catch (err) {
         console.log(err);
       }
     };
-    getFriends();
+    getFollowers();
   }, [user]);
+
+
+  useEffect(() => {
+    const getFollowings = async () => {
+      try {
+        const followingList = await followingsListUser(user._id)
+        setFollowings(followingList.data);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    getFollowings();
+  }, [user]);
+
+
+  useEffect(() => {
+    const userFollowed = followers.find(follower => follower._id === currentUser._id)
+    console.log(userFollowed)
+    if (userFollowed === undefined)
+      setIsSubscribed(false)
+    else
+      setIsSubscribed(true)
+  }, [isSubscribed, followers]);
 
 
   const navigateClick = () => {
@@ -89,13 +117,25 @@ export default function Rightbar({ user }) {
               : PUBLIC_FOLDER + "person/noAvatar.png"}
             alt=""
           />
+          {
+
+          }
+
+
           {user.username !== currentUser.username && (
-            <div className="rightbarContainerButton">
-              <button className="rightbarFollowButton" onClick={handleClick}>
-                {followed ? "Unfollow" : "Follow"}
-                {followed ? <Remove /> : <Add />}
-              </button>
-            </div>
+            isSubscribed ?
+              <div className="rightbarContainerButton">
+                <button className="rightbarFollowButton" onClick={handleClick}>
+                  {followed ? "Remove from friends" : "Add friend"}
+                  {followed ? <Remove /> : <Add />}
+                </button>
+              </div> :
+              <div className="rightbarContainerButton">
+                <button className="rightbarFollowButton" onClick={handleClick}>
+                  {followed ? "Unfollow" : "Follow"}
+                  {followed ? <Remove /> : <Add />}
+                </button>
+              </div>
 
           )}
           {user.username === currentUser.username && (
@@ -120,9 +160,16 @@ export default function Rightbar({ user }) {
             </div>
           </div>
           <hr className="rightbarHr" />
-          <h4 className="rightbarTitle">User friends</h4>
+          <h4 className="rightbarTitle">User subscribes</h4>
           <div className="rightbarFollowings">
-            {friends.map((friend, index) => (
+            {followers.map((friend, index) => (
+              <FriendsList key={friend._id} friend={friend} />
+
+            ))}
+          </div>
+          <h4 className="rightbarTitle">User subscribers</h4>
+          <div className="rightbarFollowings">
+            {followings.map((friend, index) => (
               <FriendsList key={friend._id} friend={friend} />
 
             ))}

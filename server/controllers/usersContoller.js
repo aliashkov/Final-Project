@@ -83,6 +83,27 @@ const getFollowers = async (req, res) => {
     }
 }
 
+const getFollowings = async (req, res) => {
+    try {
+        const user = await User.findById(req.params.userId);
+        const followings = await Promise.all(
+            user.followers.map((followId) => {
+                return User.findById(followId);
+            })
+        );
+        let followingList = [];
+        followings.map((follow) => {
+            const { _id, username, profilePicture } = follow;
+            followingList.push({ _id, username, profilePicture });
+        });
+        res.status(200).json(followingList)
+    } catch (err) {
+        res.status(500).json(err);
+    }
+}
+
+
+
 const followUser = async (req, res) => {
     if (req.body.userId !== req.params.id) {
         try {
@@ -134,5 +155,6 @@ module.exports = {
     followUser,
     unfollowUser,
     getFollowers,
+    getFollowings,
     findUsers
 }

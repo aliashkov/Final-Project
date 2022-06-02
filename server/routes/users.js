@@ -20,6 +20,11 @@ router.get('/all', usersController.findUsers)
 
 router.get("/followers/:userId", usersController.getFollowers);
 
+
+//Get Followings 
+
+router.get("/followings/:userId", usersController.getFollowings);
+
 //Follow User
 
 router.put('/:id/follow', usersController.followUser)

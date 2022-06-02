@@ -143,4 +143,11 @@
     outline: none;
   }
 
+  .rightbarFollowingName{
+      text-align: center;
+      margin-top: 5px;
+      font-size: 17px;
+      font-weight: 500;
+  }
+
   
