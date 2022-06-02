@@ -6,10 +6,11 @@ import { UploadFile } from '../../services/uploadApi';
 import { addPost } from '../../services/postsApi';
 import { useDispatch } from 'react-redux';
 import { AmountAddedPosts } from '../../actions/isAllPostsAction';
+import { changePost } from '../../services/postsApi';
 
 
 
-const Share = ({ change }) => {
+const Share = ({ postId, change }) => {
     console.log(change)
     const { user } = useSelector(state => state.userReducer)
     const PUBLIC_FOLDER = process.env.REACT_APP_PUBLIC_FOLDER;
@@ -35,7 +36,10 @@ const Share = ({ change }) => {
                 } catch (err) { }
             }
             try {
-                await addPost(newPost)
+                if (change)
+                    await changePost(postId, newPost)
+                else
+                    await addPost(newPost)
                 dispatch(AmountAddedPosts())
                 setFile(null)
                 setDescription("")
@@ -74,7 +78,15 @@ const Share = ({ change }) => {
                         <label htmlFor="file" className="shareOption">
 
                             {change ? (
-                                <input style={{ display: "flex" }} type="file" id="control" accept=".png,.jpeg,.jpg" onChange={(e) => setFile(e.target.files[0])} />
+                                <>
+                                    <label htmlFor="file-upload" className="shareOption">
+                                        <PermMedia htmlColor='tomato' className='shareIcon' />
+                                        <span className='shareOptionText'>Photo</span>
+                                        <input id="file-upload" type="file" onChange={(e) => setFile(e.target.files[0])} />
+                                    </label>
+                                   
+                                </>
+
                             ) :
                                 <>
                                     <PermMedia htmlColor='tomato' className='shareIcon' />

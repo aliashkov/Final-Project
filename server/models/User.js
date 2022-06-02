@@ -37,6 +37,10 @@ const userSchema = new Schema(
             type: Array,
             default: []
         },
+        friends: {
+            type: Array,
+            default: []
+        },
         isAdmin: {
             type: Boolean,
             default: false

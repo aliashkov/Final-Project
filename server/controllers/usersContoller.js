@@ -64,20 +64,20 @@ const findUsers = async (req, res) => {
     }
 }
 
-const getFriends = async (req, res) => {
+const getFollowers = async (req, res) => {
     try {
         const user = await User.findById(req.params.userId);
-        const friends = await Promise.all(
-            user.followings.map((friendId) => {
-                return User.findById(friendId);
+        const followers = await Promise.all(
+            user.followings.map((followId) => {
+                return User.findById(followId);
             })
         );
-        let friendList = [];
-        friends.map((friend) => {
-            const { _id, username, profilePicture } = friend;
-            friendList.push({ _id, username, profilePicture });
+        let followList = [];
+        followers.map((follow) => {
+            const { _id, username, profilePicture } = follow;
+            followList.push({ _id, username, profilePicture });
         });
-        res.status(200).json(friendList)
+        res.status(200).json(followList)
     } catch (err) {
         res.status(500).json(err);
     }
@@ -133,6 +133,6 @@ module.exports = {
     findUser,
     followUser,
     unfollowUser,
-    getFriends,
+    getFollowers,
     findUsers
 }

@@ -1,8 +1,8 @@
 import axios from 'axios'
 
-export const friendsListUser = (userId) => {
+export const followersListUser = (userId) => {
 
-    return axios.get("http://localhost:8000/api/users/friends/" + userId);
+    return axios.get("http://localhost:8000/api/users/followers/" + userId);
 }
 
 export const followUser = async (userProfileId, currentUserId) => {
