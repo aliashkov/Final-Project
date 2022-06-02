@@ -216,6 +216,16 @@ export default function Rightbar({ user }) {
             </div>
           </div>
           <hr className="rightbarHr" />
+
+          <h4 className="rightbarTitle">User friends</h4>
+          <div className="rightbarFollowings">
+            {friends.map((friend, index) => (
+              <FriendsList key={friend._id} friend={friend} />
+
+            ))}
+          </div>
+
+
           <h4 className="rightbarTitle">User subscribes</h4>
           <div className="rightbarFollowings">
             {followers.map((friend, index) => (
@@ -231,13 +241,7 @@ export default function Rightbar({ user }) {
             ))}
           </div>
 
-          <h4 className="rightbarTitle">User friends</h4>
-          <div className="rightbarFollowings">
-            {friends.map((friend, index) => (
-              <FriendsList key={friend._id} friend={friend} />
 
-            ))}
-          </div>
         </div>
 
       </>
