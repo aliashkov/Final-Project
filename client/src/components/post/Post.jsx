@@ -93,7 +93,7 @@ const Post = ({ post }) => {
                         <span className="postUsername">
                             {user.username}
                         </span>
-                        <span className="postDate">{format(post.createdAt)}</span>
+                        <span className="postDate">{format(post.updatedAt)}</span>
                     </div>
                     {user.username === currentUser.username && (
                         !clicked
@@ -108,7 +108,7 @@ const Post = ({ post }) => {
                     )}
                 </div>
                 {modifyData ?
-                    <Share change={true}/>
+                    <Share change={true} postId={post._id}/>
                     : <>
                         <div className="postCenter">
                             <span className="postText">{post?.description}</span>

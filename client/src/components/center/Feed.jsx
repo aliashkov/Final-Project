@@ -18,7 +18,7 @@ const Feed = ({ username }) => {
             const res = username ? await getProfilePosts(username) : 
             isAllPosts ? await getAllPosts(user._id) : await getTimelinePosts(user._id)
             setPosts(res.data.sort((post1, post2) => {
-                return new Date(post2.createdAt) - new Date(post1.createdAt)
+                return new Date(post2.updatedAt) - new Date(post1.updatedAt)
             }));
             //const users = await GetUsers()
             //const result = posts.map(post => ({ ...post, ...users.find(user => post.userId === user._id) }));

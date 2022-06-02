@@ -16,9 +16,9 @@ router.get('/', usersController.findUser)
 
 router.get('/all', usersController.findUsers)
 
-//Get Friends 
+//Get Followers 
 
-router.get("/friends/:userId", usersController.getFriends);
+router.get("/followers/:userId", usersController.getFollowers);
 
 //Follow User
 

@@ -4,7 +4,7 @@ import Friends from "../friends/Friends";
 import { useEffect } from "react";
 import { useState } from "react";
 import { FriendsList } from "../friendList/FriendList";
-import { friendsListUser } from "../../services/friendsApi";
+import { followersListUser } from "../../services/friendsApi";
 import { useSelector, useDispatch } from "react-redux";
 import { Add, Remove } from "@mui/icons-material";
 import { followUser, unfollowUser } from "../../services/friendsApi";
@@ -27,7 +27,7 @@ export default function Rightbar({ user }) {
   useEffect(() => {
     const getFriends = async () => {
       try {
-        const friendList = await friendsListUser(user._id)
+        const friendList = await followersListUser(user._id)
         setFriends(friendList.data);
       } catch (err) {
         console.log(err);
@@ -117,10 +117,6 @@ export default function Rightbar({ user }) {
             <div className="rightbarInfoItem">
               <span className="rightbarInfoKey">Country:</span>
               <span className="rightbarInfoValue">{user.country}</span>
-            </div>
-            <div className="rightbarInfoItem">
-              <span className="rightbarInfoKey">Relationship:</span>
-              <span className="rightbarInfoValue">{user.relationship === 1 ? "Single" : user.relationship === 2 ? "Married" : "-"}</span>
             </div>
           </div>
           <hr className="rightbarHr" />
