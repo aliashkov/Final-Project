@@ -44,5 +44,9 @@ router.put('/:id/unfollow', usersController.unfollowUser)
 
 router.put('/:id/addfriend', usersController.addFriend)
 
+//remove Friend User
+
+router.put('/:id/removefriend', usersController.removeFriend)
+
 
 module.exports = router;

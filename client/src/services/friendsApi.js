@@ -39,6 +39,13 @@ export const addFriend = async (userProfileId, currentUserId) => {
     });
 }
 
+export const removeFriend = async (userProfileId, currentUserId) => {
+
+    return await axios.put(`http://localhost:8000/api/users/${userProfileId}/removefriend`, {
+        userId: currentUserId,
+    });
+}
+
 
 
 
