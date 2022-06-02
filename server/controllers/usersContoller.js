@@ -83,6 +83,48 @@ const getFollowers = async (req, res) => {
     }
 }
 
+const getFollowings = async (req, res) => {
+    try {
+        const user = await User.findById(req.params.userId);
+        const followings = await Promise.all(
+            user.followers.map((followId) => {
+                return User.findById(followId);
+            })
+        );
+        let followingList = [];
+        followings.map((follow) => {
+            const { _id, username, profilePicture } = follow;
+            followingList.push({ _id, username, profilePicture });
+        });
+        res.status(200).json(followingList)
+    } catch (err) {
+        res.status(500).json(err);
+    }
+}
+
+const getFriends = async (req, res) => {
+    try {
+        const user = await User.findById(req.params.userId);
+        const friends = await Promise.all(
+            user.friends.map((followId) => {
+                return User.findById(followId);
+            })
+        );
+        let friendsList = [];
+        friends.map((friend) => {
+            const { _id, username, profilePicture } = friend;
+            friendsList.push({ _id, username, profilePicture });
+        });
+        res.status(200).json(friendsList)
+    } catch (err) {
+        res.status(500).json(err);
+    }
+}
+
+
+
+
+
 const followUser = async (req, res) => {
     if (req.body.userId !== req.params.id) {
         try {
@@ -127,12 +169,45 @@ const unfollowUser = async (req, res) => {
     }
 }
 
+const addFriend = async (req, res) => {
+    if (req.body.userId !== req.params.id) {
+        try {
+            const user = await User.findById(req.params.id)
+            const currentUser = await User.findById(req.body.userId)
+
+            
+            if (!user.friends.includes(req.body.userId)) {
+                await user.updateOne({ $pull: { followings: req.body.userId} })
+                await currentUser.updateOne({ $pull: { followers: req.params.id } })
+                await user.updateOne({ $push: { friends: req.body.userId } })
+                await currentUser.updateOne({ $push: { friends: req.params.id } })
+                res.status(200).json('User successfully added to friends')
+            } else {
+                res.status(403).json(user)
+            }
+
+        } catch (err) {
+            res.status(500).json(err)
+        }
+    }
+    else {
+        res.status(403).json('You cant add friend yourself')
+    }
+}
+
+
+
+
+
 module.exports = {
     updateUser,
     deleteUser,
     findUser,
     followUser,
     unfollowUser,
+    addFriend,
     getFollowers,
+    getFollowings,
+    getFriends,
     findUsers
 }
