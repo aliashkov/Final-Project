@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import './post.css'
 import { MoreVert } from '@mui/icons-material';
 import { GetUser } from '../../services/userApi';
 import { format } from 'timeago.js'
@@ -12,10 +11,9 @@ import { deletePost } from '../../services/postsApi';
 import { AmountAddedPosts } from '../../actions/isAllPostsAction';
 import { useDispatch } from 'react-redux';
 import Share from '../share/Share';
-import Comments from '../comments/Comments';
 
 
-const Post = ({ post }) => {
+const Comments = ({ post }) => {
 
     const dispatch = useDispatch()
     const [like, setLike] = useState(post.likes.length)
@@ -130,23 +128,11 @@ const Post = ({ post }) => {
                                 <img className="likeIcon" src={`${PUBLIC_FOLDER}heart.png`} onClick={likeHandler} alt="" />
                                 <span className="postLikeCounter">{like} people like it</span>
                             </div>
-                            <div className="postBottomRight">
-                                <span className="postCommentText" onClick={commentsHandler}>{post.comment} comments</span>
-                            </div>
                         </div>
                     </>}
-                {commentsOpen ?
-                    <>
-                        <Share comments={true} postId={post._id} />
-                        <Comments key={post._id} post={post} />
-
-                    </>
-                    : <></>
-                }
-
             </div>
         </div>
     );
 }
 
-export default Post;
+export default Comments;

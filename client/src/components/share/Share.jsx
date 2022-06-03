@@ -10,7 +10,7 @@ import { changePost } from '../../services/postsApi';
 
 
 
-const Share = ({ postId, change }) => {
+const Share = ({ postId, change, comments }) => {
     console.log(change)
     const { user } = useSelector(state => state.userReducer)
     const PUBLIC_FOLDER = process.env.REACT_APP_PUBLIC_FOLDER;
@@ -87,12 +87,12 @@ const Share = ({ postId, change }) => {
                                    
                                 </>
 
-                            ) :
+                            ) : !comments ?
                                 <>
                                     <PermMedia htmlColor='tomato' className='shareIcon' />
                                     <span className='shareOptionText'>Photo</span>
                                     <input style={{ display: "none" }} type="file" id="file" accept=".png,.jpeg,.jpg" onChange={(e) => setFile(e.target.files[0])} />
-                                </>
+                                </> : <></>
                             }
 
                         </label>

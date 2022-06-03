@@ -10,6 +10,7 @@ const connect = require("./connection/connection");
 const userRoute = require("./routes/users")
 const authRoute = require('./routes/auth')
 const postRoute = require('./routes/posts')
+const commentRoute = require('./routes/comments')
 const uploadRoute = require('./routes/upload')
 
 const app = express()
@@ -28,6 +29,7 @@ app.use("/images", express.static(path.join(__dirname, "public/images")));
 app.use('/api/users', userRoute)
 app.use('/api/auth', authRoute)
 app.use('/api/posts', postRoute)
+app.use('/api/comments', commentRoute)
 app.use('/api/upload' , uploadRoute)
 
 app.listen(8000, () => {

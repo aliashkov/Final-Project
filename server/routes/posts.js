@@ -37,4 +37,13 @@ router.get("/all/:userId", postsController.getTimelinedPostsAll);
 
 router.get("/profile/:username", postsController.getAllPosts);
 
+
+
+//Add comments
+
+router.put("/:id/addcomment", postsController.addComment);
+
+
+
+
 module.exports = router;

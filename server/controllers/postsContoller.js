@@ -56,6 +56,28 @@ const likePost = async (req, res) => {
     }
 }
 
+
+const addComment = async (req, res) => {
+    try {
+        const post = await Post.findById(req.params.id);
+        if (!post.comments[0].id.includes(req.body.userId)) {
+            const friend = {"id": req.body.userId, "post": req.params.id};
+            await post.updateOne({ $push: { comments: friend } });
+            res.status(200).json("Comments added");
+        } else {
+            const friend = {"id": req.body.userId, "post": req.params.id};
+            await post.updateOne({ $pull: { comments: friend} });
+            res.status(200).json("Comments deleted");
+        }
+    } catch (err) {
+        res.status(500).json(err);
+    }
+}
+
+
+
+
+
 const getPost = async (req, res) => {
     try {
         const post = await Post.findById(req.params.id)
@@ -110,5 +132,6 @@ module.exports = {
     getPost,
     getTimelinedPosts,
     getTimelinedPostsAll,
-    getAllPosts
+    getAllPosts,
+    addComment
 }
