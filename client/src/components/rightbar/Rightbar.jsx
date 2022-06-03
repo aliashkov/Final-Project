@@ -1,6 +1,5 @@
 import "./rightbar.css";
 import { Users } from "../../data";
-import Friends from "../friends/Friends";
 import { useEffect } from "react";
 import { useState } from "react";
 import { FriendsList } from "../friendList/FriendList";

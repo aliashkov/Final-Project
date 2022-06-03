@@ -5,6 +5,13 @@ export const GetUser = async (post) => {
     return res
 }
 
+export const GetUserById = async (id) => {
+    const res = await axios.get(`http://localhost:8000/api/users?userId=${id}`)
+    return res.data
+}
+
+
+
 export const GetUsers = async () => {
     const res = await axios.get(`http://localhost:8000/api/users/all`)
     return res.data
