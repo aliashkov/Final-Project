@@ -13,6 +13,7 @@ import { AmountAddedPosts } from '../../actions/isAllPostsAction';
 import { useDispatch } from 'react-redux';
 import Share from '../share/Share';
 import Comments from '../comments/Comments';
+import { getAllCommentsByPostId } from '../../services/commentsApi';
 
 
 const Post = ({ post }) => {
@@ -27,6 +28,9 @@ const Post = ({ post }) => {
     const [commentsOpen, setCommentsOpen] = useState(false)
     const [modifyData, setModifyData] = useState(false)
     const { amountAddedPosts } = useSelector(state => state.isAllPostsReducer)
+
+
+    const [comments, setComments] = useState({})
 
     useEffect(() => {
         setClicked(false)
@@ -43,6 +47,16 @@ const Post = ({ post }) => {
             setUser(res.data)
         })()
     }, [post])
+
+
+    useEffect(() => {
+        (async () => {
+            const data = await getAllCommentsByPostId(post._id)
+            setComments(data)
+        })()
+    }, [post, amountAddedPosts])
+
+
 
 
     const likeHandler = () => {
@@ -62,8 +76,11 @@ const Post = ({ post }) => {
         setCommentsOpen(false)
     }
 
-    const commentsHandler = (e) => {
+    const commentsHandler = async (e) => {
         e.preventDefault()
+        const data = await getAllCommentsByPostId(post._id)
+        console.log(data)
+        setComments(data)
         setCommentsOpen(!commentsOpen)
         setClicked(false)
     }
@@ -138,7 +155,13 @@ const Post = ({ post }) => {
                 {commentsOpen ?
                     <>
                         <Share comments={true} postId={post._id} />
-                        <Comments key={post._id} post={post} />
+
+
+                        {comments.map((comment, index) => (
+                            <Post key={comment._id} post={comment} />
+
+                        ))}
+
 
                     </>
                     : <></>

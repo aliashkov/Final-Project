@@ -11,6 +11,7 @@ import { FollowUser, UnfollowUser } from "../../actions/userAction"
 import { useNavigate } from "react-router-dom";
 import { addFriend , removeFriend } from "../../services/friendsApi";
 import { AddFriend , RemoveFriend } from "../../actions/userAction";
+import { getAllCommentsByPostId } from "../../services/commentsApi";
 
 
 export default function Rightbar({ user }) {
