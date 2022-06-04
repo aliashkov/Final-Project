@@ -13,10 +13,10 @@ import { AmountAddedPosts } from '../../actions/isAllPostsAction';
 import { useDispatch } from 'react-redux';
 import Share from '../share/Share';
 import Comments from '../comments/Comments';
-import { getAllCommentsByPostId } from '../../services/commentsApi';
+import { getAllCommentsByPostId, likeDislikeComments } from '../../services/commentsApi';
 
 
-const Post = ({ post }) => {
+const Post = ({ post, commentsPost }) => {
 
     const dispatch = useDispatch()
     const [like, setLike] = useState(post.likes.length)
@@ -62,9 +62,16 @@ const Post = ({ post }) => {
     const likeHandler = () => {
         (async () => {
             try {
-                await likeDislikePosts(post._id, currentUser._id)
+                if (!commentsPost) {
+                    await likeDislikePosts(post._id, currentUser._id)
+
+                }
+                else {
+                    await likeDislikeComments(post._id, currentUser._id)
+                }
                 setLike(isLiked ? like - 1 : like + 1);
                 setIsLiked(!isLiked);
+
             } catch (err) { }
 
         })()
@@ -147,9 +154,12 @@ const Post = ({ post }) => {
                                 <img className="likeIcon" src={`${PUBLIC_FOLDER}heart.png`} onClick={likeHandler} alt="" />
                                 <span className="postLikeCounter">{like} people like it</span>
                             </div>
-                            <div className="postBottomRight">
-                                <span className="postCommentText" onClick={commentsHandler}>{post.comment} comments</span>
-                            </div>
+                            {!commentsPost && (
+                                <div className="postBottomRight">
+                                    <span className="postCommentText" onClick={commentsHandler}>{post.comment} comments</span>
+                                </div>
+                            )}
+
                         </div>
                     </>}
                 {commentsOpen ?
@@ -158,7 +168,7 @@ const Post = ({ post }) => {
 
 
                         {comments.map((comment, index) => (
-                            <Post key={comment._id} post={comment} />
+                            <Post key={comment._id} post={comment} commentsPost={true} />
 
                         ))}
 
