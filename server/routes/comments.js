@@ -14,6 +14,11 @@ router.post('/', commentsController.addComment)
 router.get("/:id", commentsController.getComment)
 
 
+//Like - Unlike Comment
+
+router.put("/:id/like", commentsController.likeComment);
+
+
 
 
 module.exports = router;
