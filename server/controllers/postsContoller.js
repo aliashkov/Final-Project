@@ -1,5 +1,6 @@
 const Post = require('../models/Post');
 const User = require('../models/User');
+const Comment = require('../models/Comment');
 
 
 const addPost = async (req, res) => {
@@ -56,6 +57,37 @@ const likePost = async (req, res) => {
     }
 }
 
+
+const addComment = async (req, res) => {
+    try {
+        const post = await Post.findById(req.params.id);
+        if (!post.comments[0].id.includes(req.body.userId)) {
+            const friend = {"id": req.body.userId, "post": req.params.id};
+            await post.updateOne({ $push: { comments: friend } });
+            res.status(200).json("Comments added");
+        } else {
+            const friend = {"id": req.body.userId, "post": req.params.id};
+            await post.updateOne({ $pull: { comments: friend} });
+            res.status(200).json("Comments deleted");
+        }
+    } catch (err) {
+        res.status(500).json(err);
+    }
+}
+
+
+const getAllCommentsByPostId = async (req, res) => {
+    try {
+        const comments = await Comment.find({'postId' : req.params.id});
+        res.status(200).json(comments)
+    } catch (err) {
+        res.status(500).json(err);
+    }
+}
+
+
+
+
 const getPost = async (req, res) => {
     try {
         const post = await Post.findById(req.params.id)
@@ -70,7 +102,7 @@ const getTimelinedPosts = async (req, res) => {
         const currentUser = await User.findById(req.params.userId);
         const userPosts = await Post.find({ userId: currentUser._id });
         const friendPosts = await Promise.all(
-            currentUser.followings.map((friendId) => {
+            currentUser.friends.map((friendId) => {
                 return Post.find({ userId: friendId });
             })
         );
@@ -110,5 +142,7 @@ module.exports = {
     getPost,
     getTimelinedPosts,
     getTimelinedPostsAll,
-    getAllPosts
+    getAllPosts,
+    addComment,
+    getAllCommentsByPostId
 }

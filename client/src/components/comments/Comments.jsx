@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import './post.css'
 import { MoreVert } from '@mui/icons-material';
 import { GetUser } from '../../services/userApi';
 import { format } from 'timeago.js'
@@ -12,11 +11,9 @@ import { deletePost } from '../../services/postsApi';
 import { AmountAddedPosts } from '../../actions/isAllPostsAction';
 import { useDispatch } from 'react-redux';
 import Share from '../share/Share';
-import Comments from '../comments/Comments';
-import { getAllCommentsByPostId } from '../../services/commentsApi';
 
 
-const Post = ({ post }) => {
+const Comments = ({ post }) => {
 
     const dispatch = useDispatch()
     const [like, setLike] = useState(post.likes.length)
@@ -28,9 +25,6 @@ const Post = ({ post }) => {
     const [commentsOpen, setCommentsOpen] = useState(false)
     const [modifyData, setModifyData] = useState(false)
     const { amountAddedPosts } = useSelector(state => state.isAllPostsReducer)
-
-
-    const [comments, setComments] = useState({})
 
     useEffect(() => {
         setClicked(false)
@@ -47,16 +41,6 @@ const Post = ({ post }) => {
             setUser(res.data)
         })()
     }, [post])
-
-
-    useEffect(() => {
-        (async () => {
-            const data = await getAllCommentsByPostId(post._id)
-            setComments(data)
-        })()
-    }, [post, amountAddedPosts])
-
-
 
 
     const likeHandler = () => {
@@ -76,11 +60,8 @@ const Post = ({ post }) => {
         setCommentsOpen(false)
     }
 
-    const commentsHandler = async (e) => {
+    const commentsHandler = (e) => {
         e.preventDefault()
-        const data = await getAllCommentsByPostId(post._id)
-        console.log(data)
-        setComments(data)
         setCommentsOpen(!commentsOpen)
         setClicked(false)
     }
@@ -147,29 +128,11 @@ const Post = ({ post }) => {
                                 <img className="likeIcon" src={`${PUBLIC_FOLDER}heart.png`} onClick={likeHandler} alt="" />
                                 <span className="postLikeCounter">{like} people like it</span>
                             </div>
-                            <div className="postBottomRight">
-                                <span className="postCommentText" onClick={commentsHandler}>{post.comment} comments</span>
-                            </div>
                         </div>
                     </>}
-                {commentsOpen ?
-                    <>
-                        <Share comments={true} postId={post._id} />
-
-
-                        {comments.map((comment, index) => (
-                            <Post key={comment._id} post={comment} />
-
-                        ))}
-
-
-                    </>
-                    : <></>
-                }
-
             </div>
         </div>
     );
 }
 
-export default Post;
+export default Comments;

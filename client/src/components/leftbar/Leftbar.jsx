@@ -4,9 +4,13 @@ import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
 import { Chat, PlayCircleFilledOutlined, Group, Bookmark, HelpOutline, WorkOutline, Event, School } from '@mui/icons-material';
 import { Users } from '../../data';
 import YourFriends from '../yourFriends/YourFriends';
+import { useSelector } from 'react-redux';
 
 
 const Leftbar = () => {
+    const { user } = useSelector(state => state.userReducer)
+
+
     return (
         <div className='leftbar'>
             <div className="sidebarWrapper">
@@ -50,8 +54,8 @@ const Leftbar = () => {
                 </ul>
                 <hr className='sidebarHr' />
                 <ul className="sidebarFriendList">
-                    {Users.map(u => (
-                        <YourFriends key={u.id} user={u} />
+                    {user.friends.map(u => (
+                        <YourFriends key={u.id} userId={u} />
                     ))}
                 </ul>
             </div>

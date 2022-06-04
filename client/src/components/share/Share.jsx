@@ -7,10 +7,11 @@ import { addPost } from '../../services/postsApi';
 import { useDispatch } from 'react-redux';
 import { AmountAddedPosts } from '../../actions/isAllPostsAction';
 import { changePost } from '../../services/postsApi';
+import { addComment } from '../../services/commentsApi';
 
 
 
-const Share = ({ postId, change }) => {
+const Share = ({ postId, change, comments }) => {
     console.log(change)
     const { user } = useSelector(state => state.userReducer)
     const PUBLIC_FOLDER = process.env.REACT_APP_PUBLIC_FOLDER;
@@ -36,10 +37,19 @@ const Share = ({ postId, change }) => {
                 } catch (err) { }
             }
             try {
-                if (change)
-                    await changePost(postId, newPost)
-                else
-                    await addPost(newPost)
+                if (!comments) {
+                    if (change)
+                        await changePost(postId, newPost)
+                    else
+                        await addPost(newPost)
+                }
+                else {
+                    if (change)
+                        await changePost(postId, newPost)
+                    else
+                        await addComment(postId, newPost)
+                }
+
                 dispatch(AmountAddedPosts())
                 setFile(null)
                 setDescription("")
@@ -84,15 +94,15 @@ const Share = ({ postId, change }) => {
                                         <span className='shareOptionText'>Photo</span>
                                         <input id="file-upload" type="file" onChange={(e) => setFile(e.target.files[0])} />
                                     </label>
-                                   
+
                                 </>
 
-                            ) :
+                            ) : !comments ?
                                 <>
                                     <PermMedia htmlColor='tomato' className='shareIcon' />
                                     <span className='shareOptionText'>Photo</span>
                                     <input style={{ display: "none" }} type="file" id="file" accept=".png,.jpeg,.jpg" onChange={(e) => setFile(e.target.files[0])} />
-                                </>
+                                </> : <></>
                             }
 
                         </label>
