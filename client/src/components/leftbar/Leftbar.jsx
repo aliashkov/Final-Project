@@ -11,6 +11,7 @@ const Leftbar = () => {
     const { user } = useSelector(state => state.userReducer)
 
 
+
     return (
         <div className='leftbar'>
             <div className="sidebarWrapper">
@@ -55,7 +56,7 @@ const Leftbar = () => {
                 <hr className='sidebarHr' />
                 <ul className="sidebarFriendList">
                     {user.friends.map(u => (
-                        <YourFriends key={u.id} userId={u} />
+                        <YourFriends key={u} userId={u} />
                     ))}
                 </ul>
             </div>

@@ -26,7 +26,6 @@ export default function Rightbar({ user }) {
   const [isSubscribed, setIsSubscribed] = useState(false)
   const { user: currentUser } = useSelector(state => state.userReducer)
   const navigate = useNavigate()
-  console.log(friends)
 
   useEffect(() => {
     setFollowed(currentUser.followings.includes(user?._id))
@@ -41,7 +40,6 @@ export default function Rightbar({ user }) {
       try {
         const followerList = await followersListUser(user._id)
         setFollowers(followerList.data);
-        console.log(followers)
 
       } catch (err) {
         console.log(err);

@@ -14,3 +14,16 @@ export const likeDislikeComments = (postId, userId) => {
 
     return axios.put(`http://localhost:8000/api/comments/${postId}/like`, {userId})
 }
+
+
+
+export const deleteComment = async (postId, currentUserId) => {
+    return await axios.delete(`http://localhost:8000/api/comments/${postId}`, { data: { userId: currentUserId } });
+}
+
+
+export const changeComment = async (postId , changedPost) => {
+    if (changedPost.img === undefined)
+        changedPost.img = "";
+    return await axios.put(`http://localhost:8000/api/comments/${postId}`, changedPost);
+}
