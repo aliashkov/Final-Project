@@ -140,7 +140,7 @@ const Post = ({ post, commentsPost }) => {
                         <span className="postUsername">
                             {user.username}
                         </span>
-                        {comments ?
+                        {!comments ?
                             <span className="postDate">{format(post.createdAt)}</span>
                             : <span className="postDate">{format(post.updatedAt)}</span>
                         }

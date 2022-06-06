@@ -8,6 +8,7 @@ import { useDispatch } from 'react-redux';
 import { AmountAddedPosts } from '../../actions/isAllPostsAction';
 import { changePost } from '../../services/postsApi';
 import { addComment, changeComment } from '../../services/commentsApi';
+import { NulifyClicks } from '../../actions/clickedAction';
 
 
 
@@ -48,7 +49,7 @@ const Share = ({ postId, change, comments }) => {
                     else
                         await addComment(postId, newPost)
                 }
-
+                dispatch(NulifyClicks())
                 dispatch(AmountAddedPosts())
                 setFile(null)
                 setDescription("")
