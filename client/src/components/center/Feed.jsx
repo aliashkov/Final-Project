@@ -41,7 +41,7 @@ const Feed = ({ username }) => {
 
     useEffect(() => {
         setArr([...posts].slice(0, 8))
-    }, [posts])
+    }, [posts,username, user, isAllPosts, amountAddedPosts])
 
     console.log(posts)
 
