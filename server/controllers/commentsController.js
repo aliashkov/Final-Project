@@ -40,11 +40,43 @@ const likeComment = async (req, res) => {
 }
 
 
+const deleteComment = async (req, res) => {
+    try {
+        const comment = await Comment.findById(req.params.id);
+        if (comment.userId === req.body.userId) {
+            await comment.deleteOne();
+            res.status(200).json("Comment has been deleted");
+        } else {
+            res.status(403).json("You can delete only your comment");
+        }
+    } catch (err) {
+        res.status(500).json(err);
+    }
+}
+
+
+const updateComment = async (req, res) => {
+    try {
+        const comment = await Comment.findById(req.params.id);
+        if (comment.userId === req.body.userId) {
+            await comment.updateOne({ $set: req.body });
+            res.status(200).json("Comment has been updated");
+        } else {
+            res.status(403).json("You can update only your comment");
+        }
+    } catch (err) {
+        res.status(500).json(err);
+    }
+}
+
+
 
 
 
 module.exports = {
     addComment,
     getComment,
-    likeComment
+    likeComment,
+    deleteComment,
+    updateComment
 }

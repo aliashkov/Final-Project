@@ -12,8 +12,8 @@ import { deletePost } from '../../services/postsApi';
 import { AmountAddedPosts } from '../../actions/isAllPostsAction';
 import { useDispatch } from 'react-redux';
 import Share from '../share/Share';
-import Comments from '../comments/Comments';
-import { getAllCommentsByPostId, likeDislikeComments } from '../../services/commentsApi';
+import { getAllCommentsByPostId, likeDislikeComments, deleteComment } from '../../services/commentsApi';
+import { AddedClick, NulifyClicks } from '../../actions/clickedAction';
 
 
 const Post = ({ post, commentsPost }) => {
@@ -28,7 +28,7 @@ const Post = ({ post, commentsPost }) => {
     const [commentsOpen, setCommentsOpen] = useState(false)
     const [modifyData, setModifyData] = useState(false)
     const { amountAddedPosts } = useSelector(state => state.isAllPostsReducer)
-
+    const { amountClicks } = useSelector(state => state.clickedReducer)
 
     const [comments, setComments] = useState({})
 
@@ -80,13 +80,13 @@ const Post = ({ post, commentsPost }) => {
     const expandClickOption = (e) => {
         e.preventDefault()
         setClicked(!clicked)
+
         setCommentsOpen(false)
     }
 
     const commentsHandler = async (e) => {
         e.preventDefault()
         const data = await getAllCommentsByPostId(post._id)
-        console.log(data)
         setComments(data)
         setCommentsOpen(!commentsOpen)
         setClicked(false)
@@ -96,6 +96,11 @@ const Post = ({ post, commentsPost }) => {
 
     const changePostClick = (e) => {
         e.preventDefault()
+        dispatch(AddedClick())
+        if (amountClicks === 1) {
+            dispatch(NulifyClicks())
+            dispatch(AmountAddedPosts())
+        }
         setModifyData(!modifyData)
         setClicked(!clicked)
     }
@@ -103,7 +108,14 @@ const Post = ({ post, commentsPost }) => {
     const deletePostClick = (e) => {
         (async () => {
             try {
-                await deletePost(post._id, currentUser._id)
+                if (!commentsPost) {
+                    await deletePost(post._id, currentUser._id)
+
+                }
+                else {
+                    await deleteComment(post._id, currentUser._id)
+                }
+
                 dispatch(AmountAddedPosts())
                 setClicked(!clicked)
             } catch (err) { }
@@ -128,7 +140,10 @@ const Post = ({ post, commentsPost }) => {
                         <span className="postUsername">
                             {user.username}
                         </span>
-                        <span className="postDate">{format(post.updatedAt)}</span>
+                        {comments ?
+                            <span className="postDate">{format(post.createdAt)}</span>
+                            : <span className="postDate">{format(post.updatedAt)}</span>
+                        }
                     </div>
                     {user.username === currentUser.username && (
                         !clicked
@@ -143,7 +158,7 @@ const Post = ({ post, commentsPost }) => {
                     )}
                 </div>
                 {modifyData ?
-                    <Share change={true} postId={post._id} />
+                    <Share change={true} postId={post._id} comments={commentsPost} />
                     : <>
                         <div className="postCenter">
                             <span className="postText">{post?.description}</span>
@@ -164,14 +179,19 @@ const Post = ({ post, commentsPost }) => {
                     </>}
                 {commentsOpen ?
                     <>
-                        <Share comments={true} postId={post._id} />
+
+                        <div className="post">
+                            <div className="postWrapper">
+                                <Share comments={true} postId={post._id} />
 
 
-                        {comments.map((comment, index) => (
-                            <Post key={comment._id} post={comment} commentsPost={true} />
+                                {comments.map((comment, index) => (
+                                    <Post key={comment._id} post={comment} commentsPost={true} />
 
-                        ))}
+                                ))}
 
+                            </div>
+                        </div>
 
                     </>
                     : <></>

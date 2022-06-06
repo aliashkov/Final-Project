@@ -7,12 +7,11 @@ import { addPost } from '../../services/postsApi';
 import { useDispatch } from 'react-redux';
 import { AmountAddedPosts } from '../../actions/isAllPostsAction';
 import { changePost } from '../../services/postsApi';
-import { addComment } from '../../services/commentsApi';
+import { addComment, changeComment } from '../../services/commentsApi';
 
 
 
 const Share = ({ postId, change, comments }) => {
-    console.log(change)
     const { user } = useSelector(state => state.userReducer)
     const PUBLIC_FOLDER = process.env.REACT_APP_PUBLIC_FOLDER;
     const [file, setFile] = useState(null);
@@ -45,7 +44,7 @@ const Share = ({ postId, change, comments }) => {
                 }
                 else {
                     if (change)
-                        await changePost(postId, newPost)
+                        await changeComment(postId, newPost)
                     else
                         await addComment(postId, newPost)
                 }
@@ -53,7 +52,13 @@ const Share = ({ postId, change, comments }) => {
                 dispatch(AmountAddedPosts())
                 setFile(null)
                 setDescription("")
-                document.getElementById("shareInputId").value = "";
+                if (!comments) {
+                    document.querySelector("#shareInputId").value = "";
+                }
+                else {
+                    document.querySelector("#shareInputIdComments").value = "";
+                }
+
                 //window.location.reload()
             } catch (err) { }
         }
@@ -69,12 +74,29 @@ const Share = ({ postId, change, comments }) => {
             <div className="shareWrapper">
                 <div className="shareTop">
                     <img className='shareProfileImg' src={user.profilePicture ? PUBLIC_FOLDER + user.profilePicture : PUBLIC_FOLDER + "person/noAvatar.png"} alt="" />
-                    <input
-                        placeholder='Input your thoughts'
-                        className="shareInput"
-                        id="shareInputId"
-                        onChange={e => setDescription(e.target.value)}
-                    />
+
+
+                    {!comments ? (
+                        <>
+                            <input
+                                placeholder='Input your thoughts'
+                                className="shareInput"
+                                id="shareInputId"
+                                onChange={e => setDescription(e.target.value)}
+                            />
+
+                        </>
+
+                    ) :
+                        <input
+                            placeholder='Input your thoughts'
+                            className="shareInput"
+                            id="shareInputIdComments"
+                            onChange={e => setDescription(e.target.value)}
+                        />
+                    }
+
+
                 </div>
                 <hr className="shareHr" />
                 {file && (
@@ -87,7 +109,7 @@ const Share = ({ postId, change, comments }) => {
                     <div className="shareOptions">
                         <label htmlFor="file" className="shareOption">
 
-                            {change ? (
+                            {(!comments && change) ? (
                                 <>
                                     <label htmlFor="file-upload" className="shareOption">
                                         <PermMedia htmlColor='tomato' className='shareIcon' />
@@ -97,12 +119,14 @@ const Share = ({ postId, change, comments }) => {
 
                                 </>
 
-                            ) : !comments ?
+                            ) : (!comments && !change) ?
                                 <>
                                     <PermMedia htmlColor='tomato' className='shareIcon' />
                                     <span className='shareOptionText'>Photo</span>
                                     <input style={{ display: "none" }} type="file" id="file" accept=".png,.jpeg,.jpg" onChange={(e) => setFile(e.target.files[0])} />
-                                </> : <></>
+                                </> :
+                                <></>
+
                             }
 
                         </label>

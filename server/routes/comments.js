@@ -18,6 +18,15 @@ router.get("/:id", commentsController.getComment)
 
 router.put("/:id/like", commentsController.likeComment);
 
+//Delete Comment
+
+router.delete("/:id", commentsController.deleteComment);
+
+
+//Update Comment
+
+router.put("/:id", commentsController.updateComment);
+
 
 
 
