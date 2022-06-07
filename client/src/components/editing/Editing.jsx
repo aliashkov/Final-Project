@@ -21,9 +21,9 @@ export const Editing = () => {
     const [password, setPassword] = useState("")
     const [passwordConfirm, setPasswordConfirm] = useState("")
     const [file, setFile] = useState(null);
+    const [visible, setVisible] = useState(false);
     const navigate = useNavigate();
     const dispatch = useDispatch()
-    console.log(user)
 
     const submitHandler = async (e) => {
         e.preventDefault();
@@ -38,6 +38,7 @@ export const Editing = () => {
                 country: country.current.value,
                 password: password,
                 passwordConfirm: passwordConfirm,
+                isHidden: visible
             };
             const data = new FormData();
             if (file) {
@@ -69,6 +70,13 @@ export const Editing = () => {
 
     };
 
+
+
+    const changeVisibility = () => {
+        setVisible(!visible)
+
+    }
+
     return (
         <>
             <div className="editing">
@@ -92,15 +100,25 @@ export const Editing = () => {
                                 </div>
                             )}
                             {!file && (
-                                <div className="editingImgContainer">
-                                    <img className='editingImg' src={PUBLIC_FOLDER + "person/noAvatar.png"} alt="" />
-                                </div>
+                                <label htmlFor="file" className="editingOption">
+                                    <div className="editingImgContainer">
+                                        <img className='editingImg' src={PUBLIC_FOLDER + "person/noAvatar.png"} alt="" />
+                                    </div>
+                                </label>
+
                             )}
-                            <input placeholder="name" ref={username} className="editingInput" />
-                            <input placeholder="City" ref={city} className="editingInput" />
-                            <input placeholder="Country" ref={country} className="editingInput" />
-                            <input placeholder="Password" required minLength="6" onChange={e => setPassword(e.target.value)} type="password" className="editingInput" />
-                            <input placeholder="Password Confirm" required minLength="6" onChange={e => setPasswordConfirm(e.target.value)} type="password" className="editingInput" />
+                            <div className='form_inputs'>
+                                <input placeholder="name" ref={username} className="editingInput" />
+                                <input placeholder="City" ref={city} className="editingInput" />
+                                <input placeholder="Country" ref={country} className="editingInput" />
+                                <input placeholder="Password" required minLength="6" onChange={e => setPassword(e.target.value)} type="password" className="editingInput" />
+                                <input placeholder="Password Confirm" required minLength="6" onChange={e => setPasswordConfirm(e.target.value)} type="password" className="editingInput" />
+                            </div>
+
+                            <label className='editingCheckbox'>
+                                <input className="editingCheckbox" type="checkbox" onClick={changeVisibility} />
+                                Allowed Friends
+                            </label>
                             <div className='passwordsMessageWrapper'>
                                 <PasswordChecklist
                                     rules={["minLength", "match"]}

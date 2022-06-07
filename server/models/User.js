@@ -60,6 +60,9 @@ const userSchema = new Schema(
         relationship: {
             type: Number,
             enum: [1, 2, 3]
+        },
+        isHidden : {
+            type : Boolean,
         }
     },
     { timestamps: true },

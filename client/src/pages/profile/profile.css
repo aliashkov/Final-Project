@@ -48,3 +48,54 @@
 .profileRightBottom{
     display: flex;
 }
+
+
+.iconLock{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.restrict{
+    flex: 8;
+    display: flex;
+    justify-content: center;
+}
+
+.restrictWrapper {
+    width: 70%;
+    height: 90%;
+    display: flex;
+    flex-direction: column;
+    padding-top: 10%;
+    border-radius: 10px;
+    -webkit-box-shadow: 0px 0px 16px -8px rgba(0, 0, 0, 0.7);
+    box-shadow: 0px 0px 16px -8px rgba(0, 0, 0, 0.7);
+    margin: 20px;
+}
+
+
+.restrictLeft,
+.restrictRight {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+}
+
+.restrictLock{
+    zoom: 5;
+}
+
+.restrictLogo {
+    font-size: 40px;
+    font-weight: 500;
+    margin-bottom: 30px;
+    color: 	#131212
+}
+
+.restrictDesc {
+    font-size: 22px;
+    margin-bottom: 10%;
+}
