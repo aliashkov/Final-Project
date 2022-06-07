@@ -22,6 +22,7 @@ const Feed = ({ username }) => {
     const { amountAddedPosts } = useSelector(state => state.isAllPostsReducer)
 
     const [arr, setArr] = useState([]);
+    const [currentLength, setCurrentLength] = useState(3)
 
     const [page, setPage] = useState(1);
 
@@ -40,10 +41,9 @@ const Feed = ({ username }) => {
 
 
     useEffect(() => {
-        setArr([...posts].slice(0, 8))
-    }, [posts,username, user, isAllPosts, amountAddedPosts])
-
-    console.log(posts)
+        setCurrentLength(3)
+        setArr([...posts].slice(0, currentLength))
+    }, [posts, username, user, isAllPosts])
 
     useEffect(() => {
         const options = {
@@ -51,12 +51,12 @@ const Feed = ({ username }) => {
             threshold: 1
         };
         const callback = (entries) => {
-            if (entries[0].isIntersecting) {
+            if (currentLength === posts.length) {
+            }
+            else if (entries[0].isIntersecting) {
                 const newPage = page + 1;
-                setArr((arr) => [
-                    ...arr,
-                    ...posts
-                ]);
+                setCurrentLength(currentLength + 1)
+                setArr([...posts].slice(0, currentLength))
                 setPage(newPage);
             }
         };
@@ -81,7 +81,6 @@ const Feed = ({ username }) => {
                     if (i === arr.length - 1) {
                         return (
                             <p key={a} ref={lastItemRef}>
-                                {a._id}
                             </p>
 
                         );
