@@ -171,7 +171,7 @@ const Post = ({ post, commentsPost }) => {
                             </div>
                             {!commentsPost && (
                                 <div className="postBottomRight">
-                                    <span className="postCommentText" onClick={commentsHandler}>{post.comment} comments</span>
+                                    <span className="postCommentText" onClick={commentsHandler}>{comments.length} comments</span>
                                 </div>
                             )}
 
