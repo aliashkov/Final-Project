@@ -5,3 +5,7 @@ export const AddedClick = () => ({
 export const NulifyClicks = () => ({
     type: "NULIFY_CLICKS",
 });
+
+export const FriendsClick = () => ({
+    type: "FRIENDS_CLICK",
+});

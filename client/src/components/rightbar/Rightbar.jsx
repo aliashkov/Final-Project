@@ -12,6 +12,7 @@ import { useNavigate } from "react-router-dom";
 import { addFriend , removeFriend } from "../../services/friendsApi";
 import { AddFriend , RemoveFriend } from "../../actions/userAction";
 import { getAllCommentsByPostId } from "../../services/commentsApi";
+import { FriendsClick } from "../../actions/clickedAction";
 
 
 export default function Rightbar({ user }) {
@@ -25,6 +26,7 @@ export default function Rightbar({ user }) {
   const [isFriended, setIsFriended] = useState(false)
   const [isSubscribed, setIsSubscribed] = useState(false)
   const { user: currentUser } = useSelector(state => state.userReducer)
+  const { friendsClick } = useSelector(state => state.clickedReducer)
   const navigate = useNavigate()
 
   useEffect(() => {
@@ -112,6 +114,7 @@ export default function Rightbar({ user }) {
           followings: [...currentUser.followings, user._id]
         }))
       }
+     
       setFollowed(!followed);
     } catch (err) {
       console.log(err)
@@ -142,6 +145,7 @@ export default function Rightbar({ user }) {
           friends: [...currentUser.friends, user._id],
         }))
       }
+      dispatch(FriendsClick())
       setIsFriended(!isFriended);
     } catch (err) {
       console.log(err)
