@@ -18,7 +18,12 @@ const updatePost = async (req, res) => {
     try {
         const post = await Post.findById(req.params.id);
         if ((post.userId === req.body.userId) || req.body.isAdmin) {
-            await post.updateOne({ $set: req.body });
+            if (req.body.isAdmin) {
+                await post.updateOne({ $set: { description: req.body.description , img: req.body.img }});
+            } else {
+                await post.updateOne({ $set: req.body });
+            }
+           
             res.status(200).json("Post has been updated");
         } else {
             res.status(403).json("You can update only your post");

@@ -17,8 +17,8 @@ export const likeDislikeComments = (postId, userId) => {
 
 
 
-export const deleteComment = async (postId, currentUserId) => {
-    return await axios.delete(`http://localhost:8000/api/comments/${postId}`, { data: { userId: currentUserId } });
+export const deleteComment = async (postId, currentUserId, admin) => {
+    return await axios.delete(`http://localhost:8000/api/comments/${postId}`, { data: { userId: currentUserId , isAdmin : admin  } });
 }
 
 

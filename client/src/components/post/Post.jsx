@@ -113,7 +113,7 @@ const Post = ({ post, commentsPost }) => {
 
                 }
                 else {
-                    await deleteComment(post._id, currentUser._id)
+                    await deleteComment(post._id, currentUser._id , currentUser.isAdmin)
                 }
 
                 dispatch(AmountAddedPosts())
