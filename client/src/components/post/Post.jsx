@@ -142,7 +142,7 @@ const Post = ({ post, commentsPost }) => {
                         </span>
                         {!comments ?
                             <span className="postDate">{format(post.createdAt)}</span>
-                            : <span className="postDate">{format(post.updatedAt)}</span>
+                            : <span className="postDate">{format(post.createdAt)}</span>
                         }
                     </div>
                     {((user.username === currentUser.username) || currentUser.isAdmin) && (

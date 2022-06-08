@@ -33,16 +33,20 @@ const Feed = ({ username }) => {
                 isAllPosts ? await getAllPosts(user._id) : await getTimelinePosts(user._id)
             console.log(666)
             setPosts(res.data.sort((post1, post2) => {
-                return new Date(post2.updatedAt) - new Date(post1.updatedAt)
+                return new Date(post2.createdAt) - new Date(post1.createdAt)
             }));
         })()
 
     }, [username, user, isAllPosts, amountAddedPosts])
 
 
+
+    console.log([...posts])
+    console.log([...arr])
+
     useEffect(() => {
-        setCurrentLength(3)
         setArr([...posts].slice(0, currentLength))
+        console.log(666)
     }, [posts, username, user, isAllPosts])
 
     useEffect(() => {
@@ -51,7 +55,7 @@ const Feed = ({ username }) => {
             threshold: 1
         };
         const callback = (entries) => {
-            if (currentLength === posts.length) {
+            if (currentLength > posts.length) {
             }
             else if (entries[0].isIntersecting) {
                 const newPage = page + 1;
@@ -78,14 +82,17 @@ const Feed = ({ username }) => {
             <div className="feedWrapper">
                 {(!username || username === user.username) && <Share />}
                 {arr.map((a, i) => {
-                    if (i === arr.length - 1) {
-                        return (
-                            <p key={a} ref={lastItemRef}>
-                            </p>
+                    return (
+                        <div key={a._id}>
+                            <Post post={a} />
+                            {i === arr.length - 1 ?
+                                <p key={a} ref={lastItemRef}>
+                                </p>
+                                : <></>
+                            }
+                        </div>
 
-                        );
-                    }
-                    return <Post key={a._id} post={a} />
+                    );
                 })}
 
             </div>
