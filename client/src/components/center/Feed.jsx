@@ -31,7 +31,6 @@ const Feed = ({ username }) => {
         (async () => {
             const res = username ? await getProfilePosts(username) :
                 isAllPosts ? await getAllPosts(user._id) : await getTimelinePosts(user._id)
-            console.log(666)
             setPosts(res.data.sort((post1, post2) => {
                 return new Date(post2.createdAt) - new Date(post1.createdAt)
             }));
@@ -41,12 +40,8 @@ const Feed = ({ username }) => {
 
 
 
-    console.log([...posts])
-    console.log([...arr])
-
     useEffect(() => {
         setArr([...posts].slice(0, currentLength))
-        console.log(666)
     }, [posts, username, user, isAllPosts])
 
     useEffect(() => {
