@@ -17,7 +17,7 @@ const addPost = async (req, res) => {
 const updatePost = async (req, res) => {
     try {
         const post = await Post.findById(req.params.id);
-        if (post.userId === req.body.userId) {
+        if ((post.userId === req.body.userId) || req.body.isAdmin) {
             await post.updateOne({ $set: req.body });
             res.status(200).json("Post has been updated");
         } else {
@@ -31,7 +31,7 @@ const updatePost = async (req, res) => {
 const deletePost = async (req, res) => {
     try {
         const post = await Post.findById(req.params.id);
-        if (post.userId === req.body.userId) {
+        if ((post.userId === req.body.userId) || req.body.isAdmin) {
             await post.deleteOne();
             res.status(200).json("Post has been deleted");
         } else {

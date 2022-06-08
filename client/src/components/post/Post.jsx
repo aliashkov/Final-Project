@@ -109,7 +109,7 @@ const Post = ({ post, commentsPost }) => {
         (async () => {
             try {
                 if (!commentsPost) {
-                    await deletePost(post._id, currentUser._id)
+                    await deletePost(post._id, currentUser._id , currentUser.isAdmin)
 
                 }
                 else {
@@ -145,7 +145,7 @@ const Post = ({ post, commentsPost }) => {
                             : <span className="postDate">{format(post.updatedAt)}</span>
                         }
                     </div>
-                    {user.username === currentUser.username && (
+                    {((user.username === currentUser.username) || currentUser.isAdmin) && (
                         !clicked
                             ? <div className="postTopRight">
                                 <MoreVert onClick={expandClickOption} />
