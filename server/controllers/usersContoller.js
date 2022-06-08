@@ -1,4 +1,6 @@
 const User = require('../models/User')
+const Post =  require('../models/Post')
+const Comment =  require('../models/Comment')
 const bcrypt = require('bcrypt')
 
 
@@ -31,7 +33,21 @@ const deleteUser = async (req, res) => {
     if (req.body.userId === req.params.id || req.body.isAdmin) {
         try {
             const user = await User.findByIdAndDelete({ _id: req.params.id });
-            res.status(200).json('Account has been deleted')
+            const posts = await Post.deleteMany({ userId : req.params.id });
+            const comments = await Comment.deleteMany({ userId : req.params.id });
+            const users = await User.find({});
+
+            await Promise.all(
+                users.map((user) => {
+                    const { _id, friends , followings , followers } = user;
+                    if (friends.includes(req.params.id) || followings.includes(req.params.id) || followers.includes(req.params.id)) {
+                         return User.findOneAndUpdate({_id : _id}, { $pull: { friends: req.params.id , followings : req.params.id , followers: req.params.id } });
+                        
+                    }
+                }
+            ));
+            
+            res.status(200).json('This account has been deleted successfully')
         } catch (err) {
             res.status(500).json(err)
         }
