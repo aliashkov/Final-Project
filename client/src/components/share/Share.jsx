@@ -24,7 +24,8 @@ const Share = ({ postId, change, comments }) => {
         if (description !== "") {
             const newPost = {
                 userId: user._id,
-                description: description
+                description: description,
+                isAdmin : user.isAdmin
             };
             const data = new FormData();
             if (file) {

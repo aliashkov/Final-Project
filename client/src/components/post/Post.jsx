@@ -109,11 +109,11 @@ const Post = ({ post, commentsPost }) => {
         (async () => {
             try {
                 if (!commentsPost) {
-                    await deletePost(post._id, currentUser._id)
+                    await deletePost(post._id, currentUser._id , currentUser.isAdmin)
 
                 }
                 else {
-                    await deleteComment(post._id, currentUser._id)
+                    await deleteComment(post._id, currentUser._id , currentUser.isAdmin)
                 }
 
                 dispatch(AmountAddedPosts())
@@ -142,10 +142,10 @@ const Post = ({ post, commentsPost }) => {
                         </span>
                         {!comments ?
                             <span className="postDate">{format(post.createdAt)}</span>
-                            : <span className="postDate">{format(post.updatedAt)}</span>
+                            : <span className="postDate">{format(post.createdAt)}</span>
                         }
                     </div>
-                    {user.username === currentUser.username && (
+                    {((user.username === currentUser.username) || currentUser.isAdmin) && (
                         !clicked
                             ? <div className="postTopRight">
                                 <MoreVert onClick={expandClickOption} />
