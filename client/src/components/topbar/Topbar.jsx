@@ -5,7 +5,7 @@ import { Link } from "react-router-dom"
 import { useSelector, useDispatch } from 'react-redux';
 import LogoutIcon from '@mui/icons-material/Logout';
 import { useNavigate } from 'react-router-dom';
-import { AllPosts, AmountAddedPosts, FriendsPosts , NulifyPosts } from '../../actions/isAllPostsAction';
+import { AllPosts, AmountAddedPosts, FriendsPosts, NulifyPosts } from '../../actions/isAllPostsAction';
 import { changeFilterPosts } from '../../actions/findPostsAction';
 import { useEffect } from 'react';
 import { GetUsers } from '../../services/userApi';
@@ -74,14 +74,14 @@ const Topbar = () => {
                 </div>
             </div>
 
-             
+
             <div className="usersList">
                 {searchUser !== "" ?
-                    
+
                     users.slice(0, 5).map((findUser, index) => (
-                       <Filter hiddenString={hiddenSearch} key={findUser._id}  findUser={findUser} />
+                        <Filter hiddenString={hiddenSearch} key={findUser._id} findUser={findUser} />
                     ))
-                : <></>}
+                    : <></>}
             </div>
 
             <div className="topbarRight">
@@ -99,6 +99,11 @@ const Topbar = () => {
                     }
                 </div>
                 <div className="topbarIcons">
+
+                    <div className="topbarIconItem">
+                        <Chat />
+
+                    </div>
 
                     <div className="topbarIconItem">
                         <Link to={`/login`} style={{ textDecoration: "none", color: "white" }}>

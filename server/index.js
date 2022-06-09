@@ -12,6 +12,8 @@ const authRoute = require('./routes/auth')
 const postRoute = require('./routes/posts')
 const commentRoute = require('./routes/comments')
 const uploadRoute = require('./routes/upload')
+const conversationRoute = require('./routes/conversations')
+const messageRoute = require('./routes/messages')
 
 const app = express()
 
@@ -31,6 +33,8 @@ app.use('/api/auth', authRoute)
 app.use('/api/posts', postRoute)
 app.use('/api/comments', commentRoute)
 app.use('/api/upload' , uploadRoute)
+app.use('/api/conversations' , conversationRoute)
+app.use('/api/messages' , messageRoute)
 
 app.listen(8000, () => {
     console.log('Server is running')

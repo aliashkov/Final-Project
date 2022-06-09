@@ -7,6 +7,7 @@ import Register from '../pages/register/Register';
 import { useSelector } from 'react-redux';
 import RequireAuth from '../hoc/requireAuth';
 import EditingProfile from '../pages/editingProfile/EditingProfile'
+import Messenger from '../pages/messenger/Messenger';
 
 
 const AppRoutes = (props) => {
@@ -26,6 +27,7 @@ const AppRoutes = (props) => {
                     <RequireAuth><Register /> </RequireAuth>
                 } />
                 <Route path="/editing" element={  user ? <EditingProfile /> : <Login />} />
+                <Route path="/messenger" element={  user ? <Messenger  /> : <Login />} />
 
             </Routes>
         </>
