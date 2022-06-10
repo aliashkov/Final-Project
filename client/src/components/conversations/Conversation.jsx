@@ -15,6 +15,7 @@ const Conversation = ({ conversation, currentUser }) => {
         const getUser = async () => {
             try {
                 const res = await GetUserById(friendId);
+                console.log(res)
                 setUser(res)
             } catch (err) {
                 console.log(err)
@@ -22,15 +23,15 @@ const Conversation = ({ conversation, currentUser }) => {
 
         }
         getUser();
-    }, [currentUser , conversation])
+    }, [currentUser, conversation])
 
-    console.log(currentUser)
+    console.log(conversation)
 
 
     return (
         <div className='conversation'>
-            <img className='conversationImg' src={user.profilePicture ? PUBLIC_FOLDER + user.profilePicture : PUBLIC_FOLDER + "person/noAvatar.png"} alt="" />
-            <span className="conversationName">{user.username}</span>
+            <img className='conversationImg' src={user?.profilePicture ? PUBLIC_FOLDER + user?.profilePicture : PUBLIC_FOLDER + "person/noAvatar.png"} alt="" />
+            <span className="conversationName">{user?.username}</span>
         </div>
     );
 }
