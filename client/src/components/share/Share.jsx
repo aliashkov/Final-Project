@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState , useRef , useEffect } from 'react';
 import './share.css'
 import { PermMedia, Cancel } from '@mui/icons-material';
 import { useSelector } from 'react-redux';
@@ -9,6 +9,7 @@ import { AmountAddedPosts } from '../../actions/isAllPostsAction';
 import { changePost } from '../../services/postsApi';
 import { addComment, changeComment } from '../../services/commentsApi';
 import { NulifyClicks } from '../../actions/clickedAction';
+import { io } from 'socket.io-client'
 
 
 
@@ -18,6 +19,19 @@ const Share = ({ postId, change, comments }) => {
     const [file, setFile] = useState(null);
     const [description, setDescription] = useState("")
     const dispatch = useDispatch();
+    const socket = useRef(io("ws://localhost:8900"))
+
+    useEffect(() => {
+        socket.current = io("ws://localhost:8900")
+    }, [])
+
+    useEffect(() => {
+        socket.current.on("refreshPosts", amountRefreshes => {
+            console.log(amountRefreshes)
+            dispatch(AmountAddedPosts())
+        })
+    }, [user])
+
 
     const submitHandler = async (e) => {
         e.preventDefault();
@@ -52,6 +66,7 @@ const Share = ({ postId, change, comments }) => {
                 }
                 dispatch(NulifyClicks())
                 dispatch(AmountAddedPosts())
+                socket.current.emit("addPost");
                 setFile(null)
                 setDescription("")
                 if (!comments) {
