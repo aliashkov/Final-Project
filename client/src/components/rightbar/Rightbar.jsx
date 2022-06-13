@@ -9,10 +9,12 @@ import { Add, Remove } from "@mui/icons-material";
 import { followUser, unfollowUser } from "../../services/friendsApi";
 import { FollowUser, UnfollowUser } from "../../actions/userAction"
 import { useNavigate } from "react-router-dom";
-import { addFriend , removeFriend } from "../../services/friendsApi";
-import { AddFriend , RemoveFriend } from "../../actions/userAction";
+import { addFriend, removeFriend } from "../../services/friendsApi";
+import { AddFriend, RemoveFriend } from "../../actions/userAction";
 import { getAllCommentsByPostId } from "../../services/commentsApi";
 import { FriendsClick } from "../../actions/clickedAction";
+import { newConversation } from "../../services/conversationsApi";
+import { AddUserToChat } from "../../actions/chatAction";
 
 
 export default function Rightbar({ user }) {
@@ -48,7 +50,7 @@ export default function Rightbar({ user }) {
       }
     };
     getFollowers();
-  }, [user,isSubscribed, isFriended , followed]);
+  }, [user, isSubscribed, isFriended, followed]);
 
 
   useEffect(() => {
@@ -61,7 +63,7 @@ export default function Rightbar({ user }) {
       }
     };
     getFollowings();
-  }, [user,isSubscribed, isFriended, followed]);
+  }, [user, isSubscribed, isFriended, followed]);
 
 
   useEffect(() => {
@@ -74,7 +76,7 @@ export default function Rightbar({ user }) {
       }
     };
     getFriends();
-  }, [user,isSubscribed, isFriended, followed]);
+  }, [user, isSubscribed, isFriended, followed]);
 
 
 
@@ -85,10 +87,10 @@ export default function Rightbar({ user }) {
     if (userFriended || userFollowed) {
       setIsSubscribed(true)
     }
-     
+
     else
-       setIsSubscribed(false)
-  }, [isSubscribed, followers,friends, currentUser._id]);
+      setIsSubscribed(false)
+  }, [isSubscribed, followers, friends, currentUser._id]);
 
 
   const navigateClick = () => {
@@ -114,7 +116,7 @@ export default function Rightbar({ user }) {
           followings: [...currentUser.followings, user._id]
         }))
       }
-     
+
       setFollowed(!followed);
     } catch (err) {
       console.log(err)
@@ -153,6 +155,18 @@ export default function Rightbar({ user }) {
   }
 
 
+  const addConversationClick = async (e) => {
+    e.preventDefault();
+    const members = {
+      senderId: currentUser._id,
+      receiverId : user._id,
+    };
+    dispatch(AddUserToChat(user._id));
+    await newConversation(members)
+    navigate('/messenger' , members);
+  }
+
+
   const HomeRightbar = () => {
     return (
       <>
@@ -179,6 +193,15 @@ export default function Rightbar({ user }) {
 
           }
 
+          {user.username !== currentUser.username && (
+            <div className="rightbarContainerButton">
+              <button className="rightbarSendMessageButton" onClick={addConversationClick}>
+                Send message
+              </button>
+            </div>
+
+          )}
+
 
           {user.username !== currentUser.username && (
             isSubscribed ?
@@ -204,6 +227,10 @@ export default function Rightbar({ user }) {
             </div>
 
           )}
+
+
+
+
           <h4 className="rightbarTitleUsername">{user.username}</h4>
           <hr className="rightbarHr" />
           <h4 className="rightbarTitle">User information</h4>
