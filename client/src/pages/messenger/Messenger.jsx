@@ -27,7 +27,6 @@ const Messenger = ({ members }) => {
     const scrollRef = useRef()
     const [searchUser, setSearchUser] = useState("")
     const [searchRes, setSearchRes] = useState([])
-    const [foundConversations, setFoundConversations] = useState([])
     const [friends, setFriends] = useState([])
 
     useEffect(() => {
@@ -72,7 +71,6 @@ const Messenger = ({ members }) => {
                 setConversations(res)
                 setFriends([])
                 setSearchRes([])
-                setFoundConversations([])
 
                 await Promise.all(res.map((conversation) => {
                     const friendId = conversation.members.find(member => member !== user._id)
@@ -89,12 +87,7 @@ const Messenger = ({ members }) => {
                 }));
 
                 setSearchRes(searchedRes)
-                res.map((conversation, index) => (
-                    (searchedRes[index] !== undefined)  && (
-                        setFoundConversations((prev) => [...prev, conversation])
-                    )
-                             
-                ))
+                setConversations(res)
 
 
             } catch (err) {
@@ -169,10 +162,15 @@ const Messenger = ({ members }) => {
                             placeholder='Search user'
                             className='chatMenuInput'
                         ></input>
-                        {foundConversations.map((conversation, index) => (
-                            <div key={conversation._id} onClick={() => setCurrentChat(conversation)}>
-                                <Conversation conversation={conversation} currentUser={user} />
-                            </div>
+                        {conversations.map((conversation, index) => (
+
+                            ((searchRes[index] !== undefined) || (searchUser === "")) && (
+                                < div key={conversation._id} onClick={() => setCurrentChat(conversation)}>
+                                    <Conversation conversation={conversation} currentUser={user} />
+                                </div>
+                            )
+
+
 
                         ))}
 
