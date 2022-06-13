@@ -26,53 +26,9 @@ const Messenger = ({ members }) => {
     const socket = useRef(io("ws://localhost:8900"))
     const scrollRef = useRef()
     const [searchUser, setSearchUser] = useState("")
-    const [searchRes, setSearchedRes] = useState([])
-    console.log(conversations)
-    console.log(searchRes)
-
-
-
+    const [searchRes, setSearchRes] = useState([])
+    const [foundConversations, setFoundConversations] = useState([])
     const [friends, setFriends] = useState([])
-    console.log(friends)
-
-    useEffect(() => {
-        (async () => {
-            const res = await GetConversations(user._id)
-            //setConversations(res)
-            setFriends([])
-            setSearchedRes([])
-            console.log(res)
-
-
-            await Promise.all(conversations.map((conversation) => {
-                const friendId = conversation.members.find(member => member !== user._id)
-                setFriends((prev) => [...prev, friendId])
-                console.log(friendId)
-            }))
-
-            const searchedRes = await Promise.all(friends.map(async (friend, index) => {
-                const user = await GetUserById(friend)
-                if (user.username.toLowerCase().includes(searchUser.toLowerCase())) {
-                    return user
-                } else {
-
-                }
-            }));
-            setSearchedRes(searchedRes)
-
-        })()
-
-    }, [searchUser, user, conversations])
-
-
-    useEffect(() => {
-        searchRes.map((res, index) => {
-            console.log(res === undefined)
-        }) 
-    }, [searchRes])
-
-
-
 
     useEffect(() => {
         conversations?.map((conversation) => {
@@ -104,22 +60,49 @@ const Messenger = ({ members }) => {
     useEffect(() => {
         socket.current.emit("addUser", user._id)
         socket.current.on("getUsers", users => {
-            console.log(users)
+            //console.log(users)
         })
     }, [user])
 
     useEffect(() => {
         (async () => {
             try {
+
                 const res = await GetConversations(user._id)
                 setConversations(res)
+                setFriends([])
+                setSearchRes([])
+                setFoundConversations([])
+
+                await Promise.all(res.map((conversation) => {
+                    const friendId = conversation.members.find(member => member !== user._id)
+                    setFriends((prev) => [...prev, friendId])
+                }))
+
+                const searchedRes = await Promise.all(friends.map(async (friend, index) => {
+                    const user = await GetUserById(friend)
+                    if (user.username.toLowerCase().includes(searchUser.toLowerCase())) {
+                        return user
+                    } else {
+
+                    }
+                }));
+
+                setSearchRes(searchedRes)
+                res.map((conversation, index) => (
+                    (searchedRes[index] !== undefined)  && (
+                        setFoundConversations((prev) => [...prev, conversation])
+                    )
+                             
+                ))
+
+
             } catch (err) {
                 console.log(err)
             }
 
         })()
-    }, [user._id])
-
+    }, [user, searchUser])
 
 
     useEffect(() => {
@@ -186,7 +169,7 @@ const Messenger = ({ members }) => {
                             placeholder='Search user'
                             className='chatMenuInput'
                         ></input>
-                        {conversations.map((conversation) => (
+                        {foundConversations.map((conversation, index) => (
                             <div key={conversation._id} onClick={() => setCurrentChat(conversation)}>
                                 <Conversation conversation={conversation} currentUser={user} />
                             </div>

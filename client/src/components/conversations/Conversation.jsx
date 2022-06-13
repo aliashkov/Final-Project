@@ -4,6 +4,7 @@ import { GetUserById } from '../../services/userApi';
 
 
 const Conversation = ({ conversation, currentUser }) => {
+    console.log(conversation)
 
     const [user, setUser] = useState(null)
 
