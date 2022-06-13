@@ -25,8 +25,6 @@ const Conversation = ({ conversation, currentUser }) => {
         getUser();
     }, [currentUser, conversation])
 
-    console.log(conversation)
-
 
     return (
         <div className='conversation'>

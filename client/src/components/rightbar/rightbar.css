@@ -64,7 +64,7 @@
     text-align: center;
 }
 
-.rightbarTitleUsername{
+.rightbarTitleUsername {
     font-size: 24px;
     font-weight: 500;
     margin: 20px 0;
@@ -72,7 +72,7 @@
 
 }
 
-.rightbarHr{
+.rightbarHr {
     margin: 20px 0;
 }
 
@@ -116,13 +116,13 @@
 }
 
 
-.rightbarContainerButton{
+.rightbarContainerButton {
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
-.rightbarFollowButton{
+.rightbarFollowButton {
     margin-top: 30px;
     margin-bottom: 10px;
     border: none;
@@ -137,17 +137,38 @@
     cursor: pointer;
     text-align: center;
     justify-content: center;
-  }
-  
-  .rightbarFollowButton:focus{
+}
+
+.rightbarFollowButton:focus {
     outline: none;
-  }
+}
 
-  .rightbarFollowingName{
-      text-align: center;
-      margin-top: 5px;
-      font-size: 17px;
-      font-weight: 500;
-  }
+.rightbarFollowingName {
+    text-align: center;
+    margin-top: 5px;
+    font-size: 17px;
+    font-weight: 500;
+}
 
-  
+
+
+.rightbarSendMessageButton {
+    margin-top: 30px;
+    margin-bottom: 10px;
+    border: none;
+    background-color: #1872f2;
+    color: white;
+    border-radius: 5px;
+    padding: 5px 10px;
+    display: flex;
+    align-items: center;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    text-align: center;
+    justify-content: center;
+}
+
+.rightbarSendMessageButton:focus {
+    outline: none;
+}

@@ -60,13 +60,6 @@ const Comments = ({ post }) => {
         setCommentsOpen(false)
     }
 
-    const commentsHandler = (e) => {
-        e.preventDefault()
-        setCommentsOpen(!commentsOpen)
-        setClicked(false)
-    }
-
-
 
     const changePostClick = (e) => {
         e.preventDefault()
