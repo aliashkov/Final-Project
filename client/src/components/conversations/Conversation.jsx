@@ -4,7 +4,6 @@ import { GetUserById } from '../../services/userApi';
 
 
 const Conversation = ({ conversation, currentUser }) => {
-    console.log(conversation)
 
     const [user, setUser] = useState(null)
 
@@ -16,7 +15,6 @@ const Conversation = ({ conversation, currentUser }) => {
         const getUser = async () => {
             try {
                 const res = await GetUserById(friendId);
-                console.log(res)
                 setUser(res)
             } catch (err) {
                 console.log(err)
