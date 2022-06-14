@@ -16,7 +16,7 @@ import { getAllCommentsByPostId, likeDislikeComments, deleteComment } from '../.
 import { AddedClick, NulifyClicks } from '../../actions/clickedAction';
 
 
-const Post = ({ post, commentsPost }) => {
+const Post = ({ post, commentsPost , socket }) => {
 
     const dispatch = useDispatch()
     const [like, setLike] = useState(post.likes.length)
@@ -36,6 +36,7 @@ const Post = ({ post, commentsPost }) => {
         setClicked(false)
         setModifyData(false)
     }, [amountAddedPosts])
+
 
     useEffect(() => {
         setIsLiked(post.likes.includes(currentUser._id))
@@ -63,14 +64,20 @@ const Post = ({ post, commentsPost }) => {
         (async () => {
             try {
                 if (!commentsPost) {
+                    socket.current.emit("refreshPost");
+                    dispatch(AmountAddedPosts())
                     await likeDislikePosts(post._id, currentUser._id)
 
                 }
                 else {
+                    socket.current.emit("refreshPost");
+                    dispatch(AmountAddedPosts())
                     await likeDislikeComments(post._id, currentUser._id)
                 }
+
                 setLike(isLiked ? like - 1 : like + 1);
                 setIsLiked(!isLiked);
+
 
             } catch (err) { }
 
@@ -115,7 +122,7 @@ const Post = ({ post, commentsPost }) => {
                 else {
                     await deleteComment(post._id, currentUser._id , currentUser.isAdmin)
                 }
-
+                socket.current.emit("refreshPost");
                 dispatch(AmountAddedPosts())
                 setClicked(!clicked)
             } catch (err) { }
@@ -158,7 +165,7 @@ const Post = ({ post, commentsPost }) => {
                     )}
                 </div>
                 {modifyData ?
-                    <Share change={true} postId={post._id} comments={commentsPost} />
+                    <Share socket={socket} change={true} postId={post._id} comments={commentsPost} />
                     : <>
                         <div className="postCenter">
                             <span className="postText">{post?.description}</span>
@@ -167,7 +174,7 @@ const Post = ({ post, commentsPost }) => {
                         <div className="postBottom">
                             <div className="postBottomLeft">
                                 <img className="likeIcon" src={`${PUBLIC_FOLDER}heart.png`} onClick={likeHandler} alt="" />
-                                <span className="postLikeCounter">{like} people like it</span>
+                                <span className="postLikeCounter">{post.likes.length} people like it</span>
                             </div>
                             {!commentsPost && (
                                 <div className="postBottomRight">
@@ -182,11 +189,11 @@ const Post = ({ post, commentsPost }) => {
 
                         <div className="post">
                             <div className="postWrapper">
-                                <Share comments={true} postId={post._id} />
+                                <Share socket={socket} comments={true} postId={post._id} />
 
 
                                 {comments.map((comment, index) => (
-                                    <Post key={comment._id} post={comment} commentsPost={true} />
+                                    <Post socket={socket} key={comment._id} post={comment} commentsPost={true} />
 
                                 ))}
 

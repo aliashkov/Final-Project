@@ -6,6 +6,7 @@ import { getProfilePosts, getTimelinePosts, getAllPosts } from '../../services/p
 import { useSelector } from 'react-redux';
 import { GetUsers } from '../../services/userApi';
 import InfiniteScroll from 'react-infinite-scroller';
+import {io} from 'socket.io-client'
 
 const TOTAL_PAGES = 3;
 
@@ -20,7 +21,13 @@ const Feed = ({ username }) => {
     const { user } = useSelector(state => state.userReducer)
     const { isAllPosts } = useSelector(state => state.isAllPostsReducer)
     const { amountAddedPosts } = useSelector(state => state.isAllPostsReducer)
+    const socket = useRef(io("ws://localhost:8900"))
 
+    useEffect(() => {
+        socket.current = io("ws://localhost:8900")
+    }, [])
+
+    
     const [arr, setArr] = useState([]);
     const [currentLength, setCurrentLength] = useState(3)
 
@@ -75,11 +82,11 @@ const Feed = ({ username }) => {
 
         <div className='feed'>
             <div className="feedWrapper">
-                {(!username || username === user.username) && <Share />}
+                {(!username || username === user.username) && <Share socket={socket} />}
                 {arr.map((a, i) => {
                     return (
                         <div key={a._id}>
-                            <Post post={a} />
+                            <Post post={a} socket={socket} />
                             {i === arr.length - 1 ?
                                 <p key={a} ref={lastItemRef}>
                                 </p>

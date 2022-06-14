@@ -10,14 +10,18 @@ import { GetMessages, SendMessage } from '../../services/messagesApi';
 import { io } from 'socket.io-client'
 import { CoPresentSharp } from '@mui/icons-material';
 import { GetUserById } from '../../services/userApi';
-
+import DeleteIcon from '@mui/icons-material/Delete';
+import ModeEditIcon from '@mui/icons-material/ModeEdit';
+import { AmountAddedPosts } from '../../actions/isAllPostsAction';
+import { useDispatch } from 'react-redux';
+import { AddUserToChat , removeUserFromChat } from "../../actions/chatAction";
 
 
 const Messenger = ({ members }) => {
 
     const { user } = useSelector(state => state.userReducer)
     const { member } = useSelector(state => state.chatReducer)
-
+    const { amountAddedPosts } = useSelector(state => state.isAllPostsReducer)
     const [conversations, setConversations] = useState([])
     const [currentChat, setCurrentChat] = useState(null)
     const [messages, setMessages] = useState(null)
@@ -28,12 +32,28 @@ const Messenger = ({ members }) => {
     const [searchUser, setSearchUser] = useState("")
     const [searchRes, setSearchRes] = useState([])
     const [friends, setFriends] = useState([])
+    const dispatch = useDispatch()
+
+
+    console.log(amountAddedPosts)
+
+    useEffect(() => {
+        socket.current.on("refreshPosts", amountRefreshes => {
+            console.log(amountRefreshes)
+            dispatch(AmountAddedPosts())
+        })
+    }, [user])
+
 
     useEffect(() => {
         conversations?.map((conversation) => {
-            if ((conversation.members[0].includes(member)) && (conversation.members[1].includes(user?._id)) || (conversation.members[1].includes(member)) && (conversation.members[0].includes(user?._id))) {
-                setCurrentChat(conversation)
+            if (member !== null) {
+                if ((conversation.members[0].includes(member)) && (conversation.members[1].includes(user?._id)) || (conversation.members[1].includes(member)) && (conversation.members[0].includes(user?._id))) {
+                    setCurrentChat(conversation)
+                    dispatch(removeUserFromChat());
+                }
             }
+
 
         })
     }, [member, conversations]);
@@ -59,7 +79,7 @@ const Messenger = ({ members }) => {
     useEffect(() => {
         socket.current.emit("addUser", user._id)
         socket.current.on("getUsers", users => {
-            //console.log(users)
+            console.log(users)
         })
     }, [user])
 
@@ -68,7 +88,10 @@ const Messenger = ({ members }) => {
             try {
 
                 const res = await GetConversations(user._id)
-                setConversations(res)
+                setConversations(res.sort((post1, post2) => {
+                    return new Date(post2.updatedAt) - new Date(post1.updatedAt)
+                }));
+
                 setFriends([])
                 setSearchRes([])
 
@@ -87,15 +110,13 @@ const Messenger = ({ members }) => {
                 }));
 
                 setSearchRes(searchedRes)
-                setConversations(res)
-
 
             } catch (err) {
                 console.log(err)
             }
 
         })()
-    }, [user, searchUser])
+    }, [user, searchUser, amountAddedPosts])
 
 
     useEffect(() => {
@@ -108,7 +129,7 @@ const Messenger = ({ members }) => {
             }
 
         })()
-    }, [currentChat])
+    }, [currentChat , amountAddedPosts])
 
     useEffect(() => {
 
@@ -122,9 +143,13 @@ const Messenger = ({ members }) => {
             conversationId: currentChat._id
         }
 
+        console.log(message)
+
         const receiverId = currentChat.members.find(
             (member) => member !== user._id
         );
+
+        console.log(receiverId)
 
         socket.current.emit("sendMessage", {
             senderId: user._id,
@@ -134,6 +159,7 @@ const Messenger = ({ members }) => {
 
         try {
             const res = await SendMessage(message)
+            dispatch(AmountAddedPosts())
             setMessages([...messages, res.data])
             setNewMessage("")
 
@@ -183,7 +209,8 @@ const Messenger = ({ members }) => {
                                 <div className="chatBoxTop">
                                     {messages.map(message => (
                                         <div key={message._id} ref={scrollRef}>
-                                            <Message message={message} own={message.sender === user._id} />
+
+                                            <Message message={message} own={message.sender === user._id}  socket={socket}/>
                                         </div>
 
                                     ))}
@@ -202,10 +229,6 @@ const Messenger = ({ members }) => {
                 </div>
                 <div className="chatOnline">
                     <div className="chatOnlineWrapper">
-                        <ChatOnline />
-                        <ChatOnline />
-                        <ChatOnline />
-                        <ChatOnline />
                     </div>
                 </div>
             </div>

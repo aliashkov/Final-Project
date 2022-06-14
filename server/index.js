@@ -36,7 +36,7 @@ io.on("connection", (socket) => {
         io.emit("getUsers", users);
     });
 
-    socket.on("addPost", () => {
+    socket.on("refreshPost", () => {
         amountRefreshes++;
         io.emit("refreshPosts", amountRefreshes);
     });
