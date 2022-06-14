@@ -12,4 +12,14 @@ router.post("/" , messagesController.newMessage)
 router.get("/:conversationId" , messagesController.getMessagesById)
 
 
+// Delete Message of user
+
+router.delete("/:id" , messagesController.deleteMessage)
+
+
+// Update Message of user
+
+router.put("/:id" , messagesController.updateMessage)
+
+
 module.exports = router;

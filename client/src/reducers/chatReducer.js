@@ -9,6 +9,12 @@ export const chatReducer = (state = defaultStore, action) => {
             return {
                 member: action.payload,
             };
+
+        case "REMOVE_MEMBER_FROM_CHAT":
+            return {
+                member: null,
+            };
+
         default:
             return state;
     }

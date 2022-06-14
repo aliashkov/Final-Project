@@ -6,6 +6,8 @@
 
 .messageTop {
     display: flex;
+    flex-wrap: wrap;
+    align-items: center;
 }
 
 .messageImg {
@@ -22,7 +24,8 @@
     border-radius: 20px;
     background-color: #1877f2;
     color: white;
-    max-width: 300px;
+    max-width: 240px;
+
 }
 
 .messageBottom {
@@ -37,4 +40,13 @@
 .message.own .messageText{
     background-color: rgb(245, 245, 245);
     color: black;
+}
+
+.ow-anywhere {
+    overflow-wrap: break-word;
+}
+
+.messageSettings{
+    margin-left: 10px;
+    cursor: pointer;
 }

@@ -1,4 +1,4 @@
-import React, { useState , useRef , useEffect } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import './share.css'
 import { PermMedia, Cancel } from '@mui/icons-material';
 import { useSelector } from 'react-redux';
@@ -13,21 +13,18 @@ import { io } from 'socket.io-client'
 
 
 
-const Share = ({ postId, change, comments }) => {
+const Share = ({ postId, change, comments, socket }) => {
     const { user } = useSelector(state => state.userReducer)
     const PUBLIC_FOLDER = process.env.REACT_APP_PUBLIC_FOLDER;
     const [file, setFile] = useState(null);
     const [description, setDescription] = useState("")
     const dispatch = useDispatch();
-    const socket = useRef(io("ws://localhost:8900"))
+
+
 
     useEffect(() => {
-        socket.current = io("ws://localhost:8900")
-    }, [])
 
-    useEffect(() => {
         socket.current.on("refreshPosts", amountRefreshes => {
-            console.log(amountRefreshes)
             dispatch(AmountAddedPosts())
         })
     }, [user])
@@ -39,7 +36,7 @@ const Share = ({ postId, change, comments }) => {
             const newPost = {
                 userId: user._id,
                 description: description,
-                isAdmin : user.isAdmin
+                isAdmin: user.isAdmin
             };
             const data = new FormData();
             if (file) {
@@ -66,7 +63,7 @@ const Share = ({ postId, change, comments }) => {
                 }
                 dispatch(NulifyClicks())
                 dispatch(AmountAddedPosts())
-                socket.current.emit("addPost");
+                socket.current.emit("refreshPost");
                 setFile(null)
                 setDescription("")
                 if (!comments) {
