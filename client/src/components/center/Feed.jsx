@@ -21,17 +21,9 @@ const Feed = ({ username }) => {
     const { user } = useSelector(state => state.userReducer)
     const { isAllPosts } = useSelector(state => state.isAllPostsReducer)
     const { amountAddedPosts } = useSelector(state => state.isAllPostsReducer)
-    const socket = useRef(io("ws://localhost:8900"))
+    const socket = useRef();
 
-    useEffect(() => {
-        socket.current = io("ws://localhost:8900")
-    }, [])
 
-    useEffect(() => {
-        socket.current.emit("addUser", user._id)
-        socket.current.on("getUsers", users => {
-        })
-    }, [user])
 
 
     const [arr, setArr] = useState([]);
