@@ -26,8 +26,6 @@ const Profile = () => {
         })()
     }, [username, friendsClick])
 
-    console.log(user)
-    console.log(user._id !== currentUser._id)
 
     return (
         <>

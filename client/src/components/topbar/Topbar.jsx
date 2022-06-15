@@ -48,6 +48,13 @@ const Topbar = () => {
         dispatch(NulifyPosts())
     }
 
+
+    const logoutClick = (e) =>{
+        e.preventDefault()
+        localStorage.setItem("user", null)
+        navigate('/login');
+    }
+
     const hiddenSearch = () => {
         setSearchUser("");
         setUsers([])
@@ -106,9 +113,9 @@ const Topbar = () => {
                     </div>
 
                     <div className="topbarIconItem">
-                        <Link to={`/login`} style={{ textDecoration: "none", color: "white" }}>
-                            <LogoutIcon />
-                        </Link>
+
+                        <LogoutIcon onClick={logoutClick}/>
+
 
                     </div>
 

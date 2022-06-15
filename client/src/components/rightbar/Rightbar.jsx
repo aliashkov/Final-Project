@@ -46,7 +46,7 @@ export default function Rightbar({ user }) {
         setFollowers(followerList.data);
 
       } catch (err) {
-        console.log(err);
+
       }
     };
     getFollowers();
@@ -59,7 +59,6 @@ export default function Rightbar({ user }) {
         const followingList = await followingsListUser(user._id)
         setFollowings(followingList.data);
       } catch (err) {
-        console.log(err);
       }
     };
     getFollowings();
@@ -72,7 +71,6 @@ export default function Rightbar({ user }) {
         const friendsList = await friendsListUser(user._id)
         setFriends(friendsList.data);
       } catch (err) {
-        console.log(err);
       }
     };
     getFriends();
@@ -119,7 +117,6 @@ export default function Rightbar({ user }) {
 
       setFollowed(!followed);
     } catch (err) {
-      console.log(err)
     }
   }
 
@@ -150,7 +147,6 @@ export default function Rightbar({ user }) {
       dispatch(FriendsClick())
       setIsFriended(!isFriended);
     } catch (err) {
-      console.log(err)
     }
   }
 

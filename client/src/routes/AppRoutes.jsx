@@ -8,26 +8,35 @@ import { useSelector } from 'react-redux';
 import RequireAuth from '../hoc/requireAuth';
 import EditingProfile from '../pages/editingProfile/EditingProfile'
 import Messenger from '../pages/messenger/Messenger';
+import RequireUser from '../hoc/requireUser';
 
 
 const AppRoutes = (props) => {
 
-    const { user} = useSelector(state => state.userReducer)
+    const { user } = useSelector(state => state.userReducer)
 
     return (
 
         <>
             <Routes>
-                <Route path="/" element={ user ? <Home /> : <Login />} />
+                <Route path="/" element={
+                    <RequireUser><Home /> </RequireUser>
+                } />
                 <Route path="/login" element={
                     <RequireAuth><Login /> </RequireAuth>
                 } />
-                <Route path="/profile/:username" element={  user ? <Profile /> : <Login />} />
+                <Route path="/profile/:username" element={
+                   <RequireUser><Profile /> </RequireUser>
+                } />
                 <Route path="/register" element={
                     <RequireAuth><Register /> </RequireAuth>
                 } />
-                <Route path="/editing" element={  user ? <EditingProfile /> : <Login />} />
-                <Route path="/messenger" element={  user ? <Messenger  /> : <Login />} />
+                <Route path="/editing" element={
+                    <RequireUser><EditingProfile /> </RequireUser>
+                } />
+                <Route path="/messenger" element={
+                    <RequireUser><Messenger /> </RequireUser>
+                } />
 
             </Routes>
         </>

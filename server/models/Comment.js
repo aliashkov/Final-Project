@@ -15,7 +15,7 @@ const commentSchema = new Schema(
             type : String,
             max : 500
         },
-        img : {
+        file : {
             type : String,
         },
         likes : {

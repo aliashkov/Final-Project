@@ -14,3 +14,12 @@ export const SendMessage = async (message) => {
 export const deleteMessage = async (messageId, currentUserId , admin) => {
     return await axios.delete(`http://localhost:8000/api/messages/${messageId}`, { data: { userId: currentUserId, isAdmin : admin } });
 }
+
+
+export const updateMessage = async (messageId, currentUserId ,  text , admin) => {
+    return await axios.put(`http://localhost:8000/api/messages/${messageId}`, {
+        userId: currentUserId,
+        text : text ,
+        isAdmin : admin ,
+    });
+}

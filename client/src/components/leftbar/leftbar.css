@@ -35,6 +35,12 @@
     margin-bottom: 20px;
 }
 
+.sidebarListLink{
+    display: flex;
+    cursor: pointer;
+    align-items: center;
+}
+
 .sidebarIcon {
     margin-right: 15px;
 }

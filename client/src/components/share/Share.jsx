@@ -10,6 +10,7 @@ import { changePost } from '../../services/postsApi';
 import { addComment, changeComment } from '../../services/commentsApi';
 import { NulifyClicks } from '../../actions/clickedAction';
 import { io } from 'socket.io-client'
+import VideoPlayer from "react-video-js-player"
 
 
 
@@ -25,8 +26,12 @@ const Share = ({ postId, change, comments, socket }) => {
     useEffect(() => {
 
         socket.current.on("refreshPosts", amountRefreshes => {
+            
             dispatch(AmountAddedPosts())
+            socket.current.on();
         })
+        //socket.disconnect();
+
     }, [user])
 
 
@@ -43,7 +48,7 @@ const Share = ({ postId, change, comments, socket }) => {
                 const fileName = Date.now() + file.name;
                 data.append("name", fileName);
                 data.append("file", file);
-                newPost.img = fileName;
+                newPost.file = fileName;
                 try {
                     await UploadFile(data, user)
                 } catch (err) { }
@@ -112,9 +117,14 @@ const Share = ({ postId, change, comments, socket }) => {
 
 
                 </div>
+
                 <hr className="shareHr" />
                 {file && (
                     <div className="shareImgContainer">
+
+                        {/*                         <VideoPlayer src={URL.createObjectURL(file)} alt=""  width="720"
+                            height="420"
+                            playBackRates={[0.5, 1, 1.25, 1.5, 2]} /> */}
                         <img className="shareImg" src={URL.createObjectURL(file)} alt="" />
                         <Cancel className="shareCancelImg" onClick={() => setFile(null)} />
                     </div>
