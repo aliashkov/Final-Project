@@ -20,8 +20,8 @@ export const addPost = async (newPost) => {
 }
 
 export const changePost = async (postId , changedPost) => {
-    if (changedPost.img === undefined)
-        changedPost.img = "";
+    if (changedPost.file === undefined)
+        changedPost.file = "";
     return await axios.put(`http://localhost:8000/api/posts/${postId}`, changedPost);
 }
 

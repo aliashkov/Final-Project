@@ -15,6 +15,7 @@ import Share from '../share/Share';
 import { getAllCommentsByPostId, likeDislikeComments, deleteComment } from '../../services/commentsApi';
 import { AddedClick, NulifyClicks } from '../../actions/clickedAction';
 import VideoPlayer from "react-video-js-player"
+import { io } from 'socket.io-client'
 
 
 const Post = ({ post, commentsPost, socket }) => {
@@ -32,6 +33,17 @@ const Post = ({ post, commentsPost, socket }) => {
     const { amountClicks } = useSelector(state => state.clickedReducer)
 
     const [comments, setComments] = useState({})
+
+    useEffect(() => {
+        socket.current = io("ws://localhost:8900");
+
+    }, []);
+
+    useEffect(() => {
+        socket.current.emit("addUser", currentUser._id)
+        socket.current.on("getUsers", users => {
+        })
+    }, [currentUser])
 
     useEffect(() => {
         setClicked(false)
@@ -71,6 +83,9 @@ const Post = ({ post, commentsPost, socket }) => {
                     await likeDislikeComments(post._id, currentUser._id)
                 }
                 socket.current.emit("refreshPost");
+
+
+
                 dispatch(AmountAddedPosts())
                 setLike(isLiked ? like - 1 : like + 1);
                 setIsLiked(!isLiked);

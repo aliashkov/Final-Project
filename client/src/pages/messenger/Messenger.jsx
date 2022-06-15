@@ -27,20 +27,29 @@ const Messenger = ({ members }) => {
     const [messages, setMessages] = useState(null)
     const [newMessage, setNewMessage] = useState("")
     const [arrivalMessage, setArrivalMessage] = useState(null)
-    const socket = useRef(io("ws://localhost:8900"))
+    const socket = useRef();
     const scrollRef = useRef()
     const [searchUser, setSearchUser] = useState("")
     const [searchRes, setSearchRes] = useState([])
     const [friends, setFriends] = useState([])
     const dispatch = useDispatch()
 
-
+    useEffect(() => {
+        socket.current = io("ws://localhost:8900");
+        socket.current.on("getMessage", (data) => {
+          setArrivalMessage({
+            sender: data.senderId,
+            text: data.text,
+            createdAt: Date.now(),
+          });
+        });
+      }, []);
 
     useEffect(() => {
         socket.current.on("refreshPosts", amountRefreshes => {
             dispatch(AmountAddedPosts())
         })
-    }, [user])
+    }, [user, amountAddedPosts])
 
 
     useEffect(() => {
@@ -48,6 +57,7 @@ const Messenger = ({ members }) => {
             if (member !== null) {
                 if ((conversation.members[0].includes(member)) && (conversation.members[1].includes(user?._id)) || (conversation.members[1].includes(member)) && (conversation.members[0].includes(user?._id))) {
                     setCurrentChat(conversation)
+                    dispatch(AmountAddedPosts())
                     dispatch(removeUserFromChat());
                 }
             }
@@ -56,16 +66,7 @@ const Messenger = ({ members }) => {
         })
     }, [member, conversations]);
 
-    useEffect(() => {
-        socket.current = io("ws://localhost:8900")
-        socket.current.on("getMessage", (data) => {
-            setArrivalMessage({
-                sender: data.senderId,
-                text: data.text,
-                createdAt: Date.now(),
-            });
-        });
-    }, [])
+
 
 
     useEffect(() => {
@@ -148,6 +149,8 @@ const Messenger = ({ members }) => {
             receiverId,
             text: newMessage,
         });
+
+        socket.current.emit("refreshPost");
 
         try {
             const res = await SendMessage(message)

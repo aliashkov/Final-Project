@@ -17,10 +17,20 @@ import VideoPlayer from "react-video-js-player"
 const Share = ({ postId, change, comments, socket }) => {
     const { user } = useSelector(state => state.userReducer)
     const PUBLIC_FOLDER = process.env.REACT_APP_PUBLIC_FOLDER;
-    const [file, setFile] = useState(null);
+    const [file2, setFile2] = useState(null);
     const [description, setDescription] = useState("")
     const dispatch = useDispatch();
 
+    useEffect(() => {
+        socket.current = io("ws://localhost:8900");
+
+    }, []);
+
+    useEffect(() => {
+        socket.current.emit("addUser", user._id)
+        socket.current.on("getUsers", users => {
+        })
+    }, [user])
 
 
     useEffect(() => {
@@ -28,11 +38,13 @@ const Share = ({ postId, change, comments, socket }) => {
         socket.current.on("refreshPosts", amountRefreshes => {
             
             dispatch(AmountAddedPosts())
-            socket.current.on();
+            
         })
+
+        
         //socket.disconnect();
 
-    }, [user])
+    }, [])
 
 
     const submitHandler = async (e) => {
@@ -44,10 +56,10 @@ const Share = ({ postId, change, comments, socket }) => {
                 isAdmin: user.isAdmin
             };
             const data = new FormData();
-            if (file) {
-                const fileName = Date.now() + file.name;
+            if (file2) {
+                const fileName = Date.now() + file2.name;
                 data.append("name", fileName);
-                data.append("file", file);
+                data.append("file", file2);
                 newPost.file = fileName;
                 try {
                     await UploadFile(data, user)
@@ -69,7 +81,7 @@ const Share = ({ postId, change, comments, socket }) => {
                 dispatch(NulifyClicks())
                 dispatch(AmountAddedPosts())
                 socket.current.emit("refreshPost");
-                setFile(null)
+                setFile2(null)
                 setDescription("")
                 if (!comments) {
                     document.querySelector("#shareInputId").value = "";
@@ -119,14 +131,14 @@ const Share = ({ postId, change, comments, socket }) => {
                 </div>
 
                 <hr className="shareHr" />
-                {file && (
+                {file2 && (
                     <div className="shareImgContainer">
 
                         {/*                         <VideoPlayer src={URL.createObjectURL(file)} alt=""  width="720"
                             height="420"
                             playBackRates={[0.5, 1, 1.25, 1.5, 2]} /> */}
-                        <img className="shareImg" src={URL.createObjectURL(file)} alt="" />
-                        <Cancel className="shareCancelImg" onClick={() => setFile(null)} />
+                        <img className="shareImg" src={URL.createObjectURL(file2)} alt="" />
+                        <Cancel className="shareCancelImg" onClick={() => setFile2(null)} />
                     </div>
                 )}
                 <form className="shareBottom" onSubmit={submitHandler}>
@@ -138,7 +150,7 @@ const Share = ({ postId, change, comments, socket }) => {
                                     <label htmlFor="file-upload" className="shareOption">
                                         <PermMedia htmlColor='tomato' className='shareIcon' />
                                         <span className='shareOptionText'>Photo</span>
-                                        <input id="file-upload" type="file" onChange={(e) => setFile(e.target.files[0])} />
+                                        <input id="file-upload" type="file" onChange={(e) => setFile2(e.target.files[0])} />
                                     </label>
 
                                 </>
@@ -147,7 +159,7 @@ const Share = ({ postId, change, comments, socket }) => {
                                 <>
                                     <PermMedia htmlColor='tomato' className='shareIcon' />
                                     <span className='shareOptionText'>Photo</span>
-                                    <input style={{ display: "none" }} type="file" id="file" accept=".png,.jpeg,.jpg" onChange={(e) => setFile(e.target.files[0])} />
+                                    <input style={{ display: "none" }} type="file" id="file" accept=".png,.jpeg,.jpg" onChange={(e) => setFile2(e.target.files[0])} />
                                 </> :
                                 <></>
 
