@@ -6,7 +6,7 @@ import { getProfilePosts, getTimelinePosts, getAllPosts } from '../../services/p
 import { useSelector } from 'react-redux';
 import { GetUsers } from '../../services/userApi';
 import InfiniteScroll from 'react-infinite-scroller';
-import {io} from 'socket.io-client'
+import { io } from 'socket.io-client'
 
 const TOTAL_PAGES = 3;
 
@@ -27,7 +27,13 @@ const Feed = ({ username }) => {
         socket.current = io("ws://localhost:8900")
     }, [])
 
-    
+    useEffect(() => {
+        socket.current.emit("addUser", user._id)
+        socket.current.on("getUsers", users => {
+        })
+    }, [user])
+
+
     const [arr, setArr] = useState([]);
     const [currentLength, setCurrentLength] = useState(3)
 

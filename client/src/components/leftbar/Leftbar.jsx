@@ -5,6 +5,7 @@ import { Chat, PlayCircleFilledOutlined, Group, Bookmark, HelpOutline, WorkOutli
 import { Users } from '../../data';
 import YourFriends from '../yourFriends/YourFriends';
 import { useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
 
 
 const Leftbar = () => {
@@ -17,40 +18,68 @@ const Leftbar = () => {
             <div className="sidebarWrapper">
                 <ul className="sidebarList">
                     <li className="sidebarListItem">
-                        <PersonOutlineIcon className='sidebarIcon' />
-                        <span className="sidebarListItemText">Feed</span>
+
+                            <Link to='/'  className='sidebarListLink' style={{ textDecoration: "none" , color: "black"  }}>
+                                <PersonOutlineIcon className='sidebarIcon' />
+                                <span className="sidebarListItemText">Feed</span>
+                            </Link>
+
                     </li>
                     <li className="sidebarListItem">
-                        <Chat className="sidebarIcon" />
-                        <span className="sidebarListItemText">Chats</span>
+                        <Link to='/messenger'  className='sidebarListLink' style={{ textDecoration: "none" , color: "black"  }}>
+                            <Chat className="sidebarIcon" />
+                            <span className="sidebarListItemText">Chats</span>
+                        </Link>
+
                     </li>
                     <li className="sidebarListItem">
-                        <PlayCircleFilledOutlined className="sidebarIcon" />
-                        <span className="sidebarListItemText">Videos</span>
+                        <div className='sidebarListLink'>
+                            <PlayCircleFilledOutlined className="sidebarIcon" />
+                            <span className="sidebarListItemText">Videos</span>
+                        </div>
+
                     </li>
                     <li className="sidebarListItem">
-                        <Group className="sidebarIcon" />
-                        <span className="sidebarListItemText">Groups</span>
+                        <div className='sidebarListLink'>
+                            <Group className="sidebarIcon" />
+                            <span className="sidebarListItemText">Groups</span>
+                        </div>
+
                     </li>
                     <li className="sidebarListItem">
-                        <Bookmark className="sidebarIcon" />
-                        <span className="sidebarListItemText">Bookmarks</span>
+                        <div className='sidebarListLink'>
+                            <Bookmark className="sidebarIcon" />
+                            <span className="sidebarListItemText">Bookmarks</span>
+                        </div>
+
                     </li>
                     <li className="sidebarListItem">
-                        <HelpOutline className="sidebarIcon" />
-                        <span className="sidebarListItemText">Questions</span>
+                        <div className='sidebarListLink'>
+                            <HelpOutline className="sidebarIcon" />
+                            <span className="sidebarListItemText">Questions</span>
+                        </div>
+
                     </li>
                     <li className="sidebarListItem">
-                        <WorkOutline className="sidebarIcon" />
-                        <span className="sidebarListItemText">Jobs</span>
+                        <div className='sidebarListLink'>
+                            <WorkOutline className="sidebarIcon" />
+                            <span className="sidebarListItemText">Jobs</span>
+                        </div>
+
                     </li>
                     <li className="sidebarListItem">
-                        <Event className="sidebarIcon" />
-                        <span className="sidebarListItemText">Events</span>
+                        <div className='sidebarListLink'>
+                            <Event className="sidebarIcon" />
+                            <span className="sidebarListItemText">Events</span>
+                        </div>
+
                     </li>
                     <li className="sidebarListItem">
-                        <School className="sidebarIcon" />
-                        <span className="sidebarListItemText">Courses</span>
+                        <div className='sidebarListLink'>
+                            <School className="sidebarIcon" />
+                            <span className="sidebarListItemText">Courses</span>
+                        </div>
+
                     </li>
                 </ul>
                 <hr className='sidebarHr' />

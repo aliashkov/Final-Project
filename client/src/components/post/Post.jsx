@@ -14,9 +14,10 @@ import { useDispatch } from 'react-redux';
 import Share from '../share/Share';
 import { getAllCommentsByPostId, likeDislikeComments, deleteComment } from '../../services/commentsApi';
 import { AddedClick, NulifyClicks } from '../../actions/clickedAction';
+import VideoPlayer from "react-video-js-player"
 
 
-const Post = ({ post, commentsPost , socket }) => {
+const Post = ({ post, commentsPost, socket }) => {
 
     const dispatch = useDispatch()
     const [like, setLike] = useState(post.likes.length)
@@ -64,17 +65,13 @@ const Post = ({ post, commentsPost , socket }) => {
         (async () => {
             try {
                 if (!commentsPost) {
-                    socket.current.emit("refreshPost");
-                    dispatch(AmountAddedPosts())
                     await likeDislikePosts(post._id, currentUser._id)
-
                 }
                 else {
-                    socket.current.emit("refreshPost");
-                    dispatch(AmountAddedPosts())
                     await likeDislikeComments(post._id, currentUser._id)
                 }
-
+                socket.current.emit("refreshPost");
+                dispatch(AmountAddedPosts())
                 setLike(isLiked ? like - 1 : like + 1);
                 setIsLiked(!isLiked);
 
@@ -116,11 +113,11 @@ const Post = ({ post, commentsPost , socket }) => {
         (async () => {
             try {
                 if (!commentsPost) {
-                    await deletePost(post._id, currentUser._id , currentUser.isAdmin)
+                    await deletePost(post._id, currentUser._id, currentUser.isAdmin)
 
                 }
                 else {
-                    await deleteComment(post._id, currentUser._id , currentUser.isAdmin)
+                    await deleteComment(post._id, currentUser._id, currentUser.isAdmin)
                 }
                 socket.current.emit("refreshPost");
                 dispatch(AmountAddedPosts())
@@ -169,7 +166,17 @@ const Post = ({ post, commentsPost , socket }) => {
                     : <>
                         <div className="postCenter">
                             <span className="postText">{post?.description}</span>
-                            <img className="postImg" src={PUBLIC_FOLDER + post.img} alt="" />
+                            {
+                                post?.file?.includes('.mp4') ?
+                                    <VideoPlayer src={PUBLIC_FOLDER + post?.file} alt="" width="600px"
+                                        height="360px"
+                                        playBackRates={[0.5, 1, 1.25, 1.5, 2]} />
+
+                                    :
+                                    <img className="postImg" src={PUBLIC_FOLDER + post?.file} alt="" />
+                            }
+
+
                         </div>
                         <div className="postBottom">
                             <div className="postBottomLeft">

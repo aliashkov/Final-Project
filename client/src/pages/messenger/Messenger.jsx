@@ -35,11 +35,9 @@ const Messenger = ({ members }) => {
     const dispatch = useDispatch()
 
 
-    console.log(amountAddedPosts)
 
     useEffect(() => {
         socket.current.on("refreshPosts", amountRefreshes => {
-            console.log(amountRefreshes)
             dispatch(AmountAddedPosts())
         })
     }, [user])
@@ -79,7 +77,6 @@ const Messenger = ({ members }) => {
     useEffect(() => {
         socket.current.emit("addUser", user._id)
         socket.current.on("getUsers", users => {
-            console.log(users)
         })
     }, [user])
 
@@ -112,7 +109,6 @@ const Messenger = ({ members }) => {
                 setSearchRes(searchedRes)
 
             } catch (err) {
-                console.log(err)
             }
 
         })()
@@ -125,7 +121,6 @@ const Messenger = ({ members }) => {
                 const res = await GetMessages(currentChat?._id)
                 setMessages(res)
             } catch (err) {
-                console.log(err)
             }
 
         })()
@@ -143,13 +138,10 @@ const Messenger = ({ members }) => {
             conversationId: currentChat._id
         }
 
-        console.log(message)
-
         const receiverId = currentChat.members.find(
             (member) => member !== user._id
         );
 
-        console.log(receiverId)
 
         socket.current.emit("sendMessage", {
             senderId: user._id,
@@ -164,7 +156,6 @@ const Messenger = ({ members }) => {
             setNewMessage("")
 
         } catch (err) {
-            console.log(err)
         }
     }
 

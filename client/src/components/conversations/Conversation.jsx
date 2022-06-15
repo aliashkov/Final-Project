@@ -17,7 +17,6 @@ const Conversation = ({ conversation, currentUser }) => {
                 const res = await GetUserById(friendId);
                 setUser(res)
             } catch (err) {
-                console.log(err)
             }
 
         }

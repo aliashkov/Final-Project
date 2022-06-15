@@ -3,10 +3,12 @@ import { useSelector } from "react-redux";
 import React from 'react';
 
 const RequireAuth = ({ children }) => {
-  const { user } = useSelector(state => state.authReducer)
-
-  if (user) {
-  
+  let user = localStorage.getItem('user');
+  if (user === null) {
+    return children
+  }
+  if (user !== "null") {
+    console.log(11)
     return <Navigate to='/'></Navigate>
   }
   return children
