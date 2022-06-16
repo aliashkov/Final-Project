@@ -1,5 +1,4 @@
 import "./rightbar.css";
-import { Users } from "../../data";
 import { useEffect } from "react";
 import { useState } from "react";
 import { FriendsList } from "../friendList/FriendList";
@@ -11,7 +10,6 @@ import { FollowUser, UnfollowUser } from "../../actions/userAction"
 import { useNavigate } from "react-router-dom";
 import { addFriend, removeFriend } from "../../services/friendsApi";
 import { AddFriend, RemoveFriend } from "../../actions/userAction";
-import { getAllCommentsByPostId } from "../../services/commentsApi";
 import { FriendsClick } from "../../actions/clickedAction";
 import { newConversation } from "../../services/conversationsApi";
 import { AddUserToChat } from "../../actions/chatAction";
@@ -28,7 +26,6 @@ export default function Rightbar({ user }) {
   const [isFriended, setIsFriended] = useState(false)
   const [isSubscribed, setIsSubscribed] = useState(false)
   const { user: currentUser } = useSelector(state => state.userReducer)
-  const { friendsClick } = useSelector(state => state.clickedReducer)
   const navigate = useNavigate()
 
   useEffect(() => {

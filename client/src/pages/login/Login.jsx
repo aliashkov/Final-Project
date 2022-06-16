@@ -1,4 +1,4 @@
-import React, { useContext, useRef } from 'react';
+import React, {useRef } from 'react';
 import './login.css'
 import { loginInit } from '../../services/loginApi';
 import { CircularProgress } from "@mui/material";
@@ -14,7 +14,6 @@ const Login = () => {
     const password = useRef();
     const dispatch = useDispatch();
     const { isFetching} = useSelector(state => state.authReducer)
-    const { user} = useSelector(state => state.userReducer)
     const navigate = useNavigate();
     //localStorage.setItem("user", null)
     
@@ -28,10 +27,6 @@ const Login = () => {
         navigate('/');
     };
 
-    const loginClick = (e) => {
-        e.preventDefault();
-
-    };
 
     const registerClick = (e) => {
         e.preventDefault();

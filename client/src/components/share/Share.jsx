@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import './share.css'
 import { PermMedia, Cancel } from '@mui/icons-material';
 import { useSelector } from 'react-redux';
@@ -10,56 +10,55 @@ import { changePost } from '../../services/postsApi';
 import { addComment, changeComment } from '../../services/commentsApi';
 import { NulifyClicks } from '../../actions/clickedAction';
 import { io } from 'socket.io-client'
-import VideoPlayer from "react-video-js-player"
-
+import ReactPlayer from 'react-player'
 
 
 const Share = ({ postId, change, comments, socket }) => {
     const { user } = useSelector(state => state.userReducer)
     const PUBLIC_FOLDER = process.env.REACT_APP_PUBLIC_FOLDER;
-    const [file2, setFile2] = useState(null);
+    const [filePost, setFilePost] = useState(null);
     const [description, setDescription] = useState("")
     const dispatch = useDispatch();
 
     useEffect(() => {
         socket.current = io("ws://localhost:8900");
 
-    }, []);
+    }, [socket]);
 
     useEffect(() => {
         socket.current.emit("addUser", user._id)
         socket.current.on("getUsers", users => {
         })
-    }, [user])
+    }, [user, socket])
 
 
     useEffect(() => {
 
         socket.current.on("refreshPosts", amountRefreshes => {
-            
+
             dispatch(AmountAddedPosts())
-            
+
         })
 
-        
+
         //socket.disconnect();
 
-    }, [])
+    }, [socket, dispatch])
 
 
     const submitHandler = async (e) => {
         e.preventDefault();
-        if (description !== "") {
+        if (description !== "" || filePost) {
             const newPost = {
                 userId: user._id,
                 description: description,
                 isAdmin: user.isAdmin
             };
             const data = new FormData();
-            if (file2) {
-                const fileName = Date.now() + file2.name;
+            if (filePost) {
+                const fileName = Date.now() + filePost.name;
                 data.append("name", fileName);
-                data.append("file", file2);
+                data.append("file", filePost);
                 newPost.file = fileName;
                 try {
                     await UploadFile(data, user)
@@ -81,7 +80,7 @@ const Share = ({ postId, change, comments, socket }) => {
                 dispatch(NulifyClicks())
                 dispatch(AmountAddedPosts())
                 socket.current.emit("refreshPost");
-                setFile2(null)
+                setFilePost(null)
                 setDescription("")
                 if (!comments) {
                     document.querySelector("#shareInputId").value = "";
@@ -131,14 +130,26 @@ const Share = ({ postId, change, comments, socket }) => {
                 </div>
 
                 <hr className="shareHr" />
-                {file2 && (
-                    <div className="shareImgContainer">
 
-                        {/*                         <VideoPlayer src={URL.createObjectURL(file)} alt=""  width="720"
-                            height="420"
-                            playBackRates={[0.5, 1, 1.25, 1.5, 2]} /> */}
-                        <img className="shareImg" src={URL.createObjectURL(file2)} alt="" />
-                        <Cancel className="shareCancelImg" onClick={() => setFile2(null)} />
+
+                {filePost && (
+                    <div className="shareImgContainer">
+                        {filePost.name.includes('.mp4') ?
+
+                            <>
+                                <ReactPlayer width='100%' height='100%' controls={true} url={URL.createObjectURL(filePost)} />
+                            </>
+
+
+                            :
+                            <>
+                                <img className="shareImg" src={URL.createObjectURL(filePost)} alt="" />
+                                <Cancel className="shareCancelImg" onClick={() => setFilePost(null)} />
+                            </>
+
+
+                        }
+
                     </div>
                 )}
                 <form className="shareBottom" onSubmit={submitHandler}>
@@ -150,7 +161,7 @@ const Share = ({ postId, change, comments, socket }) => {
                                     <label htmlFor="file-upload" className="shareOption">
                                         <PermMedia htmlColor='tomato' className='shareIcon' />
                                         <span className='shareOptionText'>Photo</span>
-                                        <input id="file-upload" type="file" onChange={(e) => setFile2(e.target.files[0])} />
+                                        <input id="file-upload" type="file" onChange={(e) => setFilePost(e.target.files[0])} />
                                     </label>
 
                                 </>
@@ -158,8 +169,8 @@ const Share = ({ postId, change, comments, socket }) => {
                             ) : (!comments && !change) ?
                                 <>
                                     <PermMedia htmlColor='tomato' className='shareIcon' />
-                                    <span className='shareOptionText'>Photo</span>
-                                    <input style={{ display: "none" }} type="file" id="file" accept=".png,.jpeg,.jpg" onChange={(e) => setFile2(e.target.files[0])} />
+                                    <span className='shareOptionText'>Photo or Video</span>
+                                    <input style={{ display: "none" }} type="file" id="file" accept=".png,.jpeg,.jpg,.mp4" onChange={(e) => setFilePost(e.target.files[0])} />
                                 </> :
                                 <></>
 

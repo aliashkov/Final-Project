@@ -12,7 +12,6 @@ import { useSelector } from 'react-redux';
 
 
 const Profile = () => {
-    const PUBLIC_FOLDER = process.env.REACT_APP_PUBLIC_FOLDER;
     const [user, setUser] = useState({});
     const { user: currentUser } = useSelector(state => state.userReducer)
     const username = useParams().username;

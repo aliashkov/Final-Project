@@ -1,16 +1,13 @@
 import React, { useState } from 'react';
 import "./topbar.css"
-import { Search, Person, Chat, Notifications } from '@mui/icons-material'
+import { Search, Chat } from '@mui/icons-material'
 import { Link } from "react-router-dom"
 import { useSelector, useDispatch } from 'react-redux';
 import LogoutIcon from '@mui/icons-material/Logout';
 import { useNavigate } from 'react-router-dom';
-import { AllPosts, AmountAddedPosts, FriendsPosts, NulifyPosts } from '../../actions/isAllPostsAction';
-import { changeFilterPosts } from '../../actions/findPostsAction';
+import { AllPosts, FriendsPosts, NulifyPosts } from '../../actions/isAllPostsAction';
 import { useEffect } from 'react';
 import { GetUsers } from '../../services/userApi';
-import { MoreVert } from '@mui/icons-material';
-import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 import { Filter } from '../filter/Filter';
 
 

@@ -20,22 +20,22 @@ const AppRoutes = (props) => {
         <>
             <Routes>
                 <Route path="/" element={
-                    <RequireUser><Home /> </RequireUser>
+                    <RequireUser user={user}><Home /> </RequireUser>
                 } />
                 <Route path="/login" element={
                     <RequireAuth><Login /> </RequireAuth>
                 } />
                 <Route path="/profile/:username" element={
-                   <RequireUser><Profile /> </RequireUser>
+                   <RequireUser user={user}><Profile /> </RequireUser>
                 } />
                 <Route path="/register" element={
-                    <RequireAuth><Register /> </RequireAuth>
+                    <RequireAuth user={user}><Register /> </RequireAuth>
                 } />
                 <Route path="/editing" element={
-                    <RequireUser><EditingProfile /> </RequireUser>
+                    <RequireUser user={user}><EditingProfile /> </RequireUser>
                 } />
                 <Route path="/messenger" element={
-                    <RequireUser><Messenger /> </RequireUser>
+                    <RequireUser user={user}><Messenger /> </RequireUser>
                 } />
 
             </Routes>

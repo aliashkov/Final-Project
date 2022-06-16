@@ -14,7 +14,7 @@ import { useDispatch } from 'react-redux';
 import Share from '../share/Share';
 import { getAllCommentsByPostId, likeDislikeComments, deleteComment } from '../../services/commentsApi';
 import { AddedClick, NulifyClicks } from '../../actions/clickedAction';
-import VideoPlayer from "react-video-js-player"
+import ReactPlayer from 'react-player'
 import { io } from 'socket.io-client'
 
 
@@ -37,13 +37,13 @@ const Post = ({ post, commentsPost, socket }) => {
     useEffect(() => {
         socket.current = io("ws://localhost:8900");
 
-    }, []);
+    }, [socket]);
 
     useEffect(() => {
         socket.current.emit("addUser", currentUser._id)
         socket.current.on("getUsers", users => {
         })
-    }, [currentUser])
+    }, [currentUser, socket])
 
     useEffect(() => {
         setClicked(false)
@@ -183,9 +183,8 @@ const Post = ({ post, commentsPost, socket }) => {
                             <span className="postText">{post?.description}</span>
                             {
                                 post?.file?.includes('.mp4') ?
-                                    <VideoPlayer src={PUBLIC_FOLDER + post?.file} alt="" width="600px"
-                                        height="360px"
-                                        playBackRates={[0.5, 1, 1.25, 1.5, 2]} />
+
+                                    <ReactPlayer width='100%' height='100%' controls={true} url={PUBLIC_FOLDER + post?.file} />   
 
                                     :
                                     <img className="postImg" src={PUBLIC_FOLDER + post?.file} alt="" />

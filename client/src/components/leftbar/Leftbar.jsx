@@ -2,7 +2,6 @@ import React from 'react';
 import './leftbar.css'
 import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
 import { Chat, PlayCircleFilledOutlined, Group, Bookmark, HelpOutline, WorkOutline, Event, School } from '@mui/icons-material';
-import { Users } from '../../data';
 import YourFriends from '../yourFriends/YourFriends';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
