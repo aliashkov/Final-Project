@@ -1,15 +1,14 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState} from 'react';
 import './message.css'
 import { format } from 'timeago.js'
 import { GetUserById } from '../../services/userApi';
 import DeleteIcon from '@mui/icons-material/Delete';
 import ModeEditIcon from '@mui/icons-material/ModeEdit';
-import { deleteComment } from '../../services/commentsApi';
 import { useSelector } from 'react-redux';
 import { deleteMessage , updateMessage } from '../../services/messagesApi';
 import { useDispatch } from 'react-redux';
 import { AmountAddedPosts } from '../../actions/isAllPostsAction';
-import { io } from 'socket.io-client'
+
 
 const Message = ({ message, own, socket }) => {
 

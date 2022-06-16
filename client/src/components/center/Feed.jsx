@@ -4,18 +4,11 @@ import Share from '../share/Share';
 import Post from '../post/Post';
 import { getProfilePosts, getTimelinePosts, getAllPosts } from '../../services/postsApi';
 import { useSelector } from 'react-redux';
-import { GetUsers } from '../../services/userApi';
-import InfiniteScroll from 'react-infinite-scroller';
-import { io } from 'socket.io-client'
 
-const TOTAL_PAGES = 3;
 
 
 const Feed = ({ username }) => {
-    const [count, setCount] = useState(0);
-    const ref = useRef(null);
     const [posts, setPosts] = useState([])
-    const [size, setSize] = useState(3)
     const lastItemRef = useRef();
     const observer = useRef();
     const { user } = useSelector(state => state.userReducer)
@@ -47,7 +40,7 @@ const Feed = ({ username }) => {
 
     useEffect(() => {
         setArr([...posts].slice(0, currentLength))
-    }, [posts, username, user, isAllPosts])
+    }, [posts, username, user, isAllPosts, currentLength])
 
     useEffect(() => {
         const options = {

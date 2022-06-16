@@ -2,8 +2,7 @@ import { Navigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import React from 'react';
 
-const RequireUser = ({ children }) => {
-    const { user } = useSelector(state => state.userReducer)
+const RequireUser = ({ children , user }) => {
     if (!user) {
         return <Navigate to='/login'></Navigate>
     }

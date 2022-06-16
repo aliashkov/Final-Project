@@ -1,5 +1,4 @@
 import React, { useEffect, useState, useRef } from 'react';
-import ChatOnline from '../../components/chatOnline/ChatOnline';
 import Conversation from '../../components/conversations/Conversation';
 import Message from '../../components/message/Message';
 import Topbar from '../../components/topbar/Topbar';
@@ -8,13 +7,10 @@ import { useSelector } from 'react-redux';
 import { GetConversations } from '../../services/conversationsApi';
 import { GetMessages, SendMessage } from '../../services/messagesApi';
 import { io } from 'socket.io-client'
-import { CoPresentSharp } from '@mui/icons-material';
 import { GetUserById } from '../../services/userApi';
-import DeleteIcon from '@mui/icons-material/Delete';
-import ModeEditIcon from '@mui/icons-material/ModeEdit';
 import { AmountAddedPosts } from '../../actions/isAllPostsAction';
 import { useDispatch } from 'react-redux';
-import { AddUserToChat , removeUserFromChat } from "../../actions/chatAction";
+import { removeUserFromChat } from "../../actions/chatAction";
 
 
 const Messenger = ({ members }) => {
@@ -49,7 +45,7 @@ const Messenger = ({ members }) => {
         socket.current.on("refreshPosts", amountRefreshes => {
             dispatch(AmountAddedPosts())
         })
-    }, [user, amountAddedPosts])
+    }, [user, amountAddedPosts, dispatch])
 
 
     useEffect(() => {
@@ -61,10 +57,11 @@ const Messenger = ({ members }) => {
                     dispatch(removeUserFromChat());
                 }
             }
+            
 
 
         })
-    }, [member, conversations]);
+    }, [member, conversations, user?._id, dispatch]);
 
 
 
@@ -93,12 +90,15 @@ const Messenger = ({ members }) => {
                 setFriends([])
                 setSearchRes([])
 
-                await Promise.all(res.map((conversation) => {
+                let result = await Promise.all(res.map((conversation) => {
                     const friendId = conversation.members.find(member => member !== user._id)
-                    setFriends((prev) => [...prev, friendId])
+                    return setFriends((prev) => [...prev, friendId])
+                    
                 }))
 
-                const searchedRes = await Promise.all(friends.map(async (friend, index) => {
+                result = friends;
+
+                const searchedRes = await Promise.all(result.map(async (friend, index) => {
                     const user = await GetUserById(friend)
                     if (user.username.toLowerCase().includes(searchUser.toLowerCase())) {
                         return user

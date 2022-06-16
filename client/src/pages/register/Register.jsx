@@ -1,6 +1,5 @@
 import React, { useRef, useState } from 'react';
 import './register.css'
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom'
 import { registerCall } from '../../services/registerApi';
 import PasswordChecklist from "react-password-checklist"
@@ -27,7 +26,7 @@ const Register = () => {
             }
             console.log(user)
             try {
-                const res = await registerCall(user)
+                await registerCall(user)
                 navigate('/login');
             } catch (err) {
                 if (err.code === "ERR_BAD_RESPONSE")
