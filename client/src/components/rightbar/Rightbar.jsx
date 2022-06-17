@@ -1,6 +1,6 @@
 import "./rightbar.css";
 import { useEffect } from "react";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { FriendsList } from "../friendList/FriendList";
 import { followersListUser, followingsListUser, friendsListUser } from "../../services/friendsApi";
 import { useSelector, useDispatch } from "react-redux";
@@ -13,6 +13,8 @@ import { AddFriend, RemoveFriend } from "../../actions/userAction";
 import { FriendsClick } from "../../actions/clickedAction";
 import { newConversation } from "../../services/conversationsApi";
 import { AddUserToChat } from "../../actions/chatAction";
+import { io } from 'socket.io-client'
+import { AddRefresh } from "../../actions/refreshesAction";
 
 
 export default function Rightbar({ user }) {
@@ -27,14 +29,55 @@ export default function Rightbar({ user }) {
   const [isSubscribed, setIsSubscribed] = useState(false)
   const { user: currentUser } = useSelector(state => state.userReducer)
   const navigate = useNavigate()
+  const socket = useRef();
+  const { amountRefreshes } = useSelector(state => state.refreshesReducer)
+
+
+  useEffect(() => {
+    socket.current = io("ws://localhost:8900");
+
+  }, [socket]);
+
+  useEffect(() => {
+
+    socket.current.on("refreshPosts", amountRefreshes => {
+      dispatch(AddRefresh())
+
+    })
+
+     socket.current.on("refreshFollowed", data => {
+      console.log(data.userModify._id)
+      console.log(user)
+      if ((!data.followed) && (data.userModify._id !== currentUser._id)) {
+        console.log(currentUser)
+
+      } 
+/*       else if ((data.followed) && (data.userModify._id === currentUser._id)) {
+        localStorage.setItem("user", JSON.stringify({
+          ...currentUser,
+          followers: currentUser.followers.filter(
+            (followers) => followers !== user._id
+          ),
+        }))
+      }
+ */
+
+    })
+
+
+    //socket.disconnect();
+
+  }, [socket, dispatch])
+
+
 
   useEffect(() => {
     setFollowed(currentUser.followings.includes(user?._id))
-  }, [currentUser.followings, user]);
+  }, [currentUser.followings, user, amountRefreshes]);
 
   useEffect(() => {
     setIsFriended(currentUser.friends.includes(user?._id))
-  }, [currentUser.friends, user]);
+  }, [currentUser.friends, user, amountRefreshes]);
 
   useEffect(() => {
     const getFollowers = async () => {
@@ -47,7 +90,7 @@ export default function Rightbar({ user }) {
       }
     };
     getFollowers();
-  }, [user, isSubscribed, isFriended, followed]);
+  }, [user, isSubscribed, isFriended, followed, amountRefreshes]);
 
 
   useEffect(() => {
@@ -59,7 +102,7 @@ export default function Rightbar({ user }) {
       }
     };
     getFollowings();
-  }, [user, isSubscribed, isFriended, followed]);
+  }, [user, isSubscribed, isFriended, followed, amountRefreshes]);
 
 
   useEffect(() => {
@@ -71,7 +114,7 @@ export default function Rightbar({ user }) {
       }
     };
     getFriends();
-  }, [user, isSubscribed, isFriended, followed]);
+  }, [user, isSubscribed, isFriended, followed, amountRefreshes]);
 
 
 
@@ -85,7 +128,7 @@ export default function Rightbar({ user }) {
 
     else
       setIsSubscribed(false)
-  }, [isSubscribed, followers, friends, currentUser._id]);
+  }, [isSubscribed, followers, friends, currentUser._id, amountRefreshes]);
 
 
   const navigateClick = () => {
@@ -110,8 +153,14 @@ export default function Rightbar({ user }) {
           ...currentUser,
           followings: [...currentUser.followings, user._id]
         }))
+        socket.current.emit("followUser", {
+          followed: followed,
+          userModify: currentUser,
+        }); 
       }
 
+      dispatch(AddRefresh())
+      socket.current.emit("refreshPost");
       setFollowed(!followed);
     } catch (err) {
     }
@@ -141,6 +190,8 @@ export default function Rightbar({ user }) {
           friends: [...currentUser.friends, user._id],
         }))
       }
+      dispatch(AddRefresh())
+      socket.current.emit("refreshPost");
       dispatch(FriendsClick())
       setIsFriended(!isFriended);
     } catch (err) {
@@ -152,11 +203,11 @@ export default function Rightbar({ user }) {
     e.preventDefault();
     const members = {
       senderId: currentUser._id,
-      receiverId : user._id,
+      receiverId: user._id,
     };
     dispatch(AddUserToChat(user._id));
     await newConversation(members)
-    navigate('/messenger' , members);
+    navigate('/messenger', members);
   }
 
 

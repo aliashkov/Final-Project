@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Topbar from '../../components/topbar/Topbar';
 import Feed from '../../components/center/Feed';
 import Leftbar from '../../components/leftbar/Leftbar';
@@ -8,20 +8,54 @@ import './profile.css';
 import { useParams } from 'react-router'
 import LockIcon from '@mui/icons-material/Lock';
 import { useSelector } from 'react-redux';
+import {io} from 'socket.io-client'
+import { useDispatch } from 'react-redux';
+import { AmountAddedPosts } from '../../actions/isAllPostsAction';
+import { useNavigate } from 'react-router';
 
 
 
 const Profile = () => {
     const [user, setUser] = useState({});
     const { user: currentUser } = useSelector(state => state.userReducer)
-    const username = useParams().username;
-
+    let username = useParams().username;
+    const dispatch = useDispatch()
+    const socket = useRef();
     const { friendsClick } = useSelector(state => state.clickedReducer)
+    const { amountAddedPosts } = useSelector(state => state.isAllPostsReducer)
+    const navigate = useNavigate()
+
+
+    useEffect(() => {
+        socket.current = io("ws://localhost:8900");
+
+    }, [socket]);
+
+
+    useEffect(() => {
+
+        socket.current.on("refreshNames", data => {
+            console.log(data)
+            console.log(username)
+             if (data.oldName === username) {
+                username = data.newName
+                navigate(`/profile/${data.newName}`);
+             }
+        })
+
+    }, [socket, dispatch])
+
+
 
     useEffect(() => {
         (async () => {
-            const res = await GetProfileUser(username)
-            setUser(res.data)
+            try {
+                const res = await GetProfileUser(username)
+                setUser(res.data)
+            } catch(err) {
+                navigate('/')
+            }
+
         })()
     }, [username, friendsClick])
 
