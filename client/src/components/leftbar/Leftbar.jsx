@@ -9,9 +9,7 @@ import { Link } from 'react-router-dom';
 
 const Leftbar = () => {
     const { user } = useSelector(state => state.userReducer)
-    console.log(user)
-
-
+    
     return (
         <div className='leftbar'>
             <div className="sidebarWrapper">

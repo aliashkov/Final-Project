@@ -15,6 +15,7 @@ import { newConversation } from "../../services/conversationsApi";
 import { AddUserToChat } from "../../actions/chatAction";
 import { io } from 'socket.io-client'
 import { AddRefresh } from "../../actions/refreshesAction";
+import { GetUserById } from "../../services/userApi";
 
 
 export default function Rightbar({ user }) {
@@ -45,22 +46,29 @@ export default function Rightbar({ user }) {
 
     })
 
-     socket.current.on("refreshFollowed", data => {
-      console.log(data.userModify._id)
-      console.log(user)
-      if ((!data.followed) && (data.userModify._id !== currentUser._id)) {
-        console.log(currentUser)
+    socket.current.on("refreshFollowed", data => {
 
-      } 
-/*       else if ((data.followed) && (data.userModify._id === currentUser._id)) {
-        localStorage.setItem("user", JSON.stringify({
-          ...currentUser,
-          followers: currentUser.followers.filter(
-            (followers) => followers !== user._id
-          ),
-        }))
+      if ((data.userModify._id !== currentUser._id)) {
+
+        (async () => {
+          const res = await GetUserById(currentUser._id)
+          localStorage.setItem("user", JSON.stringify({
+            ...currentUser,
+            followers: res.followers,
+            followings: res.followings,
+            friends : res.friends
+          }))
+        })()
       }
- */
+      /*       else if ((data.followed) && (data.userModify._id === currentUser._id)) {
+              localStorage.setItem("user", JSON.stringify({
+                ...currentUser,
+                followers: currentUser.followers.filter(
+                  (followers) => followers !== user._id
+                ),
+              }))
+            }
+       */
 
     })
 
@@ -153,12 +161,12 @@ export default function Rightbar({ user }) {
           ...currentUser,
           followings: [...currentUser.followings, user._id]
         }))
-        socket.current.emit("followUser", {
-          followed: followed,
-          userModify: currentUser,
-        }); 
-      }
 
+      }
+      socket.current.emit("followUser", {
+        followed: followed,
+        userModify: currentUser,
+      });
       dispatch(AddRefresh())
       socket.current.emit("refreshPost");
       setFollowed(!followed);
@@ -190,6 +198,10 @@ export default function Rightbar({ user }) {
           friends: [...currentUser.friends, user._id],
         }))
       }
+      socket.current.emit("followUser", {
+        followed: isFriended,
+        userModify: currentUser,
+      });
       dispatch(AddRefresh())
       socket.current.emit("refreshPost");
       dispatch(FriendsClick())
