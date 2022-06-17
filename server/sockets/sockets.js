@@ -8,7 +8,6 @@ let users = []
 let amountRefreshes = 0;
 
 
-
 const addUser = (userId, socketId) => {
     !users.some((user) => user.userId === userId) &&
         users.push({ userId, socketId });
@@ -23,7 +22,7 @@ const getUser = (userId) => {
 };
 
 io.on("connection", (socket) => {
-    console.log("User connected")
+    //console.log("User connected")
     socket.on("addUser", (userId) => {
         addUser(userId, socket.id);
         io.emit("getUsers", users);
@@ -34,6 +33,15 @@ io.on("connection", (socket) => {
         io.emit("refreshPosts", amountRefreshes);
     });
 
+
+    socket.on("changeName", ({ oldName, newName }) => {
+        io.emit("refreshNames", {
+            oldName,
+            newName,
+        });
+    });
+
+
     socket.on("sendMessage", ({ senderId, receiverId, text }) => {
         console.log(senderId, receiverId, text)
         const user = getUser(receiverId);
@@ -42,13 +50,13 @@ io.on("connection", (socket) => {
             text,
         });
 
-        console.log(amountRefreshes)
-        console.log(users)
+        //console.log(amountRefreshes)
+        //console.log(users)
     });
 
 
     socket.on("disconnect", () => {
-        console.log("User disconnected")
+        //console.log("User disconnected")
         removeUser(socket.id)
         io.emit("getUsers", users);
     })

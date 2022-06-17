@@ -1,6 +1,6 @@
 import React from 'react';
 import './editing.css'
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import PasswordChecklist from "react-password-checklist"
 import { PermMedia, Cancel } from '@mui/icons-material';
@@ -10,6 +10,8 @@ import { changeUser } from '../../services/userApi';
 import { useDispatch } from 'react-redux';
 import { LoginSuccessUser } from '../../actions/userAction';
 import { changeFilterPosts } from '../../actions/findPostsAction';
+import { AmountAddedPosts } from '../../actions/isAllPostsAction';
+import {io} from 'socket.io-client'
 
 export const Editing = () => {
     const PUBLIC_FOLDER = process.env.REACT_APP_PUBLIC_FOLDER
@@ -18,12 +20,30 @@ export const Editing = () => {
     const username = useRef();
     const city = useRef();
     const country = useRef();
+    const socket = useRef();
     const [password, setPassword] = useState("")
     const [passwordConfirm, setPasswordConfirm] = useState("")
     const [file, setFile] = useState(null);
     const [visible, setVisible] = useState(false);
     const navigate = useNavigate();
     const dispatch = useDispatch()
+    const { amountAddedPosts } = useSelector(state => state.isAllPostsReducer)
+
+    console.log(amountAddedPosts)
+    
+
+
+    useEffect(() => {
+        socket.current = io("ws://localhost:8900");
+
+    }, [socket]);
+
+    useEffect(() => {
+        socket.current.emit("addUser", user._id)
+        socket.current.on("getUsers", users => {
+        })
+    }, [user, socket])
+
 
     const submitHandler = async (e) => {
         e.preventDefault();
@@ -56,9 +76,19 @@ export const Editing = () => {
                     ...user,
                     ...editUser
                 }))
+
                 dispatch(LoginSuccessUser({ ...user, ...editUser }))
+                socket.current.emit("refreshPost");
+                socket.current.emit("changeName", {
+                    oldName: user.username,
+                    newName: username.current.value,
+                });
+
+
+                console.log(user.username , username.current.value)
                 dispatch(changeFilterPosts(""))
-                navigate('/');
+                navigate(`/profile/${username.current.value}`);
+
 
             } catch (err) {
                 if (err.code === "ERR_BAD_RESPONSE")
