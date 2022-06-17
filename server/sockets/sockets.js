@@ -41,6 +41,14 @@ io.on("connection", (socket) => {
         });
     });
 
+    socket.on("followUser", ({ followed, userModify}) => {
+        console.log(followed)
+        io.emit("refreshFollowed", {
+            followed,
+            userModify,
+        });
+    });
+
 
     socket.on("sendMessage", ({ senderId, receiverId, text }) => {
         console.log(senderId, receiverId, text)
