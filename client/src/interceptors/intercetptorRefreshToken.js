@@ -8,7 +8,6 @@ export const interceptorRefreshToken = async (user, axiosJWT) => {
   const refreshToken = async () => {
     try {
       const res = await axios.post("http://localhost:8000/api/auth/refresh", { token: user.refreshToken });
-      console.log(res)
       localStorage.setItem("user", JSON.stringify({
         ...user,
         accessToken: res.data.accessToken,
@@ -26,7 +25,6 @@ export const interceptorRefreshToken = async (user, axiosJWT) => {
       const decodedToken = jwt_decode(user.accessToken);
       if (decodedToken.exp * 1000 < currentDate.getTime()) {
         const data = await refreshToken();
-        console.log(data)
         config.headers["authorization"] = "Bearer " + data.accessToken;
       }
       return config;

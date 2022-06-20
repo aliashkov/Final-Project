@@ -4,6 +4,7 @@ const defaultStore = {
 
 
 export const userReducer = (state = defaultStore, action) => {
+  console.log(state.user)
   switch (action.type) {
     case "LOGIN_START_USER":
       return {
@@ -48,17 +49,41 @@ export const userReducer = (state = defaultStore, action) => {
           friends: [...state.user.friends, action.payload],
         },
       };
-      case "REMOVE_FRIEND":
-        return {
-          ...state,
-          user: {
-            ...state.user,
-            followers: [...state.user.followers, action.payload],
-            friends: state.user.friends.filter(
-              (friend) => friend !== action.payload
-            ),
-          },
-        };
+    case "REMOVE_FRIEND":
+      return {
+        ...state,
+        user: {
+          ...state.user,
+          followers: [...state.user.followers, action.payload],
+          friends: state.user.friends.filter(
+            (friend) => friend !== action.payload
+          ),
+        },
+      };
+    case "REFRESH_FRIENDS":
+      return {
+        ...state,
+        user: {
+          ...state.user,
+          friends: action.payload,
+        },
+      };
+    case "REFRESH_FOLLOWERS":
+      return {
+        ...state,
+        user: {
+          ...state.user,
+          followers: action.payload,
+        },
+      };
+    case "REFRESH_FOLLOWINGS":
+      return {
+        ...state,
+        user: {
+          ...state.user,
+          followings: action.payload,
+        },
+      };
 
 
     default:

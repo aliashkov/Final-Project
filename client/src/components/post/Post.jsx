@@ -187,7 +187,7 @@ const Post = ({ post, commentsPost, socket }) => {
                                     <ReactPlayer width='100%' height='100%' controls={true} url={PUBLIC_FOLDER + post?.file} />   
 
                                     :
-                                    <img className="postImg" src={PUBLIC_FOLDER + post?.file} alt="" />
+                                    <img className="postImg" src={post?.file ? PUBLIC_FOLDER + post?.file : ''} alt="" />
                             }
 
 

@@ -3,6 +3,7 @@ import React from 'react';
 
 const RequireAuth = ({ children }) => {
   let user = localStorage.getItem('user');
+  console.log(user)
   if (user === null) {
     return children
   }

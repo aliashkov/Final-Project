@@ -30,6 +30,7 @@ const Login = () => {
 
     const registerClick = (e) => {
         e.preventDefault();
+        
         navigate('/register');
     };
 

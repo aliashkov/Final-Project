@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import Topbar from '../../components/topbar/Topbar';
 import Feed from '../../components/center/Feed';
 import Leftbar from '../../components/leftbar/Leftbar';
@@ -8,6 +8,8 @@ import './home.css'
 
 
 const Home = () => {
+
+
     return (
         <>
             <Topbar />

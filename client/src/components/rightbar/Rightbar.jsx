@@ -16,6 +16,7 @@ import { AddUserToChat } from "../../actions/chatAction";
 import { io } from 'socket.io-client'
 import { AddRefresh } from "../../actions/refreshesAction";
 import { GetUserById } from "../../services/userApi";
+import { RefreshFriends, RefreshFollowers, RefreshFollowings } from "../../actions/userAction";
 
 
 export default function Rightbar({ user }) {
@@ -28,11 +29,12 @@ export default function Rightbar({ user }) {
   const [followed, setFollowed] = useState(false)
   const [isFriended, setIsFriended] = useState(false)
   const [isSubscribed, setIsSubscribed] = useState(false)
+  const [isLoaded , setIsLoaded] = useState(true);
   const { user: currentUser } = useSelector(state => state.userReducer)
   const navigate = useNavigate()
   const socket = useRef();
   const { amountRefreshes } = useSelector(state => state.refreshesReducer)
-
+  console.log(currentUser)
 
   useEffect(() => {
     socket.current = io("ws://localhost:8900");
@@ -48,18 +50,25 @@ export default function Rightbar({ user }) {
 
     socket.current.on("refreshFollowed", data => {
 
-      if ((data.userModify._id !== currentUser._id)) {
+
 
         (async () => {
           const res = await GetUserById(currentUser._id)
+          dispatch(RefreshFriends(res.friends))
+          dispatch(RefreshFollowers(res.followers))
+          dispatch(RefreshFollowings(res.followings))
           localStorage.setItem("user", JSON.stringify({
             ...currentUser,
             followers: res.followers,
             followings: res.followings,
-            friends : res.friends
+            friends: res.friends
           }))
         })()
-      }
+      
+
+       
+    
+
       /*       else if ((data.followed) && (data.userModify._id === currentUser._id)) {
               localStorage.setItem("user", JSON.stringify({
                 ...currentUser,
@@ -77,24 +86,30 @@ export default function Rightbar({ user }) {
 
   }, [socket, dispatch])
 
-
+  useEffect(() => {
+    setFollowed(currentUser.followers.includes(user?._id))
+  }, [currentUser.followers, user, amountRefreshes]);
 
   useEffect(() => {
     setFollowed(currentUser.followings.includes(user?._id))
   }, [currentUser.followings, user, amountRefreshes]);
 
+
+
   useEffect(() => {
+   
     setIsFriended(currentUser.friends.includes(user?._id))
+    console.log(user?._id)
   }, [currentUser.friends, user, amountRefreshes]);
 
   useEffect(() => {
     const getFollowers = async () => {
       try {
-        const followerList = await followersListUser(user._id)
-        setFollowers(followerList.data);
-
+        if (user._id) {
+          const followerList = await followersListUser(user._id)
+          setFollowers(followerList.data);
+        }
       } catch (err) {
-
       }
     };
     getFollowers();
@@ -104,8 +119,11 @@ export default function Rightbar({ user }) {
   useEffect(() => {
     const getFollowings = async () => {
       try {
-        const followingList = await followingsListUser(user._id)
-        setFollowings(followingList.data);
+        if (user._id) {
+          const followingList = await followingsListUser(user._id)
+          setFollowings(followingList.data);
+        }
+
       } catch (err) {
       }
     };
@@ -116,8 +134,12 @@ export default function Rightbar({ user }) {
   useEffect(() => {
     const getFriends = async () => {
       try {
-        const friendsList = await friendsListUser(user._id)
-        setFriends(friendsList.data);
+        if (user._id) {
+          const friendsList = await friendsListUser(user._id)
+          setFriends(friendsList.data);
+        }
+
+
       } catch (err) {
       }
     };
@@ -143,7 +165,8 @@ export default function Rightbar({ user }) {
     navigate('/editing');
   }
 
-  const handleClick = async () => {
+  const handleClick = async (e) => {
+    e.preventDefault()
     try {
       if (followed) {
         await unfollowUser(user._id, currentUser._id)
@@ -175,7 +198,8 @@ export default function Rightbar({ user }) {
   }
 
 
-  const addFriendClick = async () => {
+  const addFriendClick = async (e) => {
+    e.preventDefault()
     try {
       if (isFriended) {
         await removeFriend(user._id, currentUser._id)
