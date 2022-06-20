@@ -29,7 +29,7 @@ export default function Rightbar({ user }) {
   const [followed, setFollowed] = useState(false)
   const [isFriended, setIsFriended] = useState(false)
   const [isSubscribed, setIsSubscribed] = useState(false)
-  const [isLoaded, setIsLoaded] = useState(true);
+  const [isLoaded , setIsLoaded] = useState(true);
   const { user: currentUser } = useSelector(state => state.userReducer)
   const navigate = useNavigate()
   const socket = useRef();
@@ -50,7 +50,9 @@ export default function Rightbar({ user }) {
 
     socket.current.on("refreshFollowed", data => {
 
-      (async () => {
+
+
+        (async () => {
           const res = await GetUserById(currentUser._id)
           dispatch(RefreshFriends(res.friends))
           dispatch(RefreshFollowers(res.followers))
@@ -62,9 +64,10 @@ export default function Rightbar({ user }) {
             friends: res.friends
           }))
         })()
-
-
       
+
+       
+    
 
       /*       else if ((data.followed) && (data.userModify._id === currentUser._id)) {
               localStorage.setItem("user", JSON.stringify({
@@ -94,7 +97,7 @@ export default function Rightbar({ user }) {
 
 
   useEffect(() => {
-
+   
     setIsFriended(currentUser.friends.includes(user?._id))
     console.log(user?._id)
   }, [currentUser.friends, user, amountRefreshes]);
