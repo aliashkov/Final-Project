@@ -1,8 +1,12 @@
 import axios from 'axios'
 
-export const followersListUser = (userId) => {
-
-    return axios.get("http://localhost:8000/api/users/followers/" + userId);
+export const followersListUser = async (userId) => {
+    try {
+        const res = await axios.get("http://localhost:8000/api/users/followers/" + userId);
+        return res;
+    } catch (err) {
+        console.log(err)
+    }
 }
 
 export const followingsListUser = (userId) => {

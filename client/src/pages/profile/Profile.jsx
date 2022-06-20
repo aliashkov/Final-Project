@@ -24,7 +24,8 @@ const Profile = () => {
     const { friendsClick } = useSelector(state => state.clickedReducer)
     const { amountAddedPosts } = useSelector(state => state.isAllPostsReducer)
     const navigate = useNavigate()
-
+    console.log(user)
+    console.log(currentUser)
 
     useEffect(() => {
         socket.current = io("ws://localhost:8900");
@@ -51,13 +52,14 @@ const Profile = () => {
         (async () => {
             try {
                 const res = await GetProfileUser(username)
+                console.log(res)
                 setUser(res.data)
             } catch(err) {
                 navigate('/')
             }
 
         })()
-    }, [username, friendsClick])
+    }, [username, friendsClick, currentUser.friends])
 
 
     return (

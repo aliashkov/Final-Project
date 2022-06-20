@@ -31,3 +31,19 @@ export const LoginStartUser = (userCredentials) => ({
     type: "ADD_FRIEND",
     payload: userId,
   });
+
+  export const RefreshFriends = (friends) => ({
+    type: "REFRESH_FRIENDS",
+    payload: friends,
+  });
+
+  export const RefreshFollowings = (followings) => ({
+    type: "REFRESH_FOLLOWINGS",
+    payload: followings,
+  });
+
+  
+  export const RefreshFollowers = (followers) => ({
+    type: "REFRESH_FOLLOWERS",
+    payload: followers,
+  });
