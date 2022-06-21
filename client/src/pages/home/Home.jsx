@@ -9,12 +9,11 @@ import './home.css'
 
 const Home = () => {
 
-    const socket = useRef();
 
 
     return (
         <>
-            <Topbar socket={socket}/>
+            <Topbar />
             <div className='homeContainer'>
                <Leftbar />
                <Feed/>

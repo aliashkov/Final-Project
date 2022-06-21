@@ -81,7 +81,6 @@ const Post = ({ post, commentsPost, socket }) => {
 
                     const res = await likeDislikePosts(post._id, currentUser._id)
 
-
                     if (post.userId !== currentUser._id) {
                         if (res.data === 'Post has been liked')
                             await newNotification(post.userId, currentUser.username, 'liked your post')
@@ -110,8 +109,6 @@ const Post = ({ post, commentsPost, socket }) => {
 
                 socket.current.emit("refreshPost");
 
-
-
                 dispatch(AmountAddedPosts())
                 setLike(isLiked ? like - 1 : like + 1);
                 setIsLiked(!isLiked);
@@ -125,7 +122,6 @@ const Post = ({ post, commentsPost, socket }) => {
     const expandClickOption = (e) => {
         e.preventDefault()
         setClicked(!clicked)
-
         setCommentsOpen(false)
     }
 

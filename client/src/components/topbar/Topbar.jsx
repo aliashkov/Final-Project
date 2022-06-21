@@ -15,7 +15,7 @@ import { GetNotifications, DeleteNotifications } from '../../services/notificati
 import { AmountAddedPosts } from '../../actions/isAllPostsAction';
 
 
-const Topbar = ({ socket }) => {
+const Topbar = () => {
     const { user } = useSelector(state => state.userReducer)
     const { isAllPosts } = useSelector(state => state.isAllPostsReducer)
     const dispatch = useDispatch()
@@ -27,17 +27,6 @@ const Topbar = ({ socket }) => {
     const [open, setOpen] = useState(false);
     console.log(notifications)
 
-
-
-    useEffect(() => {
-        console.log(777)
-        socket.current = io("ws://localhost:8900");
-
-        socket.current.emit("addUser", user._id)
-        socket.current.on("getUsers", users => {
-        })
-
-    }, [user, socket])
 
     useEffect(() => {
         (async () => {
