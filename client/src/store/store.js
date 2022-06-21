@@ -7,6 +7,7 @@ import { findPostsReducer } from '../reducers/findPostsReducer'
 import { clickedReducer } from '../reducers/clickedReducer'
 import { chatReducer } from '../reducers/chatReducer'
 import { refreshesReducer } from '../reducers/refreshesReducer'
+import { reloadReducer } from '../reducers/reloadReducer'
 
 const rootReducer = combineReducers({
     authReducer,
@@ -16,7 +17,8 @@ const rootReducer = combineReducers({
     findPostsReducer,
     clickedReducer,
     chatReducer,
-    refreshesReducer
+    refreshesReducer,
+    reloadReducer
 })
 
 

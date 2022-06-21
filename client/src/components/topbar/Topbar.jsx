@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import "./topbar.css"
-import { Search, Chat } from '@mui/icons-material'
+import { Search, Notifications } from '@mui/icons-material'
 import { Link } from "react-router-dom"
 import { useSelector, useDispatch } from 'react-redux';
 import LogoutIcon from '@mui/icons-material/Logout';
@@ -9,17 +9,61 @@ import { AllPosts, FriendsPosts, NulifyPosts } from '../../actions/isAllPostsAct
 import { useEffect } from 'react';
 import { GetUsers } from '../../services/userApi';
 import { Filter } from '../filter/Filter';
+import { reloadPage } from '../../actions/reloadAction';
+import { io } from 'socket.io-client'
+import { GetNotifications, DeleteNotifications } from '../../services/notificationsApi';
+import { AmountAddedPosts } from '../../actions/isAllPostsAction';
 
 
-const Topbar = () => {
+const Topbar = ({ socket }) => {
     const { user } = useSelector(state => state.userReducer)
     const { isAllPosts } = useSelector(state => state.isAllPostsReducer)
     const dispatch = useDispatch()
     const navigate = useNavigate()
     const [searchUser, setSearchUser] = useState("")
-
-
     const [users, setUsers] = useState([])
+    const { amountAddedPosts } = useSelector(state => state.isAllPostsReducer)
+    const [notifications, setNotifications] = useState([]);
+    const [open, setOpen] = useState(false);
+    console.log(notifications)
+
+
+
+    useEffect(() => {
+        console.log(777)
+        socket.current = io("ws://localhost:8900");
+
+        socket.current.emit("addUser", user._id)
+        socket.current.on("getUsers", users => {
+        })
+
+    }, [user, socket])
+
+    useEffect(() => {
+        (async () => {
+            const notifications = await GetNotifications(user._id)
+            setNotifications(notifications)
+
+        })()
+
+    }, [amountAddedPosts, user._id])
+
+
+    const displayNotification = ({ sender, type }) => {
+
+        return (
+            <span className="notification">{`${sender} ${type} .`}</span>
+        );
+    };
+
+    const handleRead = async (e) => {
+        e.preventDefault()
+        await DeleteNotifications(user._id)
+        dispatch(AmountAddedPosts())
+        setOpen(false);
+    }
+
+
 
     useEffect(() => {
         (async () => {
@@ -46,9 +90,10 @@ const Topbar = () => {
     }
 
 
-    const logoutClick = (e) =>{
+    const logoutClick = (e) => {
         e.preventDefault()
         localStorage.setItem("user", null)
+        dispatch(reloadPage())
         navigate('/login');
     }
 
@@ -104,14 +149,18 @@ const Topbar = () => {
                 </div>
                 <div className="topbarIcons">
 
-                    <div className="topbarIconItem">
-                        <Chat />
+                    <div className="topbarIconItem" onClick={() => setOpen(!open)}>
+                        <Notifications />
+                        {
+                            notifications.length > 0 &&
+                            <span className="topbarIconBadge">{notifications.length}</span>
+                        }
 
                     </div>
 
                     <div className="topbarIconItem">
 
-                        <LogoutIcon onClick={logoutClick}/>
+                        <LogoutIcon onClick={logoutClick} />
 
 
                     </div>
@@ -124,6 +173,14 @@ const Topbar = () => {
                     </div>
 
                 </div>
+                {open && (
+                    <div className="notifications">
+                        {notifications.map((n) => displayNotification(n))}
+                        <button className="nButton" onClick={handleRead}>
+                            Mark as read
+                        </button>
+                    </div>
+                )}
 
 
             </div>

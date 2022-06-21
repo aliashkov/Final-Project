@@ -64,7 +64,7 @@ const Profile = () => {
 
     return (
         <>
-            <Topbar />
+            <Topbar socket={socket}/>
             <div className="profile">
                 <Leftbar />
 

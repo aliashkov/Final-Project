@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useRef} from 'react';
 import Topbar from '../../components/topbar/Topbar';
 import Feed from '../../components/center/Feed';
 import Leftbar from '../../components/leftbar/Leftbar';
@@ -9,10 +9,12 @@ import './home.css'
 
 const Home = () => {
 
+    const socket = useRef();
+
 
     return (
         <>
-            <Topbar />
+            <Topbar socket={socket}/>
             <div className='homeContainer'>
                <Leftbar />
                <Feed/>
