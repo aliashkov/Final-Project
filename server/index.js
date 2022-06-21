@@ -16,6 +16,7 @@ const commentRoute = require('./routes/comments')
 const uploadRoute = require('./routes/upload')
 const conversationRoute = require('./routes/conversations')
 const messageRoute = require('./routes/messages')
+const notificationRoute = require('./routes/notifications')
 const io = require('./sockets/sockets')
 
 const app = express()
@@ -38,7 +39,7 @@ app.use('/api/comments', commentRoute)
 app.use('/api/upload', uploadRoute)
 app.use('/api/conversations', conversationRoute)
 app.use('/api/messages', messageRoute)
-
+app.use('/api/notifications', notificationRoute)
 
 app.listen(8000, () => {
     console.log('Server is running')

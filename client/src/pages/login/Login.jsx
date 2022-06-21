@@ -1,10 +1,10 @@
-import React, {useRef } from 'react';
+import React, {useRef, useEffect } from 'react';
 import './login.css'
 import { loginInit } from '../../services/loginApi';
 import { CircularProgress } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux"
 import { useNavigate } from 'react-router-dom';
-
+import { removeReloadPage } from '../../actions/reloadAction';
 
 
 
@@ -14,6 +14,10 @@ const Login = () => {
     const password = useRef();
     const dispatch = useDispatch();
     const { isFetching} = useSelector(state => state.authReducer)
+    const { isReloaded} = useSelector(state => state.reloadReducer)
+
+
+    console.log(isReloaded)
     const navigate = useNavigate();
     //localStorage.setItem("user", null)
     
@@ -26,6 +30,15 @@ const Login = () => {
         
         navigate('/');
     };
+
+
+    useEffect(() => {
+        if (isReloaded) {
+           dispatch(removeReloadPage())
+           window.location.reload()
+        }
+
+    }, [isReloaded])
 
 
     const registerClick = (e) => {

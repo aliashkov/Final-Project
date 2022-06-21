@@ -28,6 +28,17 @@ io.on("connection", (socket) => {
         io.emit("getUsers", users);
     });
 
+    socket.on("sendNotification", ({senderName , recieverName}) => {
+        console.log(senderName)
+        console.log(recieverName)
+        console.log('============================')
+        const reciever = getUser(recieverName)
+        io.to(reciever?.socketId).emit("getNotification", {
+            senderName,
+            type : 1
+        });
+    })
+
     socket.on("refreshPost", () => {
         amountRefreshes++;
         io.emit("refreshPosts", amountRefreshes);
@@ -42,7 +53,6 @@ io.on("connection", (socket) => {
     });
 
     socket.on("followUser", ({ followed, userModify}) => {
-        console.log(followed)
         io.emit("refreshFollowed", {
             followed,
             userModify,
@@ -58,8 +68,6 @@ io.on("connection", (socket) => {
             text,
         });
 
-        //console.log(amountRefreshes)
-        //console.log(users)
     });
 
 

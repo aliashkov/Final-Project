@@ -16,6 +16,7 @@ import { getAllCommentsByPostId, likeDislikeComments, deleteComment } from '../.
 import { AddedClick, NulifyClicks } from '../../actions/clickedAction';
 import ReactPlayer from 'react-player'
 import { io } from 'socket.io-client'
+import { newNotification } from '../../services/notificationsApi';
 
 
 const Post = ({ post, commentsPost, socket }) => {
@@ -77,14 +78,36 @@ const Post = ({ post, commentsPost, socket }) => {
         (async () => {
             try {
                 if (!commentsPost) {
-                    await likeDislikePosts(post._id, currentUser._id)
+
+                    const res = await likeDislikePosts(post._id, currentUser._id)
+
+                    if (post.userId !== currentUser._id) {
+                        if (res.data === 'Post has been liked')
+                            await newNotification(post.userId, currentUser.username, 'liked your post')
+                        if (res.data === 'Post has been disliked')
+                            await newNotification(post.userId, currentUser.username, 'disliked your post')
+
+                    }
+
                 }
                 else {
-                    await likeDislikeComments(post._id, currentUser._id)
+                    const res = await likeDislikeComments(post._id, currentUser._id)
+
+                    if (post.userId !== currentUser._id) {
+                        if (res.data === 'Comment has been liked')
+                            await newNotification(post.userId, currentUser.username, 'liked your comment')
+                        if (res.data === 'Comment has been disliked')
+                            await newNotification(post.userId, currentUser.username, 'disliked your comment')
+
+                    }
                 }
+                //socket.current.emit("sendNotification", {
+                //    senderName : currentUser._id,
+                //    recieverName : post.userId,
+                //})
+
+
                 socket.current.emit("refreshPost");
-
-
 
                 dispatch(AmountAddedPosts())
                 setLike(isLiked ? like - 1 : like + 1);
@@ -99,7 +122,6 @@ const Post = ({ post, commentsPost, socket }) => {
     const expandClickOption = (e) => {
         e.preventDefault()
         setClicked(!clicked)
-
         setCommentsOpen(false)
     }
 
@@ -184,7 +206,7 @@ const Post = ({ post, commentsPost, socket }) => {
                             {
                                 post?.file?.includes('.mp4') ?
 
-                                    <ReactPlayer width='100%' height='100%' controls={true} url={PUBLIC_FOLDER + post?.file} />   
+                                    <ReactPlayer width='100%' height='100%' controls={true} url={PUBLIC_FOLDER + post?.file} />
 
                                     :
                                     <img className="postImg" src={post?.file ? PUBLIC_FOLDER + post?.file : ''} alt="" />

@@ -87,6 +87,14 @@ export default function Rightbar({ user }) {
   }, [socket, dispatch])
 
   useEffect(() => {
+    socket.current.emit("addUser", currentUser._id)
+    socket.current.on("getUsers", users => {
+    })
+}, [currentUser, socket])
+
+
+
+  useEffect(() => {
     setFollowed(currentUser.followers.includes(user?._id))
   }, [currentUser.followers, user, amountRefreshes]);
 
