@@ -17,6 +17,7 @@ import { io } from 'socket.io-client'
 import { AddRefresh } from "../../actions/refreshesAction";
 import { GetUserById } from "../../services/userApi";
 import { RefreshFriends, RefreshFollowers, RefreshFollowings } from "../../actions/userAction";
+import { newNotification } from "../../services/notificationsApi";
 
 
 export default function Rightbar({ user }) {
@@ -29,12 +30,10 @@ export default function Rightbar({ user }) {
   const [followed, setFollowed] = useState(false)
   const [isFriended, setIsFriended] = useState(false)
   const [isSubscribed, setIsSubscribed] = useState(false)
-  const [isLoaded , setIsLoaded] = useState(true);
   const { user: currentUser } = useSelector(state => state.userReducer)
   const navigate = useNavigate()
   const socket = useRef();
   const { amountRefreshes } = useSelector(state => state.refreshesReducer)
-  console.log(currentUser)
 
   useEffect(() => {
     socket.current = io("ws://localhost:8900");
@@ -49,40 +48,20 @@ export default function Rightbar({ user }) {
     })
 
     socket.current.on("refreshFollowed", data => {
-
-
-
-        (async () => {
-          const res = await GetUserById(currentUser._id)
-          dispatch(RefreshFriends(res.friends))
-          dispatch(RefreshFollowers(res.followers))
-          dispatch(RefreshFollowings(res.followings))
-          localStorage.setItem("user", JSON.stringify({
-            ...currentUser,
-            followers: res.followers,
-            followings: res.followings,
-            friends: res.friends
-          }))
-        })()
-      
-
-       
-    
-
-      /*       else if ((data.followed) && (data.userModify._id === currentUser._id)) {
-              localStorage.setItem("user", JSON.stringify({
-                ...currentUser,
-                followers: currentUser.followers.filter(
-                  (followers) => followers !== user._id
-                ),
-              }))
-            }
-       */
+      (async () => {
+        const res = await GetUserById(currentUser._id)
+        dispatch(RefreshFriends(res.friends))
+        dispatch(RefreshFollowers(res.followers))
+        dispatch(RefreshFollowings(res.followings))
+        localStorage.setItem("user", JSON.stringify({
+          ...currentUser,
+          followers: res.followers,
+          followings: res.followings,
+          friends: res.friends
+        }))
+      })()
 
     })
-
-
-    //socket.disconnect();
 
   }, [socket, dispatch])
 
@@ -90,7 +69,7 @@ export default function Rightbar({ user }) {
     socket.current.emit("addUser", currentUser._id)
     socket.current.on("getUsers", users => {
     })
-}, [currentUser, socket])
+  }, [currentUser, socket])
 
 
 
@@ -105,9 +84,7 @@ export default function Rightbar({ user }) {
 
 
   useEffect(() => {
-   
     setIsFriended(currentUser.friends.includes(user?._id))
-    console.log(user?._id)
   }, [currentUser.friends, user, amountRefreshes]);
 
   useEffect(() => {
@@ -185,6 +162,9 @@ export default function Rightbar({ user }) {
             (following) => following !== user._id
           ),
         }))
+        if (user._id !== currentUser._id) {
+          await newNotification(user._id, currentUser.username, 'unfollowed to your account')
+        }
       } else {
         await followUser(user._id, currentUser._id)
         dispatch(FollowUser(user._id));
@@ -192,6 +172,10 @@ export default function Rightbar({ user }) {
           ...currentUser,
           followings: [...currentUser.followings, user._id]
         }))
+        if (user._id !== currentUser._id) {
+          await newNotification(user._id, currentUser.username, 'followed to your account')
+
+        }
 
       }
       socket.current.emit("followUser", {
@@ -219,6 +203,9 @@ export default function Rightbar({ user }) {
           ),
           followers: [...currentUser.followers, user._id],
         }))
+        if (user._id !== currentUser._id) {
+          await newNotification(user._id, currentUser.username, 'removed from your friends list')
+        }
       } else {
         await addFriend(user._id, currentUser._id)
         dispatch(AddFriend(user._id));
@@ -229,6 +216,9 @@ export default function Rightbar({ user }) {
           ),
           friends: [...currentUser.friends, user._id],
         }))
+        if (user._id !== currentUser._id) {
+          await newNotification(user._id, currentUser.username, 'added to your friends list')
+        }
       }
       socket.current.emit("followUser", {
         followed: isFriended,
@@ -316,9 +306,6 @@ export default function Rightbar({ user }) {
 
           )}
 
-
-
-
           <h4 className="rightbarTitleUsername">{user.username}</h4>
           <hr className="rightbarHr" />
           <h4 className="rightbarTitle">User information</h4>
@@ -357,7 +344,6 @@ export default function Rightbar({ user }) {
 
             ))}
           </div>
-
 
         </div>
 

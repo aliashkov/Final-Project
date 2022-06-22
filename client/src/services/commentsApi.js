@@ -15,6 +15,11 @@ export const likeDislikeComments = (postId, userId) => {
     return axios.put(`http://localhost:8000/api/comments/${postId}/like`, {userId})
 }
 
+export const getComment = async (postId) => {
+    const res = await axios.get(`http://localhost:8000/api/comments/${postId}`)
+    return res.data
+}
+
 
 
 export const deleteComment = async (postId, currentUserId, admin) => {

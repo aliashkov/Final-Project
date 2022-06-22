@@ -15,7 +15,6 @@ export const interceptorRefreshToken = async (user, axiosJWT) => {
       }))
       return res.data;
     } catch (err) {
-      console.log(err);
     }
   };
 

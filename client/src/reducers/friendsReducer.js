@@ -5,7 +5,6 @@ const defaultStore = {
 
 
 export const friendsReducer = (state = defaultStore, action) => {
-    console.log(state.user)
     switch (action.type) {
         case "iNITIAL_USER":
             return {

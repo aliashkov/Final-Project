@@ -22,10 +22,7 @@ const Profile = () => {
     const dispatch = useDispatch()
     const socket = useRef();
     const { friendsClick } = useSelector(state => state.clickedReducer)
-    const { amountAddedPosts } = useSelector(state => state.isAllPostsReducer)
     const navigate = useNavigate()
-    console.log(user)
-    console.log(currentUser)
 
     useEffect(() => {
         socket.current = io("ws://localhost:8900");
@@ -36,8 +33,6 @@ const Profile = () => {
     useEffect(() => {
 
         socket.current.on("refreshNames", data => {
-            console.log(data)
-            console.log(username)
              if (data.oldName === username) {
                 username = data.newName
                 navigate(`/profile/${data.newName}`);
@@ -52,7 +47,6 @@ const Profile = () => {
         (async () => {
             try {
                 const res = await GetProfileUser(username)
-                console.log(res)
                 setUser(res.data)
             } catch(err) {
                 navigate('/')

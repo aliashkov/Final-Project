@@ -16,8 +16,6 @@ const Login = () => {
     const { isFetching} = useSelector(state => state.authReducer)
     const { isReloaded} = useSelector(state => state.reloadReducer)
 
-
-    console.log(isReloaded)
     const navigate = useNavigate();
     //localStorage.setItem("user", null)
     
@@ -38,7 +36,7 @@ const Login = () => {
            window.location.reload()
         }
 
-    }, [isReloaded])
+    }, [isReloaded , dispatch])
 
 
     const registerClick = (e) => {

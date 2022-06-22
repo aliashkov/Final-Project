@@ -3,7 +3,7 @@ import './share.css'
 import { PermMedia, Cancel } from '@mui/icons-material';
 import { useSelector } from 'react-redux';
 import { UploadFile } from '../../services/uploadApi';
-import { addPost } from '../../services/postsApi';
+import { addPost, getPost } from '../../services/postsApi';
 import { useDispatch } from 'react-redux';
 import { AmountAddedPosts } from '../../actions/isAllPostsAction';
 import { changePost } from '../../services/postsApi';
@@ -11,6 +11,8 @@ import { addComment, changeComment } from '../../services/commentsApi';
 import { NulifyClicks } from '../../actions/clickedAction';
 import { io } from 'socket.io-client'
 import ReactPlayer from 'react-player'
+import { newNotification } from '../../services/notificationsApi';
+import { getComment } from '../../services/commentsApi';
 
 
 const Share = ({ postId, change, comments, socket }) => {
@@ -72,10 +74,22 @@ const Share = ({ postId, change, comments, socket }) => {
                         await addPost(newPost)
                 }
                 else {
-                    if (change)
+                    if (change) {
                         await changeComment(postId, newPost)
-                    else
-                        await addComment(postId, newPost)
+                        const res = await getComment(postId)
+                        const post = await getPost(res.postId)
+                        if (post.userId !== user._id) {
+                            await newNotification(post.userId, user.username, 'changes comment in your post')
+                        }
+                    }
+                    else {
+                        await addComment(postId, newPost);
+                        const res = await getPost(postId)
+                        if (res.userId !== user._id) {
+                            await newNotification(res.userId, user.username, 'leaves comment in your post')
+                        }
+                    }
+
                 }
                 dispatch(NulifyClicks())
                 dispatch(AmountAddedPosts())
@@ -160,8 +174,8 @@ const Share = ({ postId, change, comments, socket }) => {
                                 <>
                                     <label htmlFor="file-upload" className="shareOption">
                                         <PermMedia htmlColor='tomato' className='shareIcon' />
-                                        <span className='shareOptionText'>Photo</span>
-                                        <input id="file-upload" type="file" onChange={(e) => setFilePost(e.target.files[0])} />
+                                        <span className='shareOptionText'>Photo or Video</span>
+                                        <input style={{ display: "none" }} id="file-upload" type="file" onChange={(e) => setFilePost(e.target.files[0])} />
                                     </label>
 
                                 </>
