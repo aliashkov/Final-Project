@@ -10,6 +10,13 @@ export const getAllPosts = async (userId) => {
     return res
 }
 
+
+export const getPost = async (postId) => {
+    const res = await axios.get(`http://localhost:8000/api/posts/${postId}`)
+    return res.data
+}
+
+
 export const getProfilePosts = async (username) => {
     const res = await axios.get(`http://localhost:8000/api/posts/profile/${username}`)
     return res

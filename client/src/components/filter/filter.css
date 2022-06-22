@@ -1,7 +1,7 @@
 .usersList {
     position: absolute;
     width: 42%;
-    left :26%;
+    left :25%;
     top: 50px;
 
 }
@@ -44,3 +44,31 @@
      font-weight: 500;
      margin: 0 10px;
  }
+
+ @media (max-width: 1020px) {
+
+
+    .usersList {
+
+        position: absolute;
+        width: 40%;
+        left: 20%;
+        top: 50px;
+    
+    }
+
+}
+
+@media (max-width: 868px) {
+
+
+    .usersList {
+
+        position: absolute;
+        width: 44%;
+        left: 12%;
+        top: 50px;
+    
+    }
+
+}

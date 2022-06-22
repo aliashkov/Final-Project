@@ -27,10 +27,6 @@ export const Editing = () => {
     const [visible, setVisible] = useState(false);
     const navigate = useNavigate();
     const dispatch = useDispatch()
-    const { amountAddedPosts } = useSelector(state => state.isAllPostsReducer)
-
-    console.log(amountAddedPosts)
-    
 
 
     useEffect(() => {
@@ -84,9 +80,8 @@ export const Editing = () => {
                     newName: username.current.value,
                 });
 
-
-                console.log(user.username , username.current.value)
                 dispatch(changeFilterPosts(""))
+                dispatch(AmountAddedPosts())
                 navigate(`/profile/${username.current.value}`);
 
 

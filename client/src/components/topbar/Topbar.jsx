@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
 import "./topbar.css"
 import { Search, Notifications } from '@mui/icons-material'
 import { Link } from "react-router-dom"
@@ -10,9 +10,12 @@ import { useEffect } from 'react';
 import { GetUsers } from '../../services/userApi';
 import { Filter } from '../filter/Filter';
 import { reloadPage } from '../../actions/reloadAction';
-import { io } from 'socket.io-client'
 import { GetNotifications, DeleteNotifications } from '../../services/notificationsApi';
 import { AmountAddedPosts } from '../../actions/isAllPostsAction';
+import FolderIcon from '@mui/icons-material/Folder';
+import FolderSharedIcon from '@mui/icons-material/FolderShared';
+import HomeIcon from '@mui/icons-material/Home';
+
 
 
 const Topbar = () => {
@@ -23,10 +26,14 @@ const Topbar = () => {
     const [searchUser, setSearchUser] = useState("")
     const [users, setUsers] = useState([])
     const { amountAddedPosts } = useSelector(state => state.isAllPostsReducer)
+    const { amountRefreshes } = useSelector(state => state.refreshesReducer)
     const [notifications, setNotifications] = useState([]);
     const [open, setOpen] = useState(false);
-    console.log(notifications)
+    const [matches, setMatches] = useState(
+        window.matchMedia("(min-width: 868px)").matches
+    )
 
+    const PUBLIC_FOLDER = process.env.REACT_APP_PUBLIC_FOLDER
 
     useEffect(() => {
         (async () => {
@@ -35,13 +42,13 @@ const Topbar = () => {
 
         })()
 
-    }, [amountAddedPosts, user._id])
+    }, [amountAddedPosts, user._id, amountRefreshes])
 
 
-    const displayNotification = ({ sender, type }) => {
+    const displayNotification = (n) => {
 
         return (
-            <span className="notification">{`${sender} ${type} .`}</span>
+            <span key={n._id} className="notification">{`${n.sender} ${n.type} .`}</span>
         );
     };
 
@@ -63,8 +70,14 @@ const Topbar = () => {
 
     }, [searchUser])
 
+    useEffect(() => {
+        window
+            .matchMedia("(min-width: 868px)")
+            .addEventListener('change', e => setMatches(e.matches));
+    }, []);
 
-    const PUBLIC_FOLDER = process.env.REACT_APP_PUBLIC_FOLDER
+
+
 
     const friendsPostsClick = (e) => {
         e.preventDefault()
@@ -96,7 +109,15 @@ const Topbar = () => {
         <div className="topbarContainer">
             <div className="topbarLeft">
                 <Link to='/' style={{ textDecoration: "none" }}>
-                    <span className="logo">Social Media</span>
+
+                    {matches ?
+                        <span className="logo">Social Media</span>
+                        :
+                        <HomeIcon className="logo home"/>
+                    }
+
+
+
                 </Link>
 
             </div>
@@ -126,13 +147,35 @@ const Topbar = () => {
                 <div className="topbarLinks">
                     {isAllPosts ?
                         <>
-                            <span className="topbarLink" style={{ color: "red" }} onClick={allPostsClick}>All Posts</span>
-                            <span className="topbarLink" style={{ color: "white" }} onClick={friendsPostsClick}>Friend Posts</span>
+
+                            {matches ?
+                                <>
+                                    <span className="topbarLink" style={{ color: "red" }} onClick={allPostsClick}>All Posts</span>
+                                    <span className="topbarLink" style={{ color: "white" }} onClick={friendsPostsClick}>Friend Posts</span>
+                                </>
+                                :
+                                <div className='topbarPanelPosts'>
+                                    <FolderIcon className="topbarLink topbarIcon" style={{ color: "red" }} onClick={allPostsClick} />
+                                    <FolderSharedIcon className="topbarLink topbarIcon" onClick={friendsPostsClick} />
+                                </div>
+                            }
+
                         </>
                         :
                         <>
-                            <span className="topbarLink" style={{ color: "white" }} onClick={allPostsClick}>All Posts</span>
-                            <span className="topbarLink" style={{ color: "red" }} onClick={friendsPostsClick}>Friend Posts</span>
+                            {matches ?
+                                <>
+
+                                    <span className="topbarLink" style={{ color: "white" }} onClick={allPostsClick}>All Posts</span>
+                                    <span className="topbarLink" style={{ color: "red" }} onClick={friendsPostsClick}>Friend Posts</span>
+                                </>
+                                :
+                                <div className='topbarPanelPosts'>
+                                    <FolderIcon className="topbarLink topbarIcon" onClick={allPostsClick} />
+                                    <FolderSharedIcon className="topbarLink topbarIcon" style={{ color: "red" }} onClick={friendsPostsClick} />
+                                </div>
+                            }
+
                         </>
                     }
                 </div>
@@ -162,9 +205,9 @@ const Topbar = () => {
                     </div>
 
                 </div>
-                {open && (
+                {open && notifications.length > 0 && (
                     <div className="notifications">
-                        {notifications.map((n) => displayNotification(n))}
+                        {notifications.slice(-5).map((n, index) => displayNotification(n))}
                         <button className="nButton" onClick={handleRead}>
                             Mark as read
                         </button>

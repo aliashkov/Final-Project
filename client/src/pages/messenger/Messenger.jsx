@@ -166,8 +166,10 @@ const Messenger = ({ members }) => {
         scrollRef.current?.scrollIntoView({ behavior: "smooth" });
     }, [messages])
 
-
-
+    const currentChatClick = (conversation) => {
+        setCurrentChat(conversation)
+        setSearchUser("")
+    }
 
 
     return (
@@ -185,7 +187,7 @@ const Messenger = ({ members }) => {
                         {conversations.map((conversation, index) => (
 
                             ((searchRes[index] !== undefined) || (searchUser === "")) && (
-                                < div key={conversation._id} onClick={() => setCurrentChat(conversation)}>
+                                < div key={conversation._id} onClick={() => currentChatClick(conversation)}>
                                     <Conversation conversation={conversation} currentUser={user} />
                                 </div>
                             )

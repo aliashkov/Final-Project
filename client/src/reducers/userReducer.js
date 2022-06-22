@@ -4,7 +4,6 @@ const defaultStore = {
 
 
 export const userReducer = (state = defaultStore, action) => {
-  console.log(state.user)
   switch (action.type) {
     case "LOGIN_START_USER":
       return {

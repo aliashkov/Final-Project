@@ -15,8 +15,6 @@ const AppRoutes = (props) => {
 
     const { user } = useSelector(state => state.userReducer)
 
-    console.log(user)
-
     return (
 
         <>

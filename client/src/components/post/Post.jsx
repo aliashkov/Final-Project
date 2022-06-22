@@ -8,7 +8,7 @@ import { useSelector } from 'react-redux';
 import { likeDislikePosts } from '../../services/likesApi';
 import DeleteIcon from '@mui/icons-material/Delete';
 import ModeEditIcon from '@mui/icons-material/ModeEdit';
-import { deletePost } from '../../services/postsApi';
+import { deletePost, getPost } from '../../services/postsApi';
 import { AmountAddedPosts } from '../../actions/isAllPostsAction';
 import { useDispatch } from 'react-redux';
 import Share from '../share/Share';
@@ -151,10 +151,13 @@ const Post = ({ post, commentsPost, socket }) => {
             try {
                 if (!commentsPost) {
                     await deletePost(post._id, currentUser._id, currentUser.isAdmin)
-
                 }
                 else {
                     await deleteComment(post._id, currentUser._id, currentUser.isAdmin)
+                    const res = await getPost(post.postId)
+                    if (res.userId !== user._id) {
+                        await newNotification(res.userId, user.username, 'deletes comment in your post')
+                    }
                 }
                 socket.current.emit("refreshPost");
                 dispatch(AmountAddedPosts())

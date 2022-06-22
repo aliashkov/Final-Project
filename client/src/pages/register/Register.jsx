@@ -24,7 +24,6 @@ const Register = () => {
                 email: email.current.value,
                 password: password
             }
-            console.log(user)
             try {
                 await registerCall(user)
                 navigate('/login');
