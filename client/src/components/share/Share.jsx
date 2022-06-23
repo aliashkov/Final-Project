@@ -21,6 +21,7 @@ const Share = ({ postId, change, comments, socket }) => {
     const [filePost, setFilePost] = useState(null);
     const [description, setDescription] = useState("")
     const dispatch = useDispatch();
+    
 
     useEffect(() => {
         socket.current = io("ws://localhost:8900");
