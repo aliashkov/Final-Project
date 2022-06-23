@@ -49,9 +49,6 @@
     color: white;
 }
 
-.chatOnline{
-    flex: 3.5;
-}
 
 .chatMenuWrapper, .chatBoxwrapper, .chatOnlineWrapper{
     padding: 10px;

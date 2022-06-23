@@ -33,13 +33,13 @@ const Messenger = ({ members }) => {
     useEffect(() => {
         socket.current = io("ws://localhost:8900");
         socket.current.on("getMessage", (data) => {
-          setArrivalMessage({
-            sender: data.senderId,
-            text: data.text,
-            createdAt: Date.now(),
-          });
+            setArrivalMessage({
+                sender: data.senderId,
+                text: data.text,
+                createdAt: Date.now(),
+            });
         });
-      }, []);
+    }, []);
 
     useEffect(() => {
         socket.current.on("refreshPosts", amountRefreshes => {
@@ -51,13 +51,18 @@ const Messenger = ({ members }) => {
     useEffect(() => {
         conversations?.map((conversation) => {
             if (member !== null) {
-                if ((conversation.members[0].includes(member)) && (conversation.members[1].includes(user?._id)) || (conversation.members[1].includes(member)) && (conversation.members[0].includes(user?._id))) {
+                if ((conversation.members[0].includes(member)) && (conversation.members[1].includes(user?._id))) {
+                    setCurrentChat(conversation)
+                    dispatch(AmountAddedPosts())
+                    dispatch(removeUserFromChat());
+                }
+                else if ((conversation.members[1].includes(member)) && (conversation.members[0].includes(user?._id))) {
                     setCurrentChat(conversation)
                     dispatch(AmountAddedPosts())
                     dispatch(removeUserFromChat());
                 }
             }
-            
+
 
 
         })
@@ -93,7 +98,7 @@ const Messenger = ({ members }) => {
                 let result = await Promise.all(res.map((conversation) => {
                     const friendId = conversation.members.find(member => member !== user._id)
                     return setFriends((prev) => [...prev, friendId])
-                    
+
                 }))
 
                 result = friends;
@@ -125,7 +130,7 @@ const Messenger = ({ members }) => {
             }
 
         })()
-    }, [currentChat , amountAddedPosts])
+    }, [currentChat, amountAddedPosts])
 
     useEffect(() => {
 
@@ -206,7 +211,7 @@ const Messenger = ({ members }) => {
                                     {messages.map(message => (
                                         <div key={message._id} ref={scrollRef}>
 
-                                            <Message message={message} own={message.sender === user._id}  socket={socket}/>
+                                            <Message message={message} own={message.sender === user._id} socket={socket} />
                                         </div>
 
                                     ))}
