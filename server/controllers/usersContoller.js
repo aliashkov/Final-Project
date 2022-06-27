@@ -1,7 +1,7 @@
-const User = require('../models/User')
-const Post =  require('../models/Post')
-const Comment =  require('../models/Comment')
 const bcrypt = require('bcrypt')
+const userServices = require('../services/userServices');
+const commentsServices = require('../services/commentsServices');
+const postsServices = require('../services/postsServices');
 
 
 const updateUser = async (req, res) => {
@@ -15,9 +15,7 @@ const updateUser = async (req, res) => {
             }
         }
         try {
-            const user = await User.findByIdAndUpdate(req.params.id,
-                { $set: req.body }
-            );
+            await userServices.findUserAndUpdate(req.params.id , req.body)
             res.status(200).json('Account has been updated')
         } catch (err) {
             res.status(500).json(err)
@@ -32,17 +30,16 @@ const deleteUser = async (req, res) => {
     console.log(req.body.userId)
     if (req.body.userId === req.params.id || req.body.isAdmin) {
         try {
-            const user = await User.findByIdAndDelete({ _id: req.params.id });
-            const posts = await Post.deleteMany({ userId : req.params.id });
-            const comments = await Comment.deleteMany({ userId : req.params.id });
-            const users = await User.find({});
+            await userServices.deleteUser(req.params.id)
+            await postsServices.deletePostsByUser(req.params.id)
+            await commentsServices.deleteCommentsByUser(req.params.id)
+            const users = await userServices.getAllUsers()
 
             await Promise.all(
                 users.map((user) => {
                     const { _id, friends , followings , followers } = user;
                     if (friends.includes(req.params.id) || followings.includes(req.params.id) || followers.includes(req.params.id)) {
-                         return User.findOneAndUpdate({_id : _id}, { $pull: { friends: req.params.id , followings : req.params.id , followers: req.params.id } });
-                        
+                        return userServices.updateRelationships(_id , req.params.id) 
                     }
                 }
             ));
@@ -62,8 +59,8 @@ const findUser = async (req, res) => {
     const username = req.query.username;
     try {
         const user = userId
-            ? await User.findById(userId)
-            : await User.findOne({ username: username });
+            ? await userServices.findUserById(userId)
+            : await userServices.findUserByUsername(username)
         const { password, updatedAt, ...other } = user._doc;
         res.status(200).json(other);
     } catch (err) {
@@ -73,7 +70,7 @@ const findUser = async (req, res) => {
 
 const findUsers = async (req, res) => {
     try {
-        const user = await User.find({});
+        const user = await userServices.getAllUsers()
         res.status(200).json(user);
     } catch (err) {
         res.status(500).json(err);
@@ -82,10 +79,10 @@ const findUsers = async (req, res) => {
 
 const getFollowers = async (req, res) => {
     try {
-        const user = await User.findById(req.params.userId);
+        const user = await userServices.findUserById(req.params.userId)
         const followers = await Promise.all(
             user.followings.map((followId) => {
-                return User.findById(followId);
+                return userServices.findUserById(followId)
             })
         );
         let followList = [];
@@ -101,10 +98,10 @@ const getFollowers = async (req, res) => {
 
 const getFollowings = async (req, res) => {
     try {
-        const user = await User.findById(req.params.userId);
+        const user = await userServices.findUserById(req.params.userId)
         const followings = await Promise.all(
             user.followers.map((followId) => {
-                return User.findById(followId);
+                return userServices.findUserById(followId)
             })
         );
         let followingList = [];
@@ -120,10 +117,10 @@ const getFollowings = async (req, res) => {
 
 const getFriends = async (req, res) => {
     try {
-        const user = await User.findById(req.params.userId);
+        const user = await userServices.findUserById(req.params.userId)
         const friends = await Promise.all(
             user.friends.map((followId) => {
-                return User.findById(followId);
+                return userServices.findUserById(followId)
             })
         );
         let friendsList = [];
@@ -144,11 +141,11 @@ const getFriends = async (req, res) => {
 const followUser = async (req, res) => {
     if (req.body.userId !== req.params.id) {
         try {
-            const user = await User.findById(req.params.id)
-            const currentUser = await User.findById(req.body.userId)
+            const user = await userServices.findUserById(req.params.id)
+            const currentUser = await userServices.findUserById(req.body.userId)
             if (!user.followers.includes(req.body.userId)) {
-                await user.updateOne({ $push: { followers: req.body.userId } })
-                await currentUser.updateOne({ $push: { followings: req.params.id } })
+                await userServices.updateFollowers(user, req.body.userId)
+                await userServices.updateFollowings(currentUser, req.params.id)
                 res.status(200).json('User has been followed')
             } else {
                 res.status(403).json('You already followed this user')
@@ -166,11 +163,11 @@ const followUser = async (req, res) => {
 const unfollowUser = async (req, res) => {
     if (req.body.userId !== req.params.id) {
         try {
-            const user = await User.findById(req.params.id)
-            const currentUser = await User.findById(req.body.userId)
+            const user = await userServices.findUserById(req.params.id)
+            const currentUser = await userServices.findUserById(req.body.userId)
             if (user.followers.includes(req.body.userId)) {
-                await user.updateOne({ $pull: { followers: req.body.userId } })
-                await currentUser.updateOne({ $pull: { followings: req.params.id } })
+                await userServices.removeFollowers(user, req.body.userId)
+                await userServices.removeFollowings(currentUser, req.params.id)
                 res.status(200).json('User has been unfollowed')
             } else {
                 res.status(403).json('You already unfollowed this user')
@@ -188,15 +185,16 @@ const unfollowUser = async (req, res) => {
 const addFriend = async (req, res) => {
     if (req.body.userId !== req.params.id) {
         try {
-            const user = await User.findById(req.params.id)
-            const currentUser = await User.findById(req.body.userId)
+            const user = await userServices.findUserById(req.params.id)
+            const currentUser = await userServices.findUserById(req.body.userId)
 
             
             if (!user.friends.includes(req.body.userId)) {
-                await user.updateOne({ $pull: { followings: req.body.userId} })
-                await currentUser.updateOne({ $pull: { followers: req.params.id } })
-                await user.updateOne({ $push: { friends: req.body.userId } })
-                await currentUser.updateOne({ $push: { friends: req.params.id } })
+                await userServices.removeFollowings(user, req.body.userId)
+                await userServices.removeFollowers(currentUser, req.params.id)
+                
+                await userServices.updateFriends(user,  req.body.userId)
+                await userServices.updateFriends(currentUser,  req.params.id)
                 res.status(200).json('User successfully added to friends')
             } else {
                 res.status(403).json(user)
@@ -214,15 +212,18 @@ const addFriend = async (req, res) => {
 const removeFriend = async (req, res) => {
     if (req.body.userId !== req.params.id) {
         try {
-            const user = await User.findById(req.params.id)
-            const currentUser = await User.findById(req.body.userId)
+            const user = await userServices.findUserById(req.params.id)
+            const currentUser = await userServices.findUserById(req.body.userId)
 
             
             if (user.friends.includes(req.body.userId)) {
-                await user.updateOne({ $push: { followings: req.body.userId} })
-                await currentUser.updateOne({ $push: { followers: req.params.id } })
-                await user.updateOne({ $pull: { friends: req.body.userId } })
-                await currentUser.updateOne({ $pull: { friends: req.params.id } })
+
+                await userServices.updateFollowings(user, req.body.userId)
+                await userServices.updateFollowers(currentUser, req.params.id)
+                
+                await userServices.removeFriends(user,  req.body.userId)
+                await userServices.removeFriends(currentUser,  req.params.id)
+
                 res.status(200).json('User successfully removed friend')
             } else {
                 res.status(403).json(user)

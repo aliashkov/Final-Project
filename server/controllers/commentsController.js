@@ -1,12 +1,9 @@
-const Post = require('../models/Post');
-const User = require('../models/User');
-const Comment = require('../models/Comment');
-
+const commentsServices = require('../services/commentsServices');
 
 const addComment = async (req, res) => {
-    const newComment = new Comment(req.body)
+    const newComment = await commentsServices.newComment(req.body)
     try {
-        const savedComment = await newComment.save();
+        const savedComment = await commentsServices.savedComment(newComment)
         res.status(200).json(savedComment)
 
     } catch (err) {
@@ -16,7 +13,7 @@ const addComment = async (req, res) => {
 
 const getComment = async (req, res) => {
     try {
-        const comment = await Comment.findById(req.params.id)
+        const comment = await commentsServices.findComment(req.params.id)
         res.status(200).json(comment)
     } catch (err) {
         res.status(500).json(err);
@@ -26,12 +23,12 @@ const getComment = async (req, res) => {
 
 const likeComment = async (req, res) => {
     try {
-        const comment = await Comment.findById(req.params.id);
+        const comment = await commentsServices.findComment(req.params.id)
         if (!comment.likes.includes(req.body.userId)) {
-            await comment.updateOne({ $push: { likes: req.body.userId } });
+            await commentsServices.likeComment(comment, req.body.userId)
             res.status(200).json("Comment has been liked");
         } else {
-            await comment.updateOne({ $pull: { likes: req.body.userId } });
+            await commentsServices.dislikeComment(comment, req.body.userId)
             res.status(200).json("Comment has been disliked");
         }
     } catch (err) {
@@ -42,9 +39,9 @@ const likeComment = async (req, res) => {
 
 const deleteComment = async (req, res) => {
     try {
-        const comment = await Comment.findById(req.params.id);
+        const comment = await commentsServices.findComment(req.params.id)
         if ((comment.userId === req.body.userId) || req.body.isAdmin) {
-            await comment.deleteOne();
+            await commentsServices.deleteComment(comment)
             res.status(200).json("Comment has been deleted");
         } else {
             res.status(403).json("You can delete only your comment");
@@ -57,12 +54,12 @@ const deleteComment = async (req, res) => {
 
 const updateComment = async (req, res) => {
     try {
-        const comment = await Comment.findById(req.params.id);
+        const comment = await commentsServices.findComment(req.params.id)
         if ((comment.userId === req.body.userId) || req.body.isAdmin) {
             if (req.body.isAdmin) {
-                await comment.updateOne({ $set: { description: req.body.description , img: req.body.img }});
+                await commentsServices.updateCommentAdmin(comment , req.body.description)
             } else {
-                await comment.updateOne({ $set: req.body });
+                await commentsServices.updateCommentUser(comment , req.body)
             }
 
             res.status(200).json("Comment has been updated");

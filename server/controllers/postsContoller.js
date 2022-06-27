@@ -1,12 +1,11 @@
-const Post = require('../models/Post');
-const User = require('../models/User');
-const Comment = require('../models/Comment');
-
+const postsServices = require('../services/postsServices');
+const userServices = require('../services/userServices');
+const commentsServices = require('../services/commentsServices');
 
 const addPost = async (req, res) => {
-    const newPost = new Post(req.body)
+    const newPost = await postsServices.newPost(req.body)
     try {
-        const savedPost = await newPost.save();
+        const savedPost = await postsServices.savePost(newPost)
         res.status(200).json(savedPost)
 
     } catch (err) {
@@ -16,14 +15,14 @@ const addPost = async (req, res) => {
 
 const updatePost = async (req, res) => {
     try {
-        const post = await Post.findById(req.params.id);
+        const post = await postsServices.findPostById(req.params.id)
         if ((post.userId === req.body.userId) || req.body.isAdmin) {
             if (req.body.isAdmin) {
-                await post.updateOne({ $set: { description: req.body.description , img: req.body.img }});
+                await postsServices.updatePostAdmin(post, req.body.description, req.body.img)
             } else {
-                await post.updateOne({ $set: req.body });
+                await postsServices.updatePostUser(post, req.body)
             }
-           
+
             res.status(200).json("Post has been updated");
         } else {
             res.status(403).json("You can update only your post");
@@ -35,9 +34,9 @@ const updatePost = async (req, res) => {
 
 const deletePost = async (req, res) => {
     try {
-        const post = await Post.findById(req.params.id);
+        const post = await postsServices.findPostById(req.params.id)
         if ((post.userId === req.body.userId) || req.body.isAdmin) {
-            await post.deleteOne();
+            await postsServices.deletePost(post)
             res.status(200).json("Post has been deleted");
         } else {
             res.status(403).json("You can delete only your post");
@@ -49,12 +48,12 @@ const deletePost = async (req, res) => {
 
 const likePost = async (req, res) => {
     try {
-        const post = await Post.findById(req.params.id);
+        const post = await postsServices.findPostById(req.params.id)
         if (!post.likes.includes(req.body.userId)) {
-            await post.updateOne({ $push: { likes: req.body.userId } });
+            await postsServices.likePost(post, req.body.userId) 
             res.status(200).json("Post has been liked");
         } else {
-            await post.updateOne({ $pull: { likes: req.body.userId } });
+            await postsServices.dislikePost(post, req.body.userId) 
             res.status(200).json("Post has been disliked");
         }
     } catch (err) {
@@ -65,14 +64,14 @@ const likePost = async (req, res) => {
 
 const addComment = async (req, res) => {
     try {
-        const post = await Post.findById(req.params.id);
+        const post = await postsServices.findPostById(req.params.id)
         if (!post.comments[0].id.includes(req.body.userId)) {
-            const friend = {"id": req.body.userId, "post": req.params.id};
-            await post.updateOne({ $push: { comments: friend } });
+            const friend = { "id": req.body.userId, "post": req.params.id };
+            await commentsServices.commentsAdded(post, friend) 
             res.status(200).json("Comments added");
         } else {
-            const friend = {"id": req.body.userId, "post": req.params.id};
-            await post.updateOne({ $pull: { comments: friend} });
+            const friend = { "id": req.body.userId, "post": req.params.id };
+            await commentsServices.commentsDeleted(post, friend) 
             res.status(200).json("Comments deleted");
         }
     } catch (err) {
@@ -83,7 +82,7 @@ const addComment = async (req, res) => {
 
 const getAllCommentsByPostId = async (req, res) => {
     try {
-        const comments = await Comment.find({'postId' : req.params.id});
+        const comments = await commentsServices.findCommentsById(req.params.id)
         res.status(200).json(comments)
     } catch (err) {
         res.status(500).json(err);
@@ -95,7 +94,7 @@ const getAllCommentsByPostId = async (req, res) => {
 
 const getPost = async (req, res) => {
     try {
-        const post = await Post.findById(req.params.id)
+        const post = await postsServices.findPostById(req.params.id)
         res.status(200).json(post)
     } catch (err) {
         res.status(500).json(err);
@@ -104,11 +103,11 @@ const getPost = async (req, res) => {
 
 const getTimelinedPosts = async (req, res) => {
     try {
-        const currentUser = await User.findById(req.params.userId);
-        const userPosts = await Post.find({ userId: currentUser._id });
+        const currentUser = await userServices.findUserById(req.params.userId)
+        const userPosts = await postsServices.findPostsByUserId(currentUser._id)
         const friendPosts = await Promise.all(
             currentUser.friends.map((friendId) => {
-                return Post.find({ userId: friendId });
+                return postsServices.findPostByFriendId(friendId)
             })
         );
         res.status(200).json(userPosts.concat(...friendPosts))
@@ -119,8 +118,7 @@ const getTimelinedPosts = async (req, res) => {
 
 const getTimelinedPostsAll = async (req, res) => {
     try {
-        //const user = await User.find({});
-        const posts = await Post.find({});
+        const posts =  await postsServices.findAllPosts()
         res.status(200).json(posts);
     } catch (err) {
         res.status(500).json(err);
@@ -130,8 +128,8 @@ const getTimelinedPostsAll = async (req, res) => {
 
 const getAllPosts = async (req, res) => {
     try {
-        const user = await User.findOne({ username: req.params.username });
-        const posts = await Post.find({ userId: user._id });
+        const user = await userServices.findUserByUsername(req.params.username)
+        const posts = await  postsServices.findPostsByUserId(user._id)
         res.status(200).json(posts);
     } catch (err) {
         res.status(500).json(err);
