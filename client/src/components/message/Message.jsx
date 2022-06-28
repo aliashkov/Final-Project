@@ -101,7 +101,7 @@ const Message = ({ message, own, socket }) => {
                             <button className='messageChatButton' onClick={handleSubmit}> Send </button>
                         </div>
                     </>}
-                {own ?
+                {(currentUser.isAdmin || own) ?
                     <div className='messageSettings'>
                         <ModeEditIcon onClick={editMessageClick} />
                         <DeleteIcon onClick={deleteMessageClick} />
