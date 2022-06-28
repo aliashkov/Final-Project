@@ -11,7 +11,7 @@ import { useDispatch } from 'react-redux';
 import { LoginSuccessUser } from '../../actions/userAction';
 import { changeFilterPosts } from '../../actions/findPostsAction';
 import { AmountAddedPosts } from '../../actions/isAllPostsAction';
-import {io} from 'socket.io-client'
+import { io } from 'socket.io-client'
 
 export const Editing = () => {
     const PUBLIC_FOLDER = process.env.REACT_APP_PUBLIC_FOLDER
@@ -133,9 +133,22 @@ export const Editing = () => {
 
                             )}
                             <div className='form_inputs'>
-                                <input placeholder="name" ref={username} className="editingInput" />
-                                <input placeholder="City" ref={city} className="editingInput" />
-                                <input placeholder="Country" ref={country} className="editingInput" />
+                                <input placeholder="Name" onKeyPress={(event) => {
+                                    if (!/[a-zA-Z0-9]/.test(event.key)) {
+                                        event.preventDefault();
+                                    }
+                                }} ref={username} className="editingInput" />
+                                <input placeholder="City" onKeyPress={(event) => {
+                                    if (!/[a-zA-Z]/.test(event.key)) {
+                                        event.preventDefault();
+                                    }
+                                }} 
+                                ref={city} className="editingInput" />
+                                <input placeholder="Country" onKeyPress={(event) => {
+                                    if (!/[a-zA-Z0-9]/.test(event.key)) {
+                                        event.preventDefault();
+                                    }
+                                }} ref={country} className="editingInput" />
                                 <input placeholder="Password" required minLength="6" onChange={e => setPassword(e.target.value)} type="password" className="editingInput" />
                                 <input placeholder="Password Confirm" required minLength="6" onChange={e => setPasswordConfirm(e.target.value)} type="password" className="editingInput" />
                             </div>

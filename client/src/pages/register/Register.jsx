@@ -55,7 +55,11 @@ const Register = () => {
                 </div>
                 <div className="registerRight">
                     <form className="registerBox" onSubmit={handleClick}>
-                        <input placeholder="Username" required ref={username} className="registerInput" />
+                        <input placeholder="Username" onKeyPress={(event) => {
+                            if (!/[a-zA-Z0-9]/.test(event.key)) {
+                                event.preventDefault();
+                            }
+                        }} required ref={username} className="registerInput" />
                         <input placeholder="Email" required ref={email} type="email" className="registerInput" />
                         <input placeholder="Password" required minLength="6" onChange={e => setPassword(e.target.value)} type="password" className="registerInput" />
                         <input placeholder="Password Confirm" required minLength="6" onChange={e => setPasswordConfirm(e.target.value)} type="password" className="registerInput" />
