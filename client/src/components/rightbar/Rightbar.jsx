@@ -18,11 +18,16 @@ import { AddRefresh } from "../../actions/refreshesAction";
 import { GetUserById } from "../../services/userApi";
 import { RefreshFriends, RefreshFollowers, RefreshFollowings } from "../../actions/userAction";
 import { newNotification } from "../../services/notificationsApi";
+import 'dayjs/locale/es'
 
 
 export default function Rightbar({ user }) {
 
   const PUBLIC_FOLDER = process.env.REACT_APP_PUBLIC_FOLDER
+  const options = { year: 'numeric', month: 'long', day: 'numeric' };
+  const initialDate = new Date(user?.birthDate);
+  const converedDate = initialDate.toLocaleDateString('en-GB', options)
+ 
   const [followers, setFollowers] = useState([])
   const [followings, setFollowings] = useState([])
   const [friends, setFriends] = useState([])
@@ -34,6 +39,8 @@ export default function Rightbar({ user }) {
   const navigate = useNavigate()
   const socket = useRef();
   const { amountRefreshes } = useSelector(state => state.refreshesReducer)
+
+
 
   useEffect(() => {
     socket.current = io("ws://localhost:8900");
@@ -317,6 +324,10 @@ export default function Rightbar({ user }) {
             <div className="rightbarInfoItem">
               <span className="rightbarInfoKey">Country:</span>
               <span className="rightbarInfoValue">{user.country}</span>
+            </div>
+            <div className="rightbarInfoItem">
+              <span className="rightbarInfoKey">Birth date:</span>
+              <span className="rightbarInfoValue">{(converedDate === 'Invalid Date') ? "" : converedDate}</span>
             </div>
           </div>
           <hr className="rightbarHr" />
