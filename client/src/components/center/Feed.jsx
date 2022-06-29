@@ -16,9 +16,6 @@ const Feed = ({ username }) => {
     const { amountAddedPosts } = useSelector(state => state.isAllPostsReducer)
     const socket = useRef();
 
-
-
-
     const [arr, setArr] = useState([]);
     const [currentLength, setCurrentLength] = useState(3)
 
@@ -67,9 +64,6 @@ const Feed = ({ username }) => {
     });
 
     return (
-
-
-
 
         <div className='feed'>
             <div className="feedWrapper">

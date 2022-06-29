@@ -12,6 +12,8 @@ import { LoginSuccessUser } from '../../actions/userAction';
 import { changeFilterPosts } from '../../actions/findPostsAction';
 import { AmountAddedPosts } from '../../actions/isAllPostsAction';
 import { io } from 'socket.io-client'
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 export const Editing = () => {
     const PUBLIC_FOLDER = process.env.REACT_APP_PUBLIC_FOLDER
@@ -27,7 +29,9 @@ export const Editing = () => {
     const [visible, setVisible] = useState(false);
     const navigate = useNavigate();
     const dispatch = useDispatch()
+    const [startDate, setStartDate] = useState(new Date());
 
+    console.log(startDate)
 
     useEffect(() => {
         socket.current = io("ws://localhost:8900");
@@ -54,7 +58,8 @@ export const Editing = () => {
                 country: country.current.value,
                 password: password,
                 passwordConfirm: passwordConfirm,
-                isHidden: visible
+                isHidden: visible,
+                birthDate : startDate
             };
             const data = new FormData();
             if (file) {
@@ -149,6 +154,7 @@ export const Editing = () => {
                                         event.preventDefault();
                                     }
                                 }} ref={country} className="editingInput" />
+                                <DatePicker placeholder="Password"  className="editingInputDate" selected={startDate} onChange={(date) => setStartDate(date)} />
                                 <input placeholder="Password" required minLength="6" onChange={e => setPassword(e.target.value)} type="password" className="editingInput" />
                                 <input placeholder="Password Confirm" required minLength="6" onChange={e => setPasswordConfirm(e.target.value)} type="password" className="editingInput" />
                             </div>

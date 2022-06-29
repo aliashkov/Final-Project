@@ -75,6 +75,24 @@
     outline: none;
 }
 
+
+.editingInputDate{
+    height: 50px;
+    width: 96%;
+    border-radius: 10px;
+    border: 1px solid gray;
+    font-size: 18px;
+    padding-left: 20px;
+    margin-bottom: 5px;
+}
+
+.editingInput:focus {
+    outline: none;
+}
+
+
+
+
 .editingButton {
     width: 60%;
     align-self: center;
