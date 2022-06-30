@@ -11,6 +11,10 @@
     flex: 5.5;
 }
 
+.chatOnline{
+    flex: 2;
+}
+
 .chatBoxwrapper{
     display: flex;
     flex-direction: column;

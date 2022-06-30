@@ -101,10 +101,6 @@ const Post = ({ post, commentsPost, socket }) => {
 
                     }
                 }
-                //socket.current.emit("sendNotification", {
-                //    senderName : currentUser._id,
-                //    recieverName : post.userId,
-                //})
 
 
                 socket.current.emit("refreshPost");

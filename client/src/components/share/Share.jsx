@@ -104,7 +104,6 @@ const Share = ({ postId, change, comments, socket }) => {
                     document.querySelector("#shareInputIdComments").value = "";
                 }
 
-                //window.location.reload()
             } catch (err) { }
         }
         else {

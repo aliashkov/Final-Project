@@ -11,6 +11,7 @@ import { GetUserById } from '../../services/userApi';
 import { AmountAddedPosts } from '../../actions/isAllPostsAction';
 import { useDispatch } from 'react-redux';
 import { removeUserFromChat } from "../../actions/chatAction";
+import ChatOnline from '../../components/chatOnline/ChatOnline'
 
 
 const Messenger = ({ members }) => {
@@ -23,6 +24,7 @@ const Messenger = ({ members }) => {
     const [messages, setMessages] = useState(null)
     const [newMessage, setNewMessage] = useState("")
     const [arrivalMessage, setArrivalMessage] = useState(null)
+    const [onlineUsers, setOnlineUsers] = useState([])
     const socket = useRef();
     const scrollRef = useRef()
     const [searchUser, setSearchUser] = useState("")
@@ -63,8 +65,6 @@ const Messenger = ({ members }) => {
                 }
             }
 
-
-
         })
     }, [member, conversations, user?._id, dispatch]);
 
@@ -80,6 +80,7 @@ const Messenger = ({ members }) => {
     useEffect(() => {
         socket.current.emit("addUser", user._id)
         socket.current.on("getUsers", users => {
+            setOnlineUsers(user.friends.filter((f) => users.some((u) => u.userId === f)))
         })
     }, [user])
 
@@ -98,7 +99,6 @@ const Messenger = ({ members }) => {
                 let result = await Promise.all(res.map((conversation) => {
                     const friendId = conversation.members.find(member => member !== user._id)
                     return setFriends((prev) => [...prev, friendId])
-
                 }))
 
                 result = friends;
@@ -176,6 +176,7 @@ const Messenger = ({ members }) => {
         setSearchUser("")
     }
 
+    console.log(onlineUsers)
 
     return (
         <>
@@ -190,14 +191,14 @@ const Messenger = ({ members }) => {
                             className='chatMenuInput'
                         ></input>
                         {conversations.map((conversation, index) => (
-
+                            console.log(conversation),
+                            console.log(conversation.members[0].includes(onlineUsers)),
+                            console.log(conversation.members[1].includes(onlineUsers)),
                             ((searchRes[index] !== undefined) || (searchUser === "")) && (
                                 < div key={conversation._id} onClick={() => currentChatClick(conversation)}>
-                                    <Conversation conversation={conversation} currentUser={user} />
+                                    <Conversation onlineUsers={onlineUsers} conversation={conversation} currentUser={user} />
                                 </div>
                             )
-
-
 
                         ))}
 
@@ -230,6 +231,11 @@ const Messenger = ({ members }) => {
                 </div>
                 <div className="chatOnline">
                     <div className="chatOnlineWrapper">
+                        <ChatOnline
+                            onlineUsers={onlineUsers}
+                            currentId={user._id}
+                            setCurrentChat={setCurrentChat}
+                        />
                     </div>
                 </div>
             </div>

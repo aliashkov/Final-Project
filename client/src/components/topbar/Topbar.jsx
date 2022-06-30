@@ -116,8 +116,6 @@ const Topbar = () => {
                         <HomeIcon className="logo home"/>
                     }
 
-
-
                 </Link>
 
             </div>
@@ -137,7 +135,7 @@ const Topbar = () => {
             <div className="usersList">
                 {searchUser !== "" ?
 
-                    users.slice(0, 5).map((findUser, index) => (
+                    users.slice(0, 5).map((findUser) => (
                         <Filter hiddenString={hiddenSearch} key={findUser._id} findUser={findUser} />
                     ))
                     : <></>}
