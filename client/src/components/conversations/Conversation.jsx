@@ -5,10 +5,6 @@ import { GetUserById } from '../../services/userApi';
 
 const Conversation = ({ conversation, currentUser, onlineUsers }) => {
 
-    console.log(onlineUsers.includes(conversation.members[0]))
-    console.log(onlineUsers.includes(conversation.members[1]))
-
-
     const [user, setUser] = useState(null)
     const [online, setOnline] = useState(false)
 
@@ -17,6 +13,11 @@ const Conversation = ({ conversation, currentUser, onlineUsers }) => {
 
     useEffect(() => {
         const friendId = conversation.members.find(member => member !== currentUser._id)
+
+        setOnline(false)
+        onlineUsers.includes(conversation.members[0]) && (onlineUsers.includes(conversation.members[1])) && (
+            setOnline(true)
+        )
 
         const getUser = async () => {
             try {
@@ -27,7 +28,7 @@ const Conversation = ({ conversation, currentUser, onlineUsers }) => {
 
         }
         getUser();
-    }, [currentUser, conversation])
+    }, [currentUser, conversation , onlineUsers])
 
 
     return (
@@ -42,7 +43,7 @@ const Conversation = ({ conversation, currentUser, onlineUsers }) => {
                     }
                     alt=""
                 />
-                <div className="chatOnlineBadge"></div>
+                {online ? <div className="chatOnlineBadge"></div>  : <></>}
             </div>
             <span className="conversationName">{user?.username}</span>
         </div>

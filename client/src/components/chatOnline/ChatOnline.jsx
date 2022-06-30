@@ -10,9 +10,6 @@ const ChatOnline = ({ onlineUsers, currentId, setCurrentChat }) => {
     const [onlineFriends, setOnlineFriends] = useState([]);
     const PF = process.env.REACT_APP_PUBLIC_FOLDER
 
-    console.log(friends)
-    console.log(onlineFriends)
-    console.log(onlineUsers)
   
     useEffect(() => {
       const getFriends = async () => {

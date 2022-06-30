@@ -80,7 +80,7 @@ const Messenger = ({ members }) => {
     useEffect(() => {
         socket.current.emit("addUser", user._id)
         socket.current.on("getUsers", users => {
-            setOnlineUsers(user.friends.filter((f) => users.some((u) => u.userId === f)))
+            setOnlineUsers([...users.map(user => user.userId)])
         })
     }, [user])
 
@@ -176,7 +176,6 @@ const Messenger = ({ members }) => {
         setSearchUser("")
     }
 
-    console.log(onlineUsers)
 
     return (
         <>
@@ -191,9 +190,6 @@ const Messenger = ({ members }) => {
                             className='chatMenuInput'
                         ></input>
                         {conversations.map((conversation, index) => (
-                            console.log(conversation),
-                            console.log(conversation.members[0].includes(onlineUsers)),
-                            console.log(conversation.members[1].includes(onlineUsers)),
                             ((searchRes[index] !== undefined) || (searchUser === "")) && (
                                 < div key={conversation._id} onClick={() => currentChatClick(conversation)}>
                                     <Conversation onlineUsers={onlineUsers} conversation={conversation} currentUser={user} />
@@ -231,11 +227,7 @@ const Messenger = ({ members }) => {
                 </div>
                 <div className="chatOnline">
                     <div className="chatOnlineWrapper">
-                        <ChatOnline
-                            onlineUsers={onlineUsers}
-                            currentId={user._id}
-                            setCurrentChat={setCurrentChat}
-                        />
+
                     </div>
                 </div>
             </div>
