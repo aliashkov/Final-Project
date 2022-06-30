@@ -31,7 +31,6 @@ export const Editing = () => {
     const dispatch = useDispatch()
     const [startDate, setStartDate] = useState(new Date());
 
-    console.log(startDate)
 
     useEffect(() => {
         socket.current = io("ws://localhost:8900");
