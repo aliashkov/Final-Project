@@ -3,9 +3,15 @@ import './conversation.css'
 import { GetUserById } from '../../services/userApi';
 
 
-const Conversation = ({ conversation, currentUser }) => {
+const Conversation = ({ conversation, currentUser, onlineUsers }) => {
+
+    console.log(onlineUsers.includes(conversation.members[0]))
+    console.log(onlineUsers.includes(conversation.members[1]))
+
 
     const [user, setUser] = useState(null)
+    const [online, setOnline] = useState(false)
+
 
     const PUBLIC_FOLDER = process.env.REACT_APP_PUBLIC_FOLDER
 
@@ -26,7 +32,18 @@ const Conversation = ({ conversation, currentUser }) => {
 
     return (
         <div className='conversation'>
-            <img className='conversationImg' src={user?.profilePicture ? PUBLIC_FOLDER + user?.profilePicture : PUBLIC_FOLDER + "person/noAvatar.png"} alt="" />
+            <div className="chatOnlineImgContainer">
+                <img
+                    className="chatOnlineImg"
+                    src={
+                        user?.profilePicture
+                            ? PUBLIC_FOLDER + user.profilePicture
+                            : PUBLIC_FOLDER + "person/noAvatar.png"
+                    }
+                    alt=""
+                />
+                <div className="chatOnlineBadge"></div>
+            </div>
             <span className="conversationName">{user?.username}</span>
         </div>
     );

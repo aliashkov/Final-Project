@@ -17,7 +17,6 @@ const Login = () => {
     const { isReloaded} = useSelector(state => state.reloadReducer)
 
     const navigate = useNavigate();
-    //localStorage.setItem("user", null)
     
     const handleClick = (e) => {
         e.preventDefault();
@@ -25,7 +24,6 @@ const Login = () => {
             { email: email.current.value, password: password.current.value },
             dispatch
         );
-        
         navigate('/');
     };
 
@@ -41,7 +39,6 @@ const Login = () => {
 
     const registerClick = (e) => {
         e.preventDefault();
-        
         navigate('/register');
     };
 

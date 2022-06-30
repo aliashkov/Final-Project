@@ -1,9 +1,7 @@
 import axios from 'axios'
 import jwt_decode from "jwt-decode";
-//import { useDispatch } from 'react-redux';
 
 export const interceptorRefreshToken = async (user, axiosJWT) => {
-
 
   const refreshToken = async () => {
     try {
