@@ -11,7 +11,7 @@ import { GetUserById } from '../../services/userApi';
 import { AmountAddedPosts } from '../../actions/isAllPostsAction';
 import { useDispatch } from 'react-redux';
 import { removeUserFromChat } from "../../actions/chatAction";
-import ChatOnline from '../../components/chatOnline/ChatOnline'
+
 
 
 const Messenger = ({ members }) => {

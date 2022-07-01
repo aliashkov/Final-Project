@@ -11,3 +11,18 @@
     object-fit: cover;
     margin-right: 10px;
 }
+
+.sidebarOnlineBadge{
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: limegreen;
+    position: absolute;
+    top: 2px;
+    left: 23px;
+}
+
+.sidebarContainer{
+    position: relative;
+    margin-right: 5px;
+}
