@@ -1,5 +1,4 @@
 import { Link } from "react-router-dom";
-//import "rightbar.css";
 import "../filter/filter.css"
 import ExitToAppIcon from "@mui/icons-material/ExitToApp";
 

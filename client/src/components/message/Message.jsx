@@ -15,7 +15,6 @@ const Message = ({ message, own, socket }) => {
     const [user, setUser] = useState(null)
     const dispatch = useDispatch()
     const PUBLIC_FOLDER = process.env.REACT_APP_PUBLIC_FOLDER
-
     const { user: currentUser } = useSelector(state => state.userReducer)
     const [clicked, setClicked] = useState(false)
     const [newMessage, setNewMessage] = useState("")
@@ -71,14 +70,10 @@ const Message = ({ message, own, socket }) => {
             else {
                 alert("Input something before sending")
             }
-
- 
         } catch (err) {
             
         }
     }
-
-
 
     return (
         <div className={own ? "message own" : "message"}>

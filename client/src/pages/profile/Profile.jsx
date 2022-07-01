@@ -10,7 +10,6 @@ import LockIcon from '@mui/icons-material/Lock';
 import { useSelector } from 'react-redux';
 import {io} from 'socket.io-client'
 import { useDispatch } from 'react-redux';
-import { AmountAddedPosts } from '../../actions/isAllPostsAction';
 import { useNavigate } from 'react-router';
 
 
@@ -53,7 +52,7 @@ const Profile = () => {
             }
 
         })()
-    }, [username, friendsClick, currentUser.friends])
+    }, [username, friendsClick, currentUser.friends, navigate])
 
 
     return (

@@ -43,9 +43,6 @@ const Share = ({ postId, change, comments, socket }) => {
 
         })
 
-
-        //socket.disconnect();
-
     }, [socket, dispatch])
 
 

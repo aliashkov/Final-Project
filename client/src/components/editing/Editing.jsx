@@ -141,7 +141,7 @@ export const Editing = () => {
                                     if (!/[a-zA-Z0-9]/.test(event.key)) {
                                         event.preventDefault();
                                     }
-                                }} ref={username} className="editingInput" />
+                                }} ref={username}  className="editingInput" />
                                 <input placeholder="City" onKeyPress={(event) => {
                                     if (!/[a-zA-Z]/.test(event.key)) {
                                         event.preventDefault();
